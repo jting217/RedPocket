@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
@@ -22,11 +23,12 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
+    private PlayFragment playFg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -73,13 +75,15 @@ public class MainActivity extends AppCompatActivity {
         // init corresponding fragment
         switch (item.getItemId()) {
             case R.id.paly:
-                frag = MenuFragment.newInstance(getString(R.string.text_play),
-                        getColorFromRes(R.color.color_home));
+//                frag = MenuFragment.newInstance(getString(R.string.text_play),
+//                        getColorFromRes(R.color.color_home));
+                frag = null;
+                frag = PlayFragment.newInstance("A",getColorFromRes(R.color.colorWhite));
                 break;
             case R.id.shops:
                 frag = MenuFragment.newInstance(getString(R.string.text_shops),
                         getColorFromRes(R.color.color_notifications));
-                break;
+            break;
             case R.id.league:
                 frag = MenuFragment.newInstance(getString(R.string.text_league),
                         getColorFromRes(R.color.color_search));

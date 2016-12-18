@@ -11,7 +11,7 @@
         android:id="@+id/shops"
         android:enabled="true"
         android:icon="@drawable/icon_toolbar_shops"
-        android:title="@string/text_schedules"
+        android:title="@string/text_shops"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/league"

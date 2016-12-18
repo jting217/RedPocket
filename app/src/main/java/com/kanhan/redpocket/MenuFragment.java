@@ -26,7 +26,7 @@ public class MenuFragment extends Fragment {
         Fragment frag = new MenuFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TEXT, text);
-        args.putInt(ARG_COLOR, color);
+        //args.putInt(ARG_COLOR, color);
         frag.setArguments(args);
         return frag;
     }
