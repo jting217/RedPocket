@@ -20,16 +20,13 @@ import java.lang.reflect.Field;
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
 
-    private TextView textFavorites;
-    private TextView textSchedules;
-    private TextView textMusic;
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -42,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
         MenuItem selectedItem;
         if (savedInstanceState != null) {
             mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
@@ -51,61 +49,23 @@ public class MainActivity extends AppCompatActivity {
         }
         selectFragment(selectedItem);
 
-//        textFavorites = (TextView) findViewById(R.id.text_favorites);
-//        textSchedules = (TextView) findViewById(R.id.text_schedules);
-//        textMusic = (TextView) findViewById(R.id.text_music);
+    }
 
-//        BottomNavigationView bottomNavigationView = (BottomNavigationView)
-//                findViewById(R.id.bottom_navigation);
-//        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-//        Log.d("☆","start");
-//        bottomNavigationView.setOnNavigationItemSelectedListener(
-//                new BottomNavigationView.OnNavigationItemSelectedListener() {
-//                    Fragment frag = null;
-//                    FragmentTransaction ft;
-//                    @Override
-//                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                        //item.setIcon(R.drawable.ic_access_time_white_24dp);
-//                        //item.set
-//
-//                        switch (item.getItemId()) {
-//                            case R.id.paly:
-//                                frag = MenuFragment.newInstance(getString(R.string.text_play),
-//                                        getColorFromRes(R.color.color_home));
-//                                ft = getSupportFragmentManager().beginTransaction();
-//                                ft.add(R.id.container, frag, frag.getTag());
-//                                ft.commit();
-//
-//                                Log.d("☆","1");
-//
-//                                break;
-//                            case R.id.shops:
-//                                frag = MenuFragment.newInstance(getString(R.string.text_shops),
-//                                        getColorFromRes(R.color.color_notifications));
-//                                Log.d("☆","2");
-//                                ft = getSupportFragmentManager().beginTransaction();
-//                                ft.add(R.id.container, frag, frag.getTag());
-//                                ft.commit();
-//
-//                                break;
-//                            case R.id.league:
-//                                frag = MenuFragment.newInstance(getString(R.string.text_league),
-//                                        getColorFromRes(R.color.color_home));
-//                                Log.d("☆","3");
-//                                ft = getSupportFragmentManager().beginTransaction();
-//                                ft.add(R.id.container, frag, frag.getTag());
-//                                ft.commit();
-////                                textFavorites.setVisibility(View.GONE);
-////                                textSchedules.setVisibility(View.GONE);
-////                                textMusic.setVisibility(View.VISIBLE);
-//                                break;
-//                        }
-//                        return false;
-//                    }
-//
-//
-//                });
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt(SELECTED_ITEM, mSelectedItem);
+        super.onSaveInstanceState(outState);
+    }
 
+    @Override
+    public void onBackPressed() {
+        MenuItem homeItem = mBottomNav.getMenu().getItem(0);
+        if (mSelectedItem != homeItem.getItemId()) {
+            // select home item
+            selectFragment(homeItem);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void selectFragment(MenuItem item) {
@@ -175,9 +135,9 @@ public class MainActivity extends AppCompatActivity {
                     item.setChecked(item.getItemData().isChecked());
                 }
             } catch (NoSuchFieldException e) {
-                //Timber.e(e, "Unable to get shift mode field");
+                Log.e("Error", "Unable to get shift mode field");
             } catch (IllegalAccessException e) {
-                //Timber.e(e, "Unable to change value of shift mode");
+                Log.e("Error", "Unable to change value of shift mode");
             }
         }
     }
