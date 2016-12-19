@@ -9,9 +9,12 @@
     <color name="colorGray00">#4df1a4a4</color>
     <color name="colorGray01">#6A6A6A</color>
     <color name="colorGray02">#EEEEEE</color>
+    <color name="colorGray03">#d1f8f8f8</color>
     <color name="color_home">#009688</color>
     <color name="color_search">#2196F3</color>
     <color name="color_notifications">#9C27B0</color>
     <color name="colorPrimary111">#3F51B5</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorBlue">#007aff</color>
 
 </resources>

@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 //                frag = MenuFragment.newInstance(getString(R.string.text_play),
 //                        getColorFromRes(R.color.color_home));
                 frag = null;
-                frag = PlayFragment.newInstance("A",getColorFromRes(R.color.colorWhite));
+                frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite));
                 break;
             case R.id.shops:
                 frag = MenuFragment.newInstance(getString(R.string.text_shops),

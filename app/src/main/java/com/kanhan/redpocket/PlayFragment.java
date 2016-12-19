@@ -1,14 +1,18 @@
 package com.kanhan.redpocket;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -184,8 +188,24 @@ public class PlayFragment extends Fragment {
                         mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
                     }
                     Log.d("Result:", String.valueOf(result));
-                    mTxtViewResult.setVisibility(View.VISIBLE);
-                    mTxtViewResult.setText(result);
+//                    mTxtViewResult.setVisibility(View.VISIBLE);
+//                    mTxtViewResult.setText(result);
+                    CustomDialog dialog = new  CustomDialog(v.getContext(),getString(result),"10","10",new CustomDialog.ICustomDialogEventListener() {
+                        @Override
+                        public void customDialogEvent(int id) {
+//                            TextView txtView = (TextView) findViewById(R.id.textLives);
+//                            ImageView imageView = (ImageView)findViewById(R.id.main_image);
+//                            ImageView imageView = (ImageView)findViewById(R.id.main_image);
+//                            imageView.setImageDrawable(getResources().getDrawable(id));
+                        }
+                    },R.style.dialog);
+                    dialog.show();
+                    dialog.getWindow().setLayout(850, 550);
+
+//                    new AlertDialog.Builder(v.getContext())
+//                            .setMessage("")
+//                            .setTitle("")
+//                            .show();
                 }
             }.start();
 
@@ -264,4 +284,6 @@ public class PlayFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
 
     }
+
+
 }
