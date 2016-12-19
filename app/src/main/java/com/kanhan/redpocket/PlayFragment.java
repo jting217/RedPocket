@@ -34,7 +34,7 @@ public class PlayFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer;
+    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
     private TextView mTxtViewResult, mTxtViewCounter;
 
 
@@ -98,11 +98,16 @@ public class PlayFragment extends Fragment {
         mImgViewScissors = (ImageView) view.findViewById(R.id.imgViewScissors);
         mImgViewRock = (ImageView) view.findViewById(R.id.imgViewRock);
         mImgViewPaper = (ImageView) view.findViewById(R.id.imgViewPaper);
-        mTxtViewCounter = (TextView) view.findViewById(R.id.txtViewCounter);
+
         mImgViewPlayer = (ImageView) view.findViewById(R.id.imgViewPlayer);
+        mImgViewNpc  = (ImageView) view.findViewById(R.id.imgViewNpc);
         mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
         mImgViewRock.setOnClickListener(imgViewPlayOnClick);
         mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
+
+        mTxtViewCounter = (TextView) view.findViewById(R.id.txtViewCounter);
+        mTxtViewResult = (TextView) view.findViewById(R.id.txtViewResult);
+
 
     }
 
@@ -130,7 +135,7 @@ public class PlayFragment extends Fragment {
                 public void onFinish() {
                     //倒數完成後要做的事
                     mTxtViewCounter.setVisibility(View.INVISIBLE);
-                    String result = "";
+                    int result=0;
                     //Player
                     int iComPlay = (int) (Math.random() * 3 + 1);
                     switch (v.getId()) {
@@ -139,11 +144,11 @@ public class PlayFragment extends Fragment {
                             Log.d("tag", "剪刀");
                             mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
                             if(iComPlay == 1){
-                                result = "平手";
+                                result = R.string.text_tie;
                             }else if(iComPlay == 2){
-                                result = "電腦贏";
+                                result = R.string.text_lose;
                             }else{
-                                result = "玩家贏";
+                                result = R.string.text_win;
                             }
                             break;
                         case R.id.imgViewRock:
@@ -151,11 +156,11 @@ public class PlayFragment extends Fragment {
                             Log.d("tag", "石頭");
                             mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
                             if(iComPlay == 1){
-                                result = "玩家贏";
+                                result = R.string.text_win;
                             }else if(iComPlay == 2){
-                                result = "平手";
+                                result = R.string.text_tie;
                             }else{
-                                result = "電腦贏";
+                                result = R.string.text_lose;
                             }
                             break;
                         case R.id.imgViewPaper:
@@ -163,26 +168,29 @@ public class PlayFragment extends Fragment {
                             Log.d("tag", "布");
                             mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
                             if(iComPlay == 1){
-                                result = "電腦贏";
+                                result = R.string.text_lose;
                             }else if(iComPlay == 2){
-                                result = "玩家贏";
+                                result = R.string.text_win;
                             }else{
-                                result = "平手";
+                                result = R.string.text_tie;
                             }
                             break;
                     }
-
+                    if(iComPlay == 1){
+                        mImgViewNpc.setImageResource(R.drawable.img_card_scissor_black);
+                    }else if(iComPlay == 2) {
+                        mImgViewNpc.setImageResource(R.drawable.img_card_rock_black);
+                    }else{
+                        mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
+                    }
+                    Log.d("Result:", String.valueOf(result));
+                    mTxtViewResult.setVisibility(View.VISIBLE);
+                    mTxtViewResult.setText(result);
                 }
             }.start();
 
 //            animationDrawable.stop();
-//            if(iComPlay == 1){
-//                animationIV.setImageResource(R.drawable.scissors);
-//            }else if(iComPlay == 2) {
-//                animationIV.setImageResource(R.drawable.rock);
-//            }else{
-//                animationIV.setImageResource(R.drawable.paper);
-//            }
+
 
 
 //            mTxtViewResult.setText(result);

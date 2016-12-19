@@ -119,23 +119,38 @@
             android:layout_weight="0.98"
             android:background="@color/colorWhite">
 
+
+
             <ImageView
                 app:srcCompat="@drawable/img_cardback"
-                android:id="@+id/imgViewNPC"
-                android:layout_marginTop="33dp"
+                android:id="@+id/imgViewNpc"
                 android:layout_height="130dp"
                 android:layout_width="130dp"
+                android:layout_marginTop="33dp"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_alignStart="@+id/imgViewPlayer" />
 
             <ImageView
                 app:srcCompat="@drawable/img_cardback"
                 android:id="@+id/imgViewPlayer"
-                android:layout_marginTop="39dp"
                 android:layout_width="130dp"
                 android:layout_height="130dp"
-                android:layout_below="@+id/imgViewNPC"
-                android:layout_alignStart="@+id/imgViewNPC" />
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="29dp" />
+
+            <TextView
+                android:text="YOU WIN !!"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorRed"
+                android:id="@+id/txtViewResult"
+                android:textColor="@color/colorWhite"
+                android:textAlignment="center"
+                android:textSize="30dp"
+                android:visibility="invisible"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true" />
 
             <TextView
                 android:text="3"
@@ -145,10 +160,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/colorAccent"
                 android:id="@+id/txtViewCounter"
-                android:layout_alignBottom="@+id/imgViewPlayer"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="92dp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
         </RelativeLayout>
 
         <LinearLayout
