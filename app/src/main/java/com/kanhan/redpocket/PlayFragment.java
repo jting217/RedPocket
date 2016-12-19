@@ -1,13 +1,18 @@
 package com.kanhan.redpocket;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
 
 
 /**
@@ -28,6 +33,10 @@ public class PlayFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer;
+    private TextView mTxtViewResult, mTxtViewCounter;
+
 
 
 
@@ -71,18 +80,144 @@ public class PlayFragment extends Fragment {
         }
 
 
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_play, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mImgViewScissors = (ImageView) view.findViewById(R.id.imgViewScissors);
+        mImgViewRock = (ImageView) view.findViewById(R.id.imgViewRock);
+        mImgViewPaper = (ImageView) view.findViewById(R.id.imgViewPaper);
+        mTxtViewCounter = (TextView) view.findViewById(R.id.txtViewCounter);
+        mImgViewPlayer = (ImageView) view.findViewById(R.id.imgViewPlayer);
+        mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
+        mImgViewRock.setOnClickListener(imgViewPlayOnClick);
+        mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
+
+    }
+
+    private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
+        public void onClick(final View v) {
+            mImgViewScissors.setOnClickListener(null);
+            mImgViewRock.setOnClickListener(null);
+            mImgViewPaper.setOnClickListener(null);
 
 
-    // TODO: Rename method, update argument and hook method into UI event
+
+
+            mTxtViewCounter.setVisibility(View.VISIBLE);
+            new CountDownTimer(4000, 1000) {
+
+                //mTxtViewCounter.setVisibility(v.VISIBLE );
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    //倒數秒數中要做的事
+                    mTxtViewCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
+//                    textView.setText("倒數時間:" + new SimpleDateFormat("s").format(millisUntilFinished));
+                }
+
+                @Override
+                public void onFinish() {
+                    //倒數完成後要做的事
+                    mTxtViewCounter.setVisibility(View.INVISIBLE);
+                    String result = "";
+                    //Player
+                    int iComPlay = (int) (Math.random() * 3 + 1);
+                    switch (v.getId()) {
+                        case R.id.imgViewScissors:
+                            // do something
+                            Log.d("tag", "剪刀");
+                            mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
+                            if(iComPlay == 1){
+                                result = "平手";
+                            }else if(iComPlay == 2){
+                                result = "電腦贏";
+                            }else{
+                                result = "玩家贏";
+                            }
+                            break;
+                        case R.id.imgViewRock:
+                            // do something else
+                            Log.d("tag", "石頭");
+                            mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
+                            if(iComPlay == 1){
+                                result = "玩家贏";
+                            }else if(iComPlay == 2){
+                                result = "平手";
+                            }else{
+                                result = "電腦贏";
+                            }
+                            break;
+                        case R.id.imgViewPaper:
+                            // i'm lazy, do nothing
+                            Log.d("tag", "布");
+                            mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
+                            if(iComPlay == 1){
+                                result = "電腦贏";
+                            }else if(iComPlay == 2){
+                                result = "玩家贏";
+                            }else{
+                                result = "平手";
+                            }
+                            break;
+                    }
+
+                }
+            }.start();
+
+//            animationDrawable.stop();
+//            if(iComPlay == 1){
+//                animationIV.setImageResource(R.drawable.scissors);
+//            }else if(iComPlay == 2) {
+//                animationIV.setImageResource(R.drawable.rock);
+//            }else{
+//                animationIV.setImageResource(R.drawable.paper);
+//            }
+
+
+//            mTxtViewResult.setText(result);
+
+//            new Thread(new Runnable(){
+//                @Override
+//                public void run() {
+//                    try{
+//                        Thread.sleep(5000);
+//                    }
+//                    catch(Exception e){
+//                        e.printStackTrace();
+//                    }
+//                    finally{
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                animationIV.setImageResource(R.drawable.animation1);
+//                                animationDrawable = (AnimationDrawable) animationIV.getDrawable();
+//                                mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
+//                                mImgViewRock.setOnClickListener(imgViewPlayOnClick);
+//                                mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
+//                                mImgViewPlayer.setImageResource(android.R.color.transparent);
+//                                mTxtViewResult.setText("");
+//                                animationDrawable.start();
+//                            }
+//                        });
+//
+//                    }
+//                }
+//            }).start();
+        }
+    };
+
+// TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);
