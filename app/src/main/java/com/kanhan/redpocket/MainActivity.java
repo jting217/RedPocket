@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
-    private PlayFragment playFg;
+//    private PlayFragment playFg;
     private Intent svc;
 
     @Override

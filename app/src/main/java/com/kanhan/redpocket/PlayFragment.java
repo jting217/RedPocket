@@ -117,18 +117,14 @@ public class PlayFragment extends Fragment {
             mImgViewRock.setOnClickListener(null);
             mImgViewPaper.setOnClickListener(null);
 
-
-
-
             mTxtViewCounter.setVisibility(View.VISIBLE);
-            new CountDownTimer(4000, 1000) {
 
+            new CountDownTimer(4000, 1000) {
                 //mTxtViewCounter.setVisibility(v.VISIBLE );
                 @Override
                 public void onTick(long millisUntilFinished) {
                     //倒數秒數中要做的事
                     mTxtViewCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
-//                    textView.setText("倒數時間:" + new SimpleDateFormat("s").format(millisUntilFinished));
                 }
 
                 @Override
@@ -138,6 +134,7 @@ public class PlayFragment extends Fragment {
                     int result=0;
                     //Player
                     int iComPlay = (int) (Math.random() * 3 + 1);
+
                     switch (v.getId()) {
                         case R.id.imgViewScissors:
                             // do something
@@ -196,12 +193,9 @@ public class PlayFragment extends Fragment {
                         }
                     },R.style.dialog);
                     dialog.show();
+//                    dialog.
                     dialog.getWindow().setLayout(1200, 750);
 
-//                    new AlertDialog.Builder(v.getContext())
-//                            .setMessage("")
-//                            .setTitle("")
-//                            .show();
                 }
             }.start();
 

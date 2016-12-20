@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -71,12 +70,18 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         switch (id){
             case R.id.txtViewClose:
                 //drawableID = R.drawable.animal1;
+//                Fragment frag = PlayFragment.newInstance("Play", R.color.colorWhite);
+//                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//                ft.add(R.id.container, frag, frag.getTag());
+//                ft.commit();
 
-                break;
         }
         if (drawableID != -1) {
             mCustomDialogEventListener.customDialogEvent(drawableID);
         }
         dismiss();
     }
+
+
+
 }
