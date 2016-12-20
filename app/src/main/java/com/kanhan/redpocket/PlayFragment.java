@@ -1,14 +1,18 @@
 package com.kanhan.redpocket;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,6 +33,7 @@ public class PlayFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_COLOR = "arg_color";
+    private static Activity mAct;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -57,12 +62,13 @@ public class PlayFragment extends Fragment {
      * @return A new instance of fragment PlayFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PlayFragment newInstance(String param1, int param2) {
+    public static PlayFragment newInstance(String param1, int param2, Activity act) {
         PlayFragment fragment = new PlayFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
         args.putInt(ARG_COLOR, param2);
+        mAct = act;
         fragment.setArguments(args);
         return fragment;
     }
@@ -186,21 +192,29 @@ public class PlayFragment extends Fragment {
                     CustomDialog dialog = new  CustomDialog(v.getContext(),getString(result),"10","10",new CustomDialog.ICustomDialogEventListener() {
                         @Override
                         public void customDialogEvent(int id) {
-//                            TextView txtView = (TextView) findViewById(R.id.textLives);
-//                            ImageView imageView = (ImageView)findViewById(R.id.main_image);
-//                            ImageView imageView = (ImageView)findViewById(R.id.main_image);
-//                            imageView.setImageDrawable(getResources().getDrawable(id));
                         }
                     },R.style.dialog);
                     dialog.show();
-//                    dialog.
                     dialog.getWindow().setLayout(1200, 750);
+                    new CountDownTimer(1000, 1000) {
+                        //mTxtViewCounter.setVisibility(v.VISIBLE );
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            //倒數秒數中要做的事
 
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            ((MainActivity)getActivity()).recallPlayFragment();
+                        }
+                    }.start();
                 }
             }.start();
 
-//            animationDrawable.stop();
 
+            //((MainActivity)getActivity()).recallPlayFragment();
+//            animationDrawable.stop();
 
 
 //            mTxtViewResult.setText(result);

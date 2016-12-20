@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 //                frag = MenuFragment.newInstance(getString(R.string.text_play),
 //                        getColorFromRes(R.color.color_home));
                 frag = null;
-                frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite));
+                frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),this);
                 break;
             case R.id.shops:
                 frag = MenuFragment.newInstance(getString(R.string.text_shops),
@@ -136,6 +136,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void recallPlayFragment(){
+        Fragment frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),this);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.container, frag, frag.getTag());
+        ft.commit();
+    }
     private void updateToolbarText(CharSequence text) {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

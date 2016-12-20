@@ -3,6 +3,8 @@ package com.kanhan.redpocket;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +71,9 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
         int drawableID = -1;
         switch (id){
             case R.id.txtViewClose:
+                Log.d("=========","txtViewClose");
+
+                break;
                 //drawableID = R.drawable.animal1;
 //                Fragment frag = PlayFragment.newInstance("Play", R.color.colorWhite);
 //                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
