@@ -1,5 +1,7 @@
 package com.kanhan.redpocket;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.design.internal.BottomNavigationItemView;
@@ -10,11 +12,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import java.lang.reflect.Field;
 
@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
     private PlayFragment playFg;
+    private Intent svc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        svc=new Intent(this, BackgroundSoundService.class);
+        startService(svc);
 
         mBottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.disableShiftMode(mBottomNav);
@@ -57,6 +61,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         outState.putInt(SELECTED_ITEM, mSelectedItem);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        stopService(svc);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(svc);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(svc);
     }
 
     @Override
