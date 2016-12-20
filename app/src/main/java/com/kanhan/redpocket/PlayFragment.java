@@ -195,8 +195,8 @@ public class PlayFragment extends Fragment {
                         }
                     },R.style.dialog);
                     dialog.show();
-                    dialog.getWindow().setLayout(1200, 750);
-                    new CountDownTimer(1000, 1000) {
+                    dialog.getWindow().setLayout(1200, 650);
+                    new CountDownTimer(2000, 1000) {
                         //mTxtViewCounter.setVisibility(v.VISIBLE );
                         @Override
                         public void onTick(long millisUntilFinished) {
