@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
 
 import java.lang.reflect.Field;
@@ -38,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
         mBottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
         BottomNavigationViewHelper.disableShiftMode(mBottomNav);
+        View view = mBottomNav.findViewById(R.id.paly);
+        view.performClick();
+
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -45,16 +49,17 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
+        Log.d("+++++savedInstanceState", String.valueOf(savedInstanceState));
         MenuItem selectedItem;
         if (savedInstanceState != null) {
             mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
             selectedItem = mBottomNav.getMenu().findItem(mSelectedItem);
         } else {
             selectedItem = mBottomNav.getMenu().getItem(0);
+
         }
         selectFragment(selectedItem);
-
+        Log.d("++++++++++selectedItem", String.valueOf(selectedItem));
     }
 
     @Override
@@ -67,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         stopService(svc);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startService(svc);
     }
 
     @Override
