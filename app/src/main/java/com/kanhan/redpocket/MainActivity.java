@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("MainActivity","onCreate");
         //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
             selectedItem = mBottomNav.getMenu().findItem(mSelectedItem);
+            mBottomNav.getMenu().findItem(mSelectedItem).setChecked(true);
         } else {
             selectedItem = mBottomNav.getMenu().getItem(0);
 
@@ -64,36 +67,42 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.d("MainActivity","onSaveInstanceState");
         outState.putInt(SELECTED_ITEM, mSelectedItem);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onStop() {
+        Log.d("MainActivity","");
         super.onStop();
         stopService(svc);
     }
 
     @Override
     protected void onStart() {
+        Log.d("MainActivity","onStart");
         super.onStart();
         startService(svc);
     }
 
     @Override
     protected void onDestroy() {
+        Log.d("MainActivity","onDestroy");
         super.onDestroy();
         stopService(svc);
     }
 
     @Override
     protected void onPause() {
+        Log.d("MainActivity","onPause");
         super.onPause();
         stopService(svc);
     }
 
     @Override
     public void onBackPressed() {
+        Log.d("MainActivity","onBackPressed");
         MenuItem homeItem = mBottomNav.getMenu().getItem(0);
         if (mSelectedItem != homeItem.getItemId()) {
             // select home item
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectFragment(MenuItem item) {
+        Log.d("MainActivity","selectFragment");
         Fragment frag = null;
         // init corresponding fragment
         switch (item.getItemId()) {
@@ -111,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 //                frag = MenuFragment.newInstance(getString(R.string.text_play),
 //                        getColorFromRes(R.color.color_home));
                 frag = null;
-                frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),this);
+                frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite));
                 break;
             case R.id.shops:
                 frag = MenuFragment.newInstance(getString(R.string.text_shops)+" coming soon..",
@@ -129,14 +139,22 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
+
+
+
+
+
+
+
         // update selected item
         mSelectedItem = item.getItemId();
 
         // uncheck the other items.
-        for (int i = 0; i< mBottomNav.getMenu().size(); i++) {
-            MenuItem menuItem = mBottomNav.getMenu().getItem(i);
-            menuItem.setChecked(menuItem.getItemId() == item.getItemId());
-        }
+        mBottomNav.getMenu().getItem(0).setChecked(true);
+//        for (int i = 0; i< mBottomNav.getMenu().size(); i++) {
+//            MenuItem menuItem = mBottomNav.getMenu().getItem(i);
+//
+//        }
 
         updateToolbarText(item.getTitle());
 
@@ -156,10 +174,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void recallPlayFragment(){
-        Fragment frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),this);
+        Log.d("MainActivity","");
+        Fragment frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite));
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.add(R.id.container, frag, frag.getTag());
+//        ft.remove(frag);
         ft.replace(R.id.container,frag);
         ft.addToBackStack(null);
         ft.commit();
@@ -167,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void updateToolbarText(CharSequence text) {
+        Log.d("MainActivity","");
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(text);

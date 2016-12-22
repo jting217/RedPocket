@@ -3,6 +3,7 @@ package com.kanhan.redpocket;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -79,6 +80,7 @@ public class CustomDialog extends Dialog implements View.OnClickListener{
 //                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //                ft.add(R.id.container, frag, frag.getTag());
 //                ft.commit();
+
 
         }
         if (drawableID != -1) {

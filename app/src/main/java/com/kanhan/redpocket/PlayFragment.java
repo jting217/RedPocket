@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -39,16 +41,14 @@ public class PlayFragment extends Fragment {
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins;
 
-
+    private static PlayFragment instance;
 
 
     private int mColor;
 
     private OnFragmentInteractionListener mListener;
 
-    public PlayFragment() {
-        // Required empty public constructor
-    }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -59,19 +59,24 @@ public class PlayFragment extends Fragment {
      * @return A new instance of fragment PlayFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PlayFragment newInstance(String param1, int param2, Activity act) {
-        PlayFragment fragment = new PlayFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-        args.putInt(ARG_COLOR, param2);
-        mAct = act;
-        fragment.setArguments(args);
-        return fragment;
+    public static PlayFragment newInstance(String param1, int param2) {
+        Log.d("FragPlay","newInstance");
+//        if(instance == null){
+            instance = new PlayFragment();
+            Bundle args = new Bundle();
+            args.putString(ARG_PARAM1, param1);
+            args.putInt(ARG_COLOR, param2);
+
+            instance.setArguments(args);
+//        }
+//        PlayFragment fragment = new PlayFragment();
+
+        return instance;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("FragPlay","onCreate");
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -87,32 +92,43 @@ public class PlayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("FragPlay","onCreateView");
         // Inflate the layout for this fragment
 
         return inflater.inflate(R.layout.fragment_play, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        mImgViewScissors = (ImageView) view.findViewById(R.id.imgViewScissors);
-        mImgViewRock = (ImageView) view.findViewById(R.id.imgViewRock);
-        mImgViewPaper = (ImageView) view.findViewById(R.id.imgViewPaper);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        Log.d("FragPlay","onActivityCreated");
+        super.onActivityCreated(savedInstanceState);
+        mImgViewScissors = (ImageView) getView().findViewById(R.id.imgViewScissors);
+        mImgViewRock = (ImageView) getView().findViewById(R.id.imgViewRock);
+        mImgViewPaper = (ImageView) getView().findViewById(R.id.imgViewPaper);
 
-        mImgViewPlayer = (ImageView) view.findViewById(R.id.imgViewPlayer);
-        mImgViewNpc  = (ImageView) view.findViewById(R.id.imgViewNpc);
+        mImgViewPlayer = (ImageView) getView().findViewById(R.id.imgViewPlayer);
+        mImgViewNpc  = (ImageView) getView().findViewById(R.id.imgViewNpc);
         mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
         mImgViewRock.setOnClickListener(imgViewPlayOnClick);
         mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
 
-        mTxtViewCounter = (TextView) view.findViewById(R.id.txtViewCounter);
-        mTxtViewResult = (TextView) view.findViewById(R.id.txtViewResult);
-        mTxtViewCoins  = (TextView) view.findViewById(R.id.txtViewCoins);
+        mTxtViewCounter = (TextView) getView().findViewById(R.id.txtViewCounter);
+        mTxtViewResult = (TextView) getView().findViewById(R.id.txtViewResult);
+        mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
+
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        Log.d("FragPlay","onViewCreated");
+        super.onViewCreated(view, savedInstanceState);
+
 
     }
 
     private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
+            Log.d("FragPlay","OnClickListener");
 
             PlayGame(v);
 
@@ -139,6 +155,7 @@ public class PlayFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        Log.d("FragPlay","onDetach");
         super.onDetach();
         mListener = null;
     }
@@ -159,7 +176,10 @@ public class PlayFragment extends Fragment {
 
     }
 
+
+
     public void PlayGame(final View v){
+        Log.d("FragPlay","PlayGame");
         mImgViewScissors.setOnClickListener(null);
         mImgViewRock.setOnClickListener(null);
         mImgViewPaper.setOnClickListener(null);
@@ -248,11 +268,14 @@ public class PlayFragment extends Fragment {
                         //倒數秒數中要做的事
 
                     }
-
                     @Override
                     public void onFinish() {
-                            ((MainActivity)getActivity()).recallPlayFragment();
-
+//                            ((MainActivity)getActivity()).recallPlayFragment();
+                        mImgViewNpc.setImageResource(R.drawable.img_cardback);
+                        mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
+                        mImgViewRock.setOnClickListener(imgViewPlayOnClick);
+                        mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
+                        mImgViewPlayer.setImageResource(R.drawable.img_cardback);
                     }
                 }.start();
             }
@@ -262,5 +285,25 @@ public class PlayFragment extends Fragment {
 
     }
 
+    @Override
+    public void onPause() {
+        Log.d("FragPlay","onPause");
+        super.onPause();
+
+
+    }
+
+    @Override
+    public void onResume() {
+        Log.d("FragPlay","onResume");
+        super.onResume();
+
+    }
+
+    @Override
+    public void onStop() {
+        Log.d("FragPlay","onStop");
+        super.onStop();
+    }
 
 }
