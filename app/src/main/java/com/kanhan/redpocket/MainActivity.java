@@ -114,17 +114,17 @@ public class MainActivity extends AppCompatActivity {
                 frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),this);
                 break;
             case R.id.shops:
-                frag = MenuFragment.newInstance(getString(R.string.text_shops),
+                frag = MenuFragment.newInstance(getString(R.string.text_shops)+" coming soon..",
                         getColorFromRes(R.color.color_notifications));
             break;
             case R.id.league:
-                frag = MenuFragment.newInstance(getString(R.string.text_league),
+                frag = MenuFragment.newInstance(getString(R.string.text_league)+" coming soon..",
                         getColorFromRes(R.color.color_search));
             case R.id.options:
-                frag = MenuFragment.newInstance(getString(R.string.text_options),
+                frag = MenuFragment.newInstance(getString(R.string.text_options)+" coming soon..",
                         getColorFromRes(R.color.color_search));
             case R.id.info:
-                frag = MenuFragment.newInstance(getString(R.string.text_info),
+                frag = MenuFragment.newInstance(getString(R.string.text_info)+" coming soon..",
                         getColorFromRes(R.color.color_search));
                 break;
         }
@@ -142,16 +142,29 @@ public class MainActivity extends AppCompatActivity {
 
         if (frag != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.container, frag, frag.getTag());
+
+//            ft.add(R.id.container, frag, frag.getTag());
+//            if(frag.isAdded()) {
+                ft.replace(R.id.container, frag);
+//            }else {
+//                ft.add(R.id.container, frag, frag.getTag());
+
+//            }
+            ft.addToBackStack(null);
             ft.commit();
         }
     }
 
     public void recallPlayFragment(){
         Fragment frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),this);
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container, frag, frag.getTag());
+//        ft.add(R.id.container, frag, frag.getTag());
+        ft.replace(R.id.container,frag);
+        ft.addToBackStack(null);
         ft.commit();
+
+
     }
     private void updateToolbarText(CharSequence text) {
         ActionBar actionBar = getSupportActionBar();
@@ -184,4 +197,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

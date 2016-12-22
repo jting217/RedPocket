@@ -70,7 +70,7 @@
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:id="@+id/textBuyMore"
-                android:layout_below="@+id/textView4"
+                android:layout_below="@+id/txtViewCoins"
                 android:layout_alignStart="@+id/imageCoin"
                 android:layout_alignEnd="@+id/imageCoin" />
 
@@ -81,7 +81,7 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="26sp"
                 android:textAlignment="center"
-                android:id="@+id/textView4"
+                android:id="@+id/txtViewCoins"
                 android:layout_below="@+id/imageCoin"
                 android:layout_alignStart="@+id/textBuyMore"
                 android:layout_alignEnd="@+id/imageCoin" />

@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,7 +37,7 @@ public class PlayFragment extends Fragment {
     private String mParam2;
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
-    private TextView mTxtViewResult, mTxtViewCounter;
+    private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins;
 
 
 
@@ -84,11 +81,8 @@ public class PlayFragment extends Fragment {
 //            mText = savedInstanceState.getString(ARG_TEXT);
             mColor = savedInstanceState.getInt(ARG_COLOR);
         }
-
-
-
-
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -113,139 +107,15 @@ public class PlayFragment extends Fragment {
 
         mTxtViewCounter = (TextView) view.findViewById(R.id.txtViewCounter);
         mTxtViewResult = (TextView) view.findViewById(R.id.txtViewResult);
-
+        mTxtViewCoins  = (TextView) view.findViewById(R.id.txtViewCoins);
 
     }
 
     private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
-            mImgViewScissors.setOnClickListener(null);
-            mImgViewRock.setOnClickListener(null);
-            mImgViewPaper.setOnClickListener(null);
 
-            mTxtViewCounter.setVisibility(View.VISIBLE);
+            PlayGame(v);
 
-            new CountDownTimer(4000, 1000) {
-                //mTxtViewCounter.setVisibility(v.VISIBLE );
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    //倒數秒數中要做的事
-                    mTxtViewCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
-                }
-
-                @Override
-                public void onFinish() {
-                    //倒數完成後要做的事
-                    mTxtViewCounter.setVisibility(View.INVISIBLE);
-                    int result=0;
-                    //Player
-                    int iComPlay = (int) (Math.random() * 3 + 1);
-
-                    switch (v.getId()) {
-                        case R.id.imgViewScissors:
-                            // do something
-                            Log.d("tag", "剪刀");
-                            mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
-                            if(iComPlay == 1){
-                                result = R.string.text_tie;
-                            }else if(iComPlay == 2){
-                                result = R.string.text_lose;
-                            }else{
-                                result = R.string.text_win;
-                            }
-                            break;
-                        case R.id.imgViewRock:
-                            // do something else
-                            Log.d("tag", "石頭");
-                            mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
-                            if(iComPlay == 1){
-                                result = R.string.text_win;
-                            }else if(iComPlay == 2){
-                                result = R.string.text_tie;
-                            }else{
-                                result = R.string.text_lose;
-                            }
-                            break;
-                        case R.id.imgViewPaper:
-                            // i'm lazy, do nothing
-                            Log.d("tag", "布");
-                            mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
-                            if(iComPlay == 1){
-                                result = R.string.text_lose;
-                            }else if(iComPlay == 2){
-                                result = R.string.text_win;
-                            }else{
-                                result = R.string.text_tie;
-                            }
-                            break;
-                    }
-                    if(iComPlay == 1){
-                        mImgViewNpc.setImageResource(R.drawable.img_card_scissor_black);
-                    }else if(iComPlay == 2) {
-                        mImgViewNpc.setImageResource(R.drawable.img_card_rock_black);
-                    }else{
-                        mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
-                    }
-                    Log.d("Result:", String.valueOf(result));
-//                    mTxtViewResult.setVisibility(View.VISIBLE);
-//                    mTxtViewResult.setText(result);
-                    CustomDialog dialog = new  CustomDialog(v.getContext(),getString(result),"10","10",new CustomDialog.ICustomDialogEventListener() {
-                        @Override
-                        public void customDialogEvent(int id) {
-                        }
-                    },R.style.dialog);
-                    dialog.show();
-                    dialog.getWindow().setLayout(1200, 650);
-                    new CountDownTimer(2000, 1000) {
-                        //mTxtViewCounter.setVisibility(v.VISIBLE );
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            //倒數秒數中要做的事
-
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            ((MainActivity)getActivity()).recallPlayFragment();
-                        }
-                    }.start();
-                }
-            }.start();
-
-
-            //((MainActivity)getActivity()).recallPlayFragment();
-//            animationDrawable.stop();
-
-
-//            mTxtViewResult.setText(result);
-
-//            new Thread(new Runnable(){
-//                @Override
-//                public void run() {
-//                    try{
-//                        Thread.sleep(5000);
-//                    }
-//                    catch(Exception e){
-//                        e.printStackTrace();
-//                    }
-//                    finally{
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                animationIV.setImageResource(R.drawable.animation1);
-//                                animationDrawable = (AnimationDrawable) animationIV.getDrawable();
-//                                mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
-//                                mImgViewRock.setOnClickListener(imgViewPlayOnClick);
-//                                mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
-//                                mImgViewPlayer.setImageResource(android.R.color.transparent);
-//                                mTxtViewResult.setText("");
-//                                animationDrawable.start();
-//                            }
-//                        });
-//
-//                    }
-//                }
-//            }).start();
         }
     };
 
@@ -286,6 +156,109 @@ public class PlayFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+
+    }
+
+    public void PlayGame(final View v){
+        mImgViewScissors.setOnClickListener(null);
+        mImgViewRock.setOnClickListener(null);
+        mImgViewPaper.setOnClickListener(null);
+
+        mTxtViewCounter.setVisibility(View.VISIBLE);
+
+        new CountDownTimer(4000, 1000) {
+            //mTxtViewCounter.setVisibility(v.VISIBLE );
+            @Override
+            public void onTick(long millisUntilFinished) {
+                //倒數秒數中要做的事
+                mTxtViewCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
+            }
+
+            @Override
+            public void onFinish() {
+                //倒數完成後要做的事
+                mTxtViewCounter.setVisibility(View.INVISIBLE);
+                int result=0;
+                //Player
+                int iComPlay = (int) (Math.random() * 3 + 1);
+
+                switch (v.getId()) {
+                    case R.id.imgViewScissors:
+                        // do something
+                        Log.d("tag", "剪刀");
+                        mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
+                        if(iComPlay == 1){
+                            result = R.string.text_tie;
+                        }else if(iComPlay == 2){
+                            result = R.string.text_lose;
+                        }else{
+                            result = R.string.text_win;
+                        }
+                        break;
+                    case R.id.imgViewRock:
+                        // do something else
+                        Log.d("tag", "石頭");
+                        mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
+                        if(iComPlay == 1){
+                            result = R.string.text_win;
+                        }else if(iComPlay == 2){
+                            result = R.string.text_tie;
+                        }else{
+                            result = R.string.text_lose;
+                        }
+                        break;
+                    case R.id.imgViewPaper:
+                        // i'm lazy, do nothing
+                        Log.d("tag", "布");
+                        mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
+                        if(iComPlay == 1){
+                            result = R.string.text_lose;
+                        }else if(iComPlay == 2){
+                            result = R.string.text_win;
+                        }else{
+                            result = R.string.text_tie;
+                        }
+                        break;
+                }
+                if(iComPlay == 1){
+                    mImgViewNpc.setImageResource(R.drawable.img_card_scissor_black);
+                }else if(iComPlay == 2) {
+                    mImgViewNpc.setImageResource(R.drawable.img_card_rock_black);
+                }else{
+                    mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
+                }
+                Log.d("Result:", String.valueOf(result));
+//                    mTxtViewResult.setVisibility(View.VISIBLE);
+//                    mTxtViewResult.setText(result);
+
+                CustomDialog dialog = new  CustomDialog(v.getContext(),getString(result),"10","10",new CustomDialog.ICustomDialogEventListener() {
+                    @Override
+                    public void customDialogEvent(int id) {
+                    }
+                },R.style.dialog);
+                dialog.show();
+                dialog.getWindow().setLayout(1200, 650);
+
+                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
+
+                new CountDownTimer(2000, 1000) {
+                    //mTxtViewCounter.setVisibility(v.VISIBLE );
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        //倒數秒數中要做的事
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                            ((MainActivity)getActivity()).recallPlayFragment();
+
+                    }
+                }.start();
+            }
+        }.start();
+
+
 
     }
 
