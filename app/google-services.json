@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "429187235405",
+    "firebase_url": "https://redpocketapp.firebaseio.com",
+    "project_id": "redpocketapp",
+    "storage_bucket": "redpocketapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429187235405:android:37701da1ceddf15b",
+        "android_client_info": {
+          "package_name": "com.kanhan.redpocket"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "429187235405-jj4c24vtj5vlc7h538hpavc0nh1ujbqa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kanhan.redpocket",
+            "certificate_hash": "173C5A7F98BA12B1BA7723D3C34837B4C1019071"
+          }
+        },
+        {
+          "client_id": "429187235405-50gdi7396l2klc2skmadafk1jdgo1s41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAgLlcjb6lbAQo3xwNArXxbkPmlc9OPTs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "429187235405-50gdi7396l2klc2skmadafk1jdgo1s41.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "429187235405-ijnag60hpbdckh4s5omr4l39bbjr19h2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.retsohuang.red"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
