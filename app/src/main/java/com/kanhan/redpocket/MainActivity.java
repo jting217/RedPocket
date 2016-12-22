@@ -16,12 +16,21 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
+
+import com.facebook.login.LoginManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
+
+    private TextView nameTextView;
+    private TextView emailTextView;
+    private TextView uidTextView;
 
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
@@ -35,6 +44,37 @@ public class MainActivity extends AppCompatActivity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //------------------------login start---------------
+        nameTextView = (TextView) findViewById(R.id.nameTextView);
+        emailTextView = (TextView) findViewById(R.id.emailTextView);
+        uidTextView = (TextView) findViewById(R.id.uidTextView);
+
+
+
+        //接收Bundle
+        Intent intent = this.getIntent();
+        Bundle bundle = intent.getExtras();
+        //  String tid = bundle.getString("Id");
+
+        //nameTextView.setText(tid);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String name = user.getDisplayName();
+            String email = user.getEmail();
+            String uid = user.getUid();
+
+
+            //nameTextView.setText(name);
+            emailTextView.setText(email);
+            uidTextView.setText(uid);
+        }
+        else{
+            goLoginScreen();
+        }
+
+        // ---------------------------login end--------------------------------------
 
         svc=new Intent(this, BackgroundSoundService.class);
         startService(svc);
@@ -219,5 +259,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private void goLoginScreen() {
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
+
+    public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();
+        LoginManager.getInstance().logOut();
+        goLoginScreen();
+    }
 
 }
