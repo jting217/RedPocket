@@ -16,14 +16,22 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.kanhan.redpocket.Data.User;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
@@ -37,9 +45,14 @@ public class MainActivity extends AppCompatActivity {
 //    private PlayFragment playFg;
     private Intent svc;
 
+    private DatabaseReference mDatabase;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("MainActivity","onCreate");
+
         //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
@@ -50,6 +63,11 @@ public class MainActivity extends AppCompatActivity {
         emailTextView = (TextView) findViewById(R.id.emailTextView);
         uidTextView = (TextView) findViewById(R.id.uidTextView);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+
+
+
 
 
         //接收Bundle
@@ -59,20 +77,24 @@ public class MainActivity extends AppCompatActivity {
 
         //nameTextView.setText(tid);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String name = user.getDisplayName();
             String email = user.getEmail();
             String uid = user.getUid();
 
-
             //nameTextView.setText(name);
             emailTextView.setText(email);
             uidTextView.setText(uid);
+
+            writeNewUser(uid,name,email);
         }
         else{
             goLoginScreen();
         }
+
+
+
 
         // ---------------------------login end--------------------------------------
 
@@ -102,6 +124,10 @@ public class MainActivity extends AppCompatActivity {
 
         }
         selectFragment(selectedItem);
+
+
+
+
         Log.d("++++++++++selectedItem", String.valueOf(selectedItem));
     }
 
@@ -270,6 +296,42 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         goLoginScreen();
+    }
+    private void writeNewUser(final String userId, String nickName, String email) {
+//        User user = new User(userId, nickName, email);
+
+        //Getting values to store
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+
+        //Creating Person object
+        final User user = new User();
+
+        //Adding values
+        user.setNickName(nickName);
+        user.setEmail(email);
+        user.setEmail("xxx@xxx.com");
+
+        //Storing values to firebase
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.hasChild(userId)) {
+                    // run some code
+                    Log.d("Firebase",userId + " is existed!");
+
+                }else{
+                    mDatabase.child(userId).setValue(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
     }
 
 }

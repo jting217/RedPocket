@@ -5,39 +5,41 @@ package com.kanhan.redpocket.Data;
  */
 
 public class User {
-    public String usrid;
-    public String nickname;
-    public String useremail;
+//    public String userId;
+    private String nickName;
+    private String email;
 
     public User() {
     }
 
-    public String getUsrid() {
-        return usrid;
+//    public String getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUsrId(String userId) {
+//        this.userId = userId;
+//    }
+
+
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setUsrid(String usrid) {
-        this.usrid = usrid;
+    public String getEmail() {
+        return email;
     }
 
-    public String getNickname(String na) {
-        return nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUseremail(String em) {
-        return useremail;
-    }
-
-    public void setUseremail(String useremail) {
-        this.useremail = useremail;
-    }
-    public User(String usrid, String nickname, String useremail){
-        this.usrid = usrid;
-        this.nickname = nickname;
-        this.useremail = useremail;
+    public User(String nickName, String email){//(String userId, String nickName, String email){
+//        this.userId = userId;
+        this.nickName = nickName;
+        this.email = email;
     }
 }
