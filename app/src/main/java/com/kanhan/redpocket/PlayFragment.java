@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ public class PlayFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_COLOR = "arg_color";
-    private static Activity mAct;
+
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -180,6 +181,7 @@ public class PlayFragment extends Fragment {
 
     public void PlayGame(final View v){
         Log.d("FragPlay","PlayGame");
+        ((MainActivity)getActivity()).removeBottomNavListener();
         mImgViewScissors.setOnClickListener(null);
         mImgViewRock.setOnClickListener(null);
         mImgViewPaper.setOnClickListener(null);
@@ -248,6 +250,7 @@ public class PlayFragment extends Fragment {
                     mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
                 }
                 Log.d("Result:", String.valueOf(result));
+
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
 //                    mTxtViewResult.setText(result);
 
@@ -276,6 +279,7 @@ public class PlayFragment extends Fragment {
                         mImgViewRock.setOnClickListener(imgViewPlayOnClick);
                         mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
                         mImgViewPlayer.setImageResource(R.drawable.img_cardback);
+                        ((MainActivity)getActivity()).setBottomNavListener();
                     }
                 }.start();
             }
@@ -305,5 +309,8 @@ public class PlayFragment extends Fragment {
         Log.d("FragPlay","onStop");
         super.onStop();
     }
+
+
+
 
 }

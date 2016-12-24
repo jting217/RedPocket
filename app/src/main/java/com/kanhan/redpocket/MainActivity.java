@@ -66,10 +66,6 @@ public class MainActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
 
-
-
-
-
         //接收Bundle
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -94,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
         // ---------------------------login end--------------------------------------
 
         svc=new Intent(this, BackgroundSoundService.class);
@@ -105,14 +99,15 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationViewHelper.disableShiftMode(mBottomNav);
         View view = mBottomNav.findViewById(R.id.paly);
         view.performClick();
+        setBottomNavListener();
+//        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                selectFragment(item);
+//                return true;
+//            }
+//        });
 
-        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                selectFragment(item);
-                return true;
-            }
-        });
         Log.d("+++++savedInstanceState", String.valueOf(savedInstanceState));
         MenuItem selectedItem;
         if (savedInstanceState != null) {
@@ -124,9 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
         selectFragment(selectedItem);
-
-
-
 
         Log.d("++++++++++selectedItem", String.valueOf(selectedItem));
     }
@@ -207,21 +199,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
         // update selected item
         mSelectedItem = item.getItemId();
 
         // uncheck the other items.
         mBottomNav.getMenu().getItem(0).setChecked(true);
+
 //        for (int i = 0; i< mBottomNav.getMenu().size(); i++) {
 //            MenuItem menuItem = mBottomNav.getMenu().getItem(i);
-//
 //        }
-
         updateToolbarText(item.getTitle());
 
         if (frag != null) {
@@ -234,7 +220,8 @@ public class MainActivity extends AppCompatActivity {
 //                ft.add(R.id.container, frag, frag.getTag());
 
 //            }
-            ft.addToBackStack(null);
+
+//            ft.addToBackStack(null);
             ft.commit();
         }
     }
@@ -247,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
 //        ft.add(R.id.container, frag, frag.getTag());
 //        ft.remove(frag);
         ft.replace(R.id.container,frag);
-        ft.addToBackStack(null);
+        //ft.addToBackStack(null);
         ft.commit();
 
 
@@ -333,5 +320,29 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    public void setBottomNavListener(){
+        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectFragment(item);
+                return true;
+            }
+        });
+    }
+    public void removeBottomNavListener(){
+        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                mBottomNav.getMenu().getItem(1).setOnMenuItemClickListener(null);
+                mBottomNav.getMenu().getItem(2).setOnMenuItemClickListener(null);
+                mBottomNav.getMenu().getItem(3).setOnMenuItemClickListener(null);
+                mBottomNav.getMenu().getItem(4).setOnMenuItemClickListener(null);
+                return true;
+            }
+        });
+    }
+
 
 }
