@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
@@ -26,12 +25,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
+import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
+        readSystemPreferences();
         //接收Bundle
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -319,6 +322,58 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void readSystemPreferences() {
+        Log.d("Firebase","readSystemPreferences");
+        mDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
+
+        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+             @Override
+             public void onDataChange(DataSnapshot snapshot) {
+                 // do some stuff once
+                 SystemPreferences sp = snapshot.getValue(SystemPreferences.class);
+//                 Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+//                    //Adding it to a string
+//                    for (Object key : map.keySet()) {
+//                        Log.w("firebase",key + " : " + map.get(key));
+//                    }
+                 Log.w("firebase",String.valueOf(sp.getCounterSec())+","+String.valueOf(sp.getDailyReward()));
+             }
+
+             @Override
+             public void onCancelled(DatabaseError databaseError) {
+                 Log.e("firebase failed: " , databaseError.getMessage());
+             }
+
+
+        });
+
+        //Value event listener for realtime data update
+//        mDatabase.addValueEventListener(new ValueEventListener() {
+//
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+////                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+//                    //Getting the data from snapshot
+//                    SystemPreferences sp = snapshot.getValue(SystemPreferences.class);
+//                    Log.d("firebase",sp.getCounterSec());
+////                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+////                    //Adding it to a string
+////                    for (Object key : map.keySet()) {
+////                        Log.d("firebase",key + " : " + map.get(key));
+////                    }
+////                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                Log.e("The read failed: " , databaseError.getMessage());
+//            }
+//
+//
+//        });
+       // return sp;
     }
 
     public void setBottomNavListener(){
