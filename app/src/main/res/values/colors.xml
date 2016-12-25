@@ -10,6 +10,8 @@
     <color name="colorGray01">#6A6A6A</color>
     <color name="colorGray02">#EEEEEE</color>
     <color name="colorGray03">#d1f8f8f8</color>
+    <color name="colorGray04">#c8c7cc</color>
+    <color name="colorFragmentTitle"> #e6f9f9f9</color>
     <color name="color_home">#009688</color>
     <color name="color_search">#2196F3</color>
     <color name="color_notifications">#9C27B0</color>

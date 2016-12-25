@@ -42,13 +42,14 @@ public class MainActivity extends AppCompatActivity {
     private TextView nameTextView;
     private TextView emailTextView;
     private TextView uidTextView;
+    private TextView textPlayMusic;
 
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
 //    private PlayFragment playFg;
     private Intent svc;
 
-    private DatabaseReference mDatabase;
+    private DatabaseReference mWriteDatabase, mReadDatabase;
 
 
 
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity","onCreate");
 
         //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -65,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
         nameTextView = (TextView) findViewById(R.id.nameTextView);
         emailTextView = (TextView) findViewById(R.id.emailTextView);
         uidTextView = (TextView) findViewById(R.id.uidTextView);
+        textPlayMusic = (TextView) findViewById(R.id.txtPlayMusic);
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         readSystemPreferences();
         //接收Bundle
@@ -144,7 +145,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         Log.d("MainActivity","onStart");
         super.onStart();
-        startService(svc);
+        if(textPlayMusic.getText().equals("1")) {
+            startService(svc);
+        }
     }
 
     @Override
@@ -185,45 +188,48 @@ public class MainActivity extends AppCompatActivity {
                 frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite));
                 break;
             case R.id.shops:
+                Log.d("selectFragment","shops");
                 frag = MenuFragment.newInstance(getString(R.string.text_shops)+" coming soon..",
                         getColorFromRes(R.color.color_notifications));
-            break;
+                break;
             case R.id.league:
+                Log.d("selectFragment","league");
                 frag = MenuFragment.newInstance(getString(R.string.text_league)+" coming soon..",
                         getColorFromRes(R.color.color_search));
+                break;
             case R.id.options:
-                frag = MenuFragment.newInstance(getString(R.string.text_options)+" coming soon..",
-                        getColorFromRes(R.color.color_search));
+                Log.d("selectFragment","options");
+                frag = OptionsFragment.newInstance("Options",String.valueOf(textPlayMusic.getText()));
+//                frag = MenuFragment.newInstance(getString(R.string.text_options)+" coming soon..",
+//                        getColorFromRes(R.color.color_search));
+                break;
             case R.id.info:
+                Log.d("selectFragment","info");
                 frag = MenuFragment.newInstance(getString(R.string.text_info)+" coming soon..",
                         getColorFromRes(R.color.color_search));
                 break;
         }
 
-
-
         // update selected item
         mSelectedItem = item.getItemId();
 
         // uncheck the other items.
-        mBottomNav.getMenu().getItem(0).setChecked(true);
+//        Log.d("selectItem",item.getTitle());
+//        mBottomNav.getMenu().getItem(0).setChecked(true);
 
-//        for (int i = 0; i< mBottomNav.getMenu().size(); i++) {
-//            MenuItem menuItem = mBottomNav.getMenu().getItem(i);
-//        }
+        for (int i = 0; i< mBottomNav.getMenu().size(); i++) {
+            MenuItem menuItem = mBottomNav.getMenu().getItem(i);
+        }
         updateToolbarText(item.getTitle());
 
         if (frag != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
 //            ft.add(R.id.container, frag, frag.getTag());
 //            if(frag.isAdded()) {
                 ft.replace(R.id.container, frag);
 //            }else {
 //                ft.add(R.id.container, frag, frag.getTag());
-
 //            }
-
 //            ft.addToBackStack(null);
             ft.commit();
         }
@@ -291,7 +297,7 @@ public class MainActivity extends AppCompatActivity {
 //        User user = new User(userId, nickName, email);
 
         //Getting values to store
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users");
 
         //Creating Person object
         final User user = new User();
@@ -299,10 +305,10 @@ public class MainActivity extends AppCompatActivity {
         //Adding values
         user.setNickName(nickName);
         user.setEmail(email);
-        user.setEmail("xxx@xxx.com");
+//        user.setEmail("xxx@xxx.com");
 
         //Storing values to firebase
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 if (snapshot.hasChild(userId)) {
@@ -310,7 +316,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Firebase",userId + " is existed!");
 
                 }else{
-                    mDatabase.child(userId).setValue(user);
+                    mWriteDatabase.child(userId).setValue(user);
                 }
             }
 
@@ -326,13 +332,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void readSystemPreferences() {
         Log.d("Firebase","readSystemPreferences");
-        mDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
+        mReadDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
 
-        mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
              @Override
              public void onDataChange(DataSnapshot snapshot) {
                  // do some stuff once
                  SystemPreferences sp = snapshot.getValue(SystemPreferences.class);
+                 //以下這段也可以用！
 //                 Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 //                    //Adding it to a string
 //                    for (Object key : map.keySet()) {
@@ -345,7 +352,6 @@ public class MainActivity extends AppCompatActivity {
              public void onCancelled(DatabaseError databaseError) {
                  Log.e("firebase failed: " , databaseError.getMessage());
              }
-
 
         });
 
@@ -399,5 +405,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    public void playMusic()
+    {
+        startService(svc);
+        textPlayMusic.setText("1");
+    }
+    public void stopMusic()
+    {
+        stopService(svc);
+        textPlayMusic.setText("0");
+    }
 
 }
