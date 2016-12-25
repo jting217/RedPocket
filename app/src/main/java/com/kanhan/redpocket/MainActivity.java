@@ -343,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
 //                 Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 //                    //Adding it to a string
 //                    for (Object key : map.keySet()) {
-//                        Log.w("firebase",key + " : " + map.get(key));
+//                        Log.w("firebase",key + " : " + map.get(key) +  map.get(key).getClass());
 //                    }
                  Log.w("firebase",String.valueOf(sp.getCounterSec())+","+String.valueOf(sp.getDailyReward()));
              }
