@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.kanhan.redpocket.ShopsFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            android:textColor="@color/colorBlack"
+            android:background="@color/colorFragmentTitle"
+            android:textAlignment="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/text_shops" />
+
+        <TextView
+            android:text="Coins"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGray05"
+            android:paddingTop="28dp"
+            android:paddingLeft="15dp"
+            android:paddingBottom="10dp"
+            android:textSize="16dp"
+            android:id="@+id/txtCoins" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="131dp" />
+
+        <TextView
+            android:text="Tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorGray05"
+            android:paddingTop="28dp"
+            android:paddingLeft="15dp"
+            android:paddingBottom="10dp"
+            android:textSize="16dp"
+            android:id="@+id/txtTools" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="131dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

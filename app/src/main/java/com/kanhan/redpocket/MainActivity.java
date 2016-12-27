@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
@@ -25,16 +24,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
@@ -189,13 +183,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.shops:
                 Log.d("selectFragment","shops");
-                frag = MenuFragment.newInstance(getString(R.string.text_shops)+" coming soon..",
-                        getColorFromRes(R.color.color_notifications));
+                frag = ShopsFragment.newInstance("Shops","");
                 break;
             case R.id.league:
                 Log.d("selectFragment","league");
-                frag = MenuFragment.newInstance(getString(R.string.text_league)+" coming soon..",
-                        getColorFromRes(R.color.color_search));
+                frag = LeagueFragment.newInstance("League","");
                 break;
             case R.id.options:
                 Log.d("selectFragment","options");
@@ -205,8 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.info:
                 Log.d("selectFragment","info");
-                frag = MenuFragment.newInstance(getString(R.string.text_info)+" coming soon..",
-                        getColorFromRes(R.color.color_search));
+                frag = InfoFragment.newInstance("Info","");
                 break;
         }
 
