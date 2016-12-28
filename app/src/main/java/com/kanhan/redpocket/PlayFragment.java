@@ -31,7 +31,6 @@ public class PlayFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_COLOR = "arg_color";
 
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -45,7 +44,6 @@ public class PlayFragment extends Fragment {
     private int mColor;
 
     private OnFragmentInteractionListener mListener;
-
 
 
     /**
@@ -97,7 +95,6 @@ public class PlayFragment extends Fragment {
     }
 
 
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         Log.d("FragPlay","onActivityCreated");
@@ -115,15 +112,12 @@ public class PlayFragment extends Fragment {
         mTxtViewCounter = (TextView) getView().findViewById(R.id.txtViewCounter);
         mTxtViewResult = (TextView) getView().findViewById(R.id.txtViewResult);
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
-
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Log.d("FragPlay","onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
@@ -131,7 +125,6 @@ public class PlayFragment extends Fragment {
             Log.d("FragPlay","OnClickListener");
 
             PlayGame(v);
-
         }
     };
 
@@ -173,9 +166,7 @@ public class PlayFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-
     }
-
 
 
     public void PlayGame(final View v){
@@ -285,22 +276,18 @@ public class PlayFragment extends Fragment {
         }.start();
 
 
-
     }
 
     @Override
     public void onPause() {
         Log.d("FragPlay","onPause");
         super.onPause();
-
-
     }
 
     @Override
     public void onResume() {
         Log.d("FragPlay","onResume");
         super.onResume();
-
     }
 
     @Override
@@ -310,6 +297,4 @@ public class PlayFragment extends Fragment {
     }
 
 
-
-
-}
+}//程式結尾
