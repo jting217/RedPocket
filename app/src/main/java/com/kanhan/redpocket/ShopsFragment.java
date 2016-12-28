@@ -28,7 +28,8 @@ public class ShopsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private ListView mListView;
+    private ListView mListViewCoins;
+    private ListView mListViewTools;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,8 +39,10 @@ public class ShopsFragment extends Fragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        mListView = (ListView) getView().findViewById(R.id.listViewCoins);
-        mListView.setAdapter(new CoinsAdapter());
+        mListViewCoins = (ListView) getView().findViewById(R.id.listViewCoins);
+        mListViewCoins.setAdapter(new CoinsAdapter());
+        mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
+        mListViewTools.setAdapter(new ToolsAdapter());
         super.onActivityCreated(savedInstanceState);
     }
 
