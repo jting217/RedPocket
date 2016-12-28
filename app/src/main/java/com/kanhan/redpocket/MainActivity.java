@@ -170,6 +170,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void selectFragment(MenuItem item) {
         Log.d("MainActivity","selectFragment");
         Fragment frag = null;
@@ -346,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+
         //Value event listener for realtime data update
 //        mDatabase.addValueEventListener(new ValueEventListener() {
 //
@@ -407,5 +410,7 @@ public class MainActivity extends AppCompatActivity {
         stopService(svc);
         textPlayMusic.setText("0");
     }
+
+
 
 }
