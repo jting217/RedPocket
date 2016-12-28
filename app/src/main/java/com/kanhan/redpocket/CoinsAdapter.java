@@ -35,7 +35,7 @@ public class CoinsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
         if(convertView == null){
-            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.list_adapter, null);
+            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.shops_list_adapter, null);
             holder = new Holder();
             holder.image = (ImageView) convertView.findViewById(R.id.imageItem);
             holder.txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);

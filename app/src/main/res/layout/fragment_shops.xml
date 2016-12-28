@@ -18,8 +18,8 @@
             android:textColor="@color/colorBlack"
             android:background="@color/colorFragmentTitle"
             android:textAlignment="center"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/text_shops" />
 
         <TextView
@@ -27,11 +27,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorGray05"
-            android:paddingTop="28dp"
+            android:paddingTop="20dp"
             android:paddingLeft="15dp"
             android:paddingBottom="3dp"
-            android:textSize="16dp"
-            android:id="@+id/txtCoins" />
+            android:textSize="13dp"
+            android:id="@+id/txtCoins"
+            android:background="@drawable/border_set_underline"/>
 
         <ListView
             android:layout_width="match_parent"
@@ -41,15 +42,16 @@
             android:layout_weight="0.07" />
 
         <TextView
-            android:text="Tools"
+            android:text="@string/text_shops"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorGray05"
-            android:paddingTop="28dp"
+            android:paddingTop="20dp"
             android:paddingLeft="15dp"
             android:paddingBottom="10dp"
-            android:textSize="16dp"
-            android:id="@+id/txtTools" />
+            android:textSize="13dp"
+            android:id="@+id/txtTools"
+            android:background="@drawable/border_set_underline"/>
 
         <ListView
             android:layout_width="match_parent"

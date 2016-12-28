@@ -13,6 +13,8 @@
     <color name="colorGray04">#c8c7cc</color>
     <color name="colorGray05">#828282</color>
     <color name="colorGray06">#8c8c8c</color>
+    <color name="colorGray07">#8f8e94</color>
+    <color name="colorGray08">#cdced2</color>
     <color name="colorFragmentTitle"> #e6f9f9f9</color>
     <color name="color_home">#009688</color>
     <color name="color_search">#2196F3</color>
