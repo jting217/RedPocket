@@ -12,6 +12,7 @@
     <color name="colorGray03">#d1f8f8f8</color>
     <color name="colorGray04">#c8c7cc</color>
     <color name="colorGray05">#828282</color>
+    <color name="colorGray06">#8c8c8c</color>
     <color name="colorFragmentTitle"> #e6f9f9f9</color>
     <color name="color_home">#009688</color>
     <color name="color_search">#2196F3</color>
@@ -19,5 +20,6 @@
     <color name="colorPrimary111">#3F51B5</color>
     <color name="colorBlack">#000000</color>
     <color name="colorBlue">#007aff</color>
+    <color name="colorPrice">#ff2d55</color>
 
 </resources>

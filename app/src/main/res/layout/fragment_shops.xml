@@ -34,7 +34,9 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="131dp" />
+            android:layout_height="131dp"
+            android:paddingLeft="15dp"
+            android:id="@+id/listViewCoins"/>
 
         <TextView
             android:text="Tools"
@@ -49,7 +51,8 @@
 
         <ListView
             android:layout_width="match_parent"
-            android:layout_height="131dp" />
+            android:layout_height="131dp"
+            android:id="@+id/listViewTools"/>
 
     </LinearLayout>
 

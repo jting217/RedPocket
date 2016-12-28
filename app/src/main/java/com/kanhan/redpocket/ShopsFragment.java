@@ -2,10 +2,12 @@ package com.kanhan.redpocket;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 
 /**
@@ -26,10 +28,19 @@ public class ShopsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private ListView mListView;
+
     private OnFragmentInteractionListener mListener;
 
     public ShopsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        mListView = (ListView) getView().findViewById(R.id.listViewCoins);
+        mListView.setAdapter(new CoinsAdapter());
+        super.onActivityCreated(savedInstanceState);
     }
 
     /**

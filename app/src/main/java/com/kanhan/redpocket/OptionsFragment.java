@@ -1,6 +1,5 @@
 package com.kanhan.redpocket;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +34,7 @@ public class OptionsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private Switch mSwitch;
+
 
     public OptionsFragment() {
         // Required empty public constructor
@@ -80,6 +80,7 @@ public class OptionsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSwitch = (Switch) getView().findViewById(R.id.switchMusic);
+
         //set the switch to ONe
         if(mParam2.equals("1")) {
             mSwitch.setChecked(true);
