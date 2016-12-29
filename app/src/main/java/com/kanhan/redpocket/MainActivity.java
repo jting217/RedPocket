@@ -238,9 +238,8 @@ public class MainActivity extends AppCompatActivity {
         ft.replace(R.id.container,frag);
         //ft.addToBackStack(null);
         ft.commit();
-
-
     }
+
     private void updateToolbarText(CharSequence text) {
         Log.d("MainActivity","");
         ActionBar actionBar = getSupportActionBar();
@@ -248,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setTitle(text);
         }
     }
+
     private int getColorFromRes(@ColorRes int resId) {
         return ContextCompat.getColor(this, resId);
     }
@@ -286,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
         LoginManager.getInstance().logOut();
         goLoginScreen();
     }
+
     private void writeNewUser(final String userId, String nickName, String email) {
 //        User user = new User(userId, nickName, email);
 
@@ -318,8 +319,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
 
     }
 
