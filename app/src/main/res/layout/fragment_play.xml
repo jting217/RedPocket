@@ -38,26 +38,26 @@
                 android:layout_marginStart="20dp" />
 
             <TextView
-                android:text="88"
+                android:text="0"
                 android:layout_width="92dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="26sp"
                 android:textAlignment="center"
-                android:id="@+id/textLives"
+                android:id="@+id/txtViewLives"
                 android:layout_alignStart="@+id/imageLives"
-                android:layout_alignBottom="@+id/textView3"
+                android:layout_alignBottom="@+id/txtViewScore"
                 android:layout_below="@+id/imageLives" />
 
             <TextView
-                android:text="1403"
+                android:text="0"
                 android:layout_width="92dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:textAlignment="center"
-                android:id="@+id/textView3"
+                android:id="@+id/txtViewScore"
                 android:layout_below="@+id/imageScore"
                 android:layout_centerHorizontal="true" />
 
@@ -75,7 +75,7 @@
                 android:layout_alignEnd="@+id/imageCoin" />
 
             <TextView
-                android:text="150"
+                android:text="0"
                 android:layout_width="92dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorAccent"
@@ -96,7 +96,7 @@
                 android:id="@+id/textCounter"
                 android:layout_alignBaseline="@+id/textBuyMore"
                 android:layout_alignBottom="@+id/textBuyMore"
-                android:layout_alignStart="@+id/textLives" />
+                android:layout_alignStart="@+id/txtViewLives" />
 
             <ImageView
                 android:layout_width="69dp"

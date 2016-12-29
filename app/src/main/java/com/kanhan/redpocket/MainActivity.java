@@ -29,6 +29,8 @@ import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     private static final String SELECTED_ITEM = "arg_selected_item";
@@ -44,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private Intent svc;
 
     private DatabaseReference mWriteDatabase, mReadDatabase;
-
+    private SystemPreferences mSystemPreferences;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
     @Override
@@ -61,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         emailTextView = (TextView) findViewById(R.id.emailTextView);
         uidTextView = (TextView) findViewById(R.id.uidTextView);
         textPlayMusic = (TextView) findViewById(R.id.txtPlayMusic);
+        mSystemPreferences = new SystemPreferences();
 
 
-        readSystemPreferences();
         //接收Bundle
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
         //nameTextView.setText(tid);
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             String name = user.getDisplayName();
             String email = user.getEmail();
@@ -80,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
             //nameTextView.setText(name);
             emailTextView.setText(email);
             uidTextView.setText(uid);
-
-            writeNewUser(uid,name,email);
+            readSystemPreferences();
+            //writeNewUser(uid);
         }
         else{
             goLoginScreen();
@@ -287,29 +290,49 @@ public class MainActivity extends AppCompatActivity {
         goLoginScreen();
     }
 
-    private void writeNewUser(final String userId, String nickName, String email) {
+    private void writeNewUser(final String userId) {
 //        User user = new User(userId, nickName, email);
 
         //Getting values to store
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users");
 
         //Creating Person object
-        final User user = new User();
+
 
         //Adding values
-        user.setNickName(nickName);
-        user.setEmail(email);
+//        user.setNickName(nickName);
+//        user.setEmail(email);
 //        user.setEmail("xxx@xxx.com");
-
+//        Log.d("firebase",String.valueOf(sp.getSignupReward()));
         //Storing values to firebase
         mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                User user = new User();
+                Long iniVal = Long.valueOf(0);
+
                 if (snapshot.hasChild(userId)) {
                     // run some code
                     Log.d("Firebase",userId + " is existed!");
 
                 }else{
+                    user.setCoins(iniVal);
+                    user.setDailyPlayTimes(iniVal);
+                    user.setDailyResetDate(iniVal);
+                    user.setDailyWinTimes(iniVal);
+                    user.setDice(iniVal);
+                    user.setGoldenHand(iniVal);
+                    user.setIronFirst(iniVal);
+                    user.setLifeCounter(iniVal);
+                    user.setMindControl(iniVal);
+                    user.setScore(iniVal);
+                    user.setSpecialTimeRewardGetDate(iniVal);
+                    user.setTimer(iniVal);
+                    user.setVictory(iniVal);
+                    user.setWinWithPaper(iniVal);
+                    user.setWinWithRock(iniVal);
+                    user.setWinWithScissor(iniVal);
+                    user.setLives(mSystemPreferences.getSignupReward());
                     mWriteDatabase.child(userId).setValue(user);
                 }
             }
@@ -323,7 +346,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readSystemPreferences() {
-        Log.d("Firebase","readSystemPreferences");
+        Log.d("☆Firebase","readSystemPreferences");
         mReadDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
 
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -332,17 +355,19 @@ public class MainActivity extends AppCompatActivity {
                  // do some stuff once
                  SystemPreferences sp = snapshot.getValue(SystemPreferences.class);
                  //以下這段也可以用！
-//                 Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
-//                    //Adding it to a string
-//                    for (Object key : map.keySet()) {
-//                        Log.w("firebase",key + " : " + map.get(key) +  map.get(key).getClass());
-//                    }
-                 Log.w("firebase",String.valueOf(sp.getCounterSec())+","+String.valueOf(sp.getDailyReward()));
+                 Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+                    //Adding it to a string
+                    for (Object key : map.keySet()) {
+                        Log.w("firebase",key + " : " + map.get(key) +  map.get(key).getClass());
+                    }
+                 mSystemPreferences = sp;
+                 Log.w("☆firebase",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getSignupReward()));
+                 writeNewUser(user.getUid());
              }
 
              @Override
              public void onCancelled(DatabaseError databaseError) {
-                 Log.e("firebase failed: " , databaseError.getMessage());
+                 Log.e("☆firebase failed: " , databaseError.getMessage());
              }
 
         });

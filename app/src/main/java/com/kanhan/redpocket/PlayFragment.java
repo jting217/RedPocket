@@ -13,7 +13,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.kanhan.redpocket.Data.SystemPreferences;
+import com.kanhan.redpocket.Data.User;
+
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -35,8 +47,12 @@ public class PlayFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private User iniUser;
+    private DatabaseReference mWriteDatabase, mReadDatabase;
+
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
-    private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins;
+    private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives;
 
     private static PlayFragment instance;
 
@@ -74,6 +90,7 @@ public class PlayFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.d("FragPlay","onCreate");
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -82,6 +99,8 @@ public class PlayFragment extends Fragment {
 //            mText = savedInstanceState.getString(ARG_TEXT);
             mColor = savedInstanceState.getInt(ARG_COLOR);
         }
+
+
     }
 
 
@@ -112,12 +131,21 @@ public class PlayFragment extends Fragment {
         mTxtViewCounter = (TextView) getView().findViewById(R.id.txtViewCounter);
         mTxtViewResult = (TextView) getView().findViewById(R.id.txtViewResult);
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
+        mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScore);
+        mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
+        iniUser = new User();
+
+
+
+
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Log.d("FragPlay","onViewCreated");
         super.onViewCreated(view, savedInstanceState);
+
+        readUser();
     }
 
     private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
@@ -296,5 +324,39 @@ public class PlayFragment extends Fragment {
         super.onStop();
     }
 
+    private void readUser() {
+        Log.d("☆Firebase", "readUser");
+        mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+
+        mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                User u = snapshot.getValue(User.class);
+                if(u != null){
+                    //以下這段也可以用！
+                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+
+                    //Adding it to a string
+                    for (Object key : map.keySet()) {
+                        Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
+                    }
+                    iniUser = u;
+                    Log.d("firebase",String.valueOf(u.getLives()));
+
+                    mTxtViewCoins.setText(String.valueOf(u.getCoins()));
+                    mTxtViewScore.setText(String.valueOf(u.getScore()));
+                    mTxtViewLives.setText(String.valueOf(u.getLives()));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+
+        });
+    }
 
 }//程式結尾

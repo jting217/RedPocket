@@ -44,7 +44,7 @@
 
     <Button
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="6dp"
         android:layout_centerHorizontal="true"
         android:onClick="logout"
         android:text="@string/logout"/>

@@ -1,5 +1,6 @@
 package com.kanhan.redpocket;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -72,6 +74,8 @@ public class SinginActivity extends AppCompatActivity {
                     Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
                     if (!task.isSuccessful()) {
                         Log.w("TAG", "signInWithEmail:failed", task.getException());
+                    }else{
+                        goMainScreen();
                     }
                 }
             });
@@ -79,4 +83,9 @@ public class SinginActivity extends AppCompatActivity {
 
     }
 
+    private void goMainScreen() {
+        Intent intent = new Intent(SinginActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }
 }
