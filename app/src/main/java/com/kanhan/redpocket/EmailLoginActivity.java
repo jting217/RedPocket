@@ -48,7 +48,7 @@ public class EmailLoginActivity  extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 eMailLogin();
-                goMainScreen();
+
             }
         });
         buttonCancel.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +73,14 @@ public class EmailLoginActivity  extends AppCompatActivity {
                     Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
                     if (!task.isSuccessful()) {
                         Log.w("TAG", "signInWithEmail:failed", task.getException());
+                    }else{
+                        goMainScreen();
                     }
                 }
             });
         }
     }
+
     private void goMainScreen() {
         Intent intent = new Intent(EmailLoginActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -20,8 +20,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
+
 
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -53,6 +53,11 @@ public class PlayFragment extends Fragment {
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives;
+    private int mCoins;
+    private int mScore;
+    private int mLives;
+    private int mMatchResult;
+    private int mLifeTransationType;
 
     private static PlayFragment instance;
 
@@ -134,7 +139,7 @@ public class PlayFragment extends Fragment {
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScore);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
         iniUser = new User();
-
+        readUser();
 
 
 
@@ -145,7 +150,7 @@ public class PlayFragment extends Fragment {
         Log.d("FragPlay","onViewCreated");
         super.onViewCreated(view, savedInstanceState);
 
-        readUser();
+
     }
 
     private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
@@ -204,6 +209,12 @@ public class PlayFragment extends Fragment {
         mImgViewRock.setOnClickListener(null);
         mImgViewPaper.setOnClickListener(null);
 
+        mCoins = Integer.valueOf(mTxtViewCoins.getText().toString());
+        mScore = Integer.valueOf(mTxtViewScore.getText().toString());
+        mLives = Integer.valueOf(mTxtViewLives.getText().toString());
+
+        Log.d("mCoins,S,L",mCoins+","+mScore+","+mLives);
+        mMatchResult = 0;
         mTxtViewCounter.setVisibility(View.VISIBLE);
 
         new CountDownTimer(4000, 1000) {
@@ -229,10 +240,13 @@ public class PlayFragment extends Fragment {
                         mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
                         if(iComPlay == 1){
                             result = R.string.text_tie;
+                            mMatchResult = MatchResult.Tie.value;
                         }else if(iComPlay == 2){
                             result = R.string.text_lose;
+                            mMatchResult = MatchResult.Lose.value;
                         }else{
                             result = R.string.text_win;
+                            mMatchResult = MatchResult.Win.value;
                         }
                         break;
                     case R.id.imgViewRock:
@@ -241,10 +255,13 @@ public class PlayFragment extends Fragment {
                         mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
                         if(iComPlay == 1){
                             result = R.string.text_win;
+                            mMatchResult = MatchResult.Win.value;
                         }else if(iComPlay == 2){
                             result = R.string.text_tie;
+                            mMatchResult = MatchResult.Tie.value;
                         }else{
                             result = R.string.text_lose;
+                            mMatchResult = MatchResult.Lose.value;
                         }
                         break;
                     case R.id.imgViewPaper:
@@ -253,10 +270,13 @@ public class PlayFragment extends Fragment {
                         mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
                         if(iComPlay == 1){
                             result = R.string.text_lose;
+                            mMatchResult = MatchResult.Lose.value;
                         }else if(iComPlay == 2){
                             result = R.string.text_win;
+                            mMatchResult = MatchResult.Win.value;
                         }else{
                             result = R.string.text_tie;
+                            mMatchResult = MatchResult.Tie.value;
                         }
                         break;
                 }
@@ -267,7 +287,21 @@ public class PlayFragment extends Fragment {
                 }else{
                     mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
                 }
-                Log.d("Result:", String.valueOf(result));
+                int mr = mMatchResult;
+                switch (mMatchResult){
+                    case 1 :
+                        mScore+=10;
+                        mLives-=1;
+                        break;
+                    case 2 :
+                        mScore+=100;
+                        mLives-=1;
+                        break;
+
+                }
+
+
+                Log.d("Result:", String.valueOf(result)+","+mScore+","+mLives);
 
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
 //                    mTxtViewResult.setText(result);
@@ -280,8 +314,10 @@ public class PlayFragment extends Fragment {
                 dialog.show();
                 dialog.getWindow().setLayout(1200, 650);
 
-                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
-
+//                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
+                mTxtViewScore.setText(String.valueOf(mScore));
+                mTxtViewLives.setText(String.valueOf(mLives));
+                updateUser(user.getUid());
                 new CountDownTimer(2000, 1000) {
                     //mTxtViewCounter.setVisibility(v.VISIBLE );
                     @Override
@@ -297,6 +333,7 @@ public class PlayFragment extends Fragment {
                         mImgViewRock.setOnClickListener(imgViewPlayOnClick);
                         mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
                         mImgViewPlayer.setImageResource(R.drawable.img_cardback);
+
                         ((MainActivity)getActivity()).setBottomNavListener();
                     }
                 }.start();
@@ -357,6 +394,54 @@ public class PlayFragment extends Fragment {
             }
 
         });
+    }
+
+    private void updateUser(final String userId) {
+        Log.d("☆Firebase", "updateUser");
+        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+
+        mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                User user = new User();
+
+                user.setCoins(Long.valueOf(mCoins));
+                user.setScore(Long.valueOf(mScore));
+                Map<String, Object> userValues = user.toMap();
+//                Map<String, Object> childUpdates = new HashMap<>();
+//                childUpdates.put("/posts/" + key, postValues);
+//                childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+//                mWriteDatabase.updateChildren(userValues);
+//                mWriteDatabase.setValue(user);
+
+                Map newUserData = new HashMap();
+                    newUserData.put("lives", Long.valueOf(mLives));
+                    newUserData.put("score",Long.valueOf(mScore));
+                mWriteDatabase.updateChildren(newUserData);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+        });
+    }
+
+    public enum MatchResult {
+        Lose(1),
+        Win(2),
+        Tie(3);
+
+        private int value;
+
+        private MatchResult(int value) {
+            this.value = value;
+        }
+
+        public int MatchResult() {
+            return this.value;
+        }
     }
 
 }//程式結尾

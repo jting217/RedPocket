@@ -142,9 +142,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         Log.d("MainActivity","onStart");
         super.onStart();
-        if(textPlayMusic.getText().equals("1")) {
-            startService(svc);
-        }
     }
 
     @Override

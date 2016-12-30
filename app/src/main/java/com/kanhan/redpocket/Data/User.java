@@ -233,16 +233,25 @@ public class User {
 
     }
 
-//    @Exclude
-//    public Map<String, Object> toMap() {
-//        HashMap<String, Object> result = new HashMap<>();
-//        result.put("coins", coins);
-//        result.put("dailyPlayTimes", dailyPlayTimes);
-//        result.put("dailyResetDate", dailyResetDate);
-//        result.put("dailyWinTimes", dailyWinTimes);
-//        result.put("dice", dice);
-//        result.put("stars", stars);
-//
-//        return result;
-//    }
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("coins", coins);
+        result.put("dailyPlayTimes", dailyPlayTimes);
+        result.put("dailyResetDate", dailyResetDate);
+        result.put("dailyWinTimes", dailyWinTimes);
+        result.put("dice", dice);
+        result.put("goldenHand", goldenHand);
+        result.put("ironFirst", ironFirst);
+        result.put("lifeCounter", lifeCounter);
+        result.put("lives", lives);
+        result.put("mindControl", mindControl);
+        result.put("specialTimeRewardGetDate", specialTimeRewardGetDate);
+        result.put("victory", victory);
+        result.put("winWithPaper", winWithPaper);
+        result.put("winWithRock", winWithRock);
+        result.put("winWithScissor", winWithScissor);
+
+        return result;
+    }
 }
