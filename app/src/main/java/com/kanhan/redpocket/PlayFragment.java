@@ -64,6 +64,8 @@ public class PlayFragment extends Fragment {
 
     private int mColor;
 
+    private boolean chkReaded = false;
+
     private OnFragmentInteractionListener mListener;
 
 
@@ -156,8 +158,9 @@ public class PlayFragment extends Fragment {
     private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
             Log.d("FragPlay","OnClickListener");
-
-            PlayGame(v);
+            if(chkReaded) {
+                PlayGame(v);
+            }
         }
     };
 
@@ -288,14 +291,19 @@ public class PlayFragment extends Fragment {
                     mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
                 }
                 int mr = mMatchResult;
+                int getScore = 0 , getLives = 0;
                 switch (mMatchResult){
                     case 1 :
                         mScore+=10;
                         mLives-=1;
+                        getScore = 10;
+                        getLives = -1;
                         break;
                     case 2 :
                         mScore+=100;
                         mLives-=1;
+                        getScore = 100;
+                        getLives = -1;
                         break;
 
                 }
@@ -306,7 +314,7 @@ public class PlayFragment extends Fragment {
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
 //                    mTxtViewResult.setText(result);
 
-                CustomDialog dialog = new  CustomDialog(v.getContext(),getString(result),"10","10",new CustomDialog.ICustomDialogEventListener() {
+                CustomDialog dialog = new  CustomDialog(v.getContext(),getString(result),String.valueOf(getLives),String.valueOf(getScore),new CustomDialog.ICustomDialogEventListener() {
                     @Override
                     public void customDialogEvent(int id) {
                     }
@@ -384,6 +392,8 @@ public class PlayFragment extends Fragment {
                     mTxtViewCoins.setText(String.valueOf(u.getCoins()));
                     mTxtViewScore.setText(String.valueOf(u.getScore()));
                     mTxtViewLives.setText(String.valueOf(u.getLives()));
+
+                    chkReaded = true;
                 }
 
             }
@@ -419,6 +429,12 @@ public class PlayFragment extends Fragment {
                     newUserData.put("lives", Long.valueOf(mLives));
                     newUserData.put("score",Long.valueOf(mScore));
                 mWriteDatabase.updateChildren(newUserData);
+
+                mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId +"/transatinLogPlay/"+GetRightNow());
+                Map transatinLogPlay = new HashMap();
+                transatinLogPlay.put("test",1);
+                transatinLogPlay.put("ss",2);
+                mWriteDatabase.setValue(transatinLogPlay);
             }
 
             @Override
@@ -442,6 +458,12 @@ public class PlayFragment extends Fragment {
         public int MatchResult() {
             return this.value;
         }
+    }
+
+    private Long GetRightNow(){
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        return tsLong;
     }
 
 }//程式結尾
