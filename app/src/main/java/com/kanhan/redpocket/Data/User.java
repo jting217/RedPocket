@@ -30,10 +30,10 @@ public class User {
     private Long winWithPaper;
     private Long winWithRock;
     private Long winWithScissor;
-    public Map<String, String> transactionLogCoin = new HashMap<>();
-    public Map<String, String> transactionLogLife = new HashMap<>();
-    public Map<String, String> transactionLogPlay = new HashMap<>();
-    public Map<String, String> transactionLogTool = new HashMap<>();
+    public Map<String, Object> transactionLogCoin = new HashMap<>();
+    public Map<String, Object> transactionLogLife = new HashMap<>();
+    public Map<String, Object> transactionLogPlay = new HashMap<>();
+    public Map<String, Object> transactionLogTool = new HashMap<>();
 
     public User() {
     }
@@ -178,35 +178,35 @@ public class User {
         this.winWithScissor = winWithScissor;
     }
 
-    public Map<String, String> getTransactionLogCoin() {
+    public Map<String, Object> getTransactionLogCoin() {
         return transactionLogCoin;
     }
 
-    public void setTransactionLogCoin(Map<String, String> transactionLogCoin) {
+    public void setTransactionLogCoin(Map<String, Object> transactionLogCoin) {
         this.transactionLogCoin = transactionLogCoin;
     }
 
-    public Map<String, String> getTransactionLogLife() {
+    public Map<String, Object> getTransactionLogLife() {
         return transactionLogLife;
     }
 
-    public void setTransactionLogLife(Map<String, String> transactionLogLife) {
+    public void setTransactionLogLife(Map<String, Object> transactionLogLife) {
         this.transactionLogLife = transactionLogLife;
     }
 
-    public Map<String, String> getTransactionLogPlay() {
+    public Map<String, Object> getTransactionLogPlay() {
         return transactionLogPlay;
     }
 
-    public void setTransactionLogPlay(Map<String, String> transactionLogPlay) {
+    public void setTransactionLogPlay(Map<String, Object> transactionLogPlay) {
         this.transactionLogPlay = transactionLogPlay;
     }
 
-    public Map<String, String> getTransactionLogTool() {
+    public Map<String, Object> getTransactionLogTool() {
         return transactionLogTool;
     }
 
-    public void setTransactionLogTool(Map<String, String> transactionLogTool) {
+    public void setTransactionLogTool(Map<String, Object> transactionLogTool) {
         this.transactionLogTool = transactionLogTool;
     }
 

@@ -56,8 +56,8 @@ public class PlayFragment extends Fragment {
     private int mCoins;
     private int mScore;
     private int mLives;
-    private int mMatchResult;
-    private int mLifeTransationType;
+    private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
+    private int ltlogType, ltlogTransaction;
 
     private static PlayFragment instance;
 
@@ -207,6 +207,8 @@ public class PlayFragment extends Fragment {
 
     public void PlayGame(final View v){
         Log.d("FragPlay","PlayGame");
+        ptlogMultiple = 1;
+
         ((MainActivity)getActivity()).removeBottomNavListener();
         mImgViewScissors.setOnClickListener(null);
         mImgViewRock.setOnClickListener(null);
@@ -217,7 +219,7 @@ public class PlayFragment extends Fragment {
         mLives = Integer.valueOf(mTxtViewLives.getText().toString());
 
         Log.d("mCoins,S,L",mCoins+","+mScore+","+mLives);
-        mMatchResult = 0;
+        ptlogMatchResult = 0;
         mTxtViewCounter.setVisibility(View.VISIBLE);
 
         new CountDownTimer(4000, 1000) {
@@ -235,51 +237,60 @@ public class PlayFragment extends Fragment {
                 int result=0;
                 //Player
                 int iComPlay = (int) (Math.random() * 3 + 1);
-
+                if(iComPlay == 1){
+                    ptlogComputerInput = Input.Scissor.value;
+                }else if(iComPlay == 2){
+                    ptlogComputerInput = Input.Rock.value;
+                }else{
+                    ptlogComputerInput = Input.Paper.value;
+                }
                 switch (v.getId()) {
                     case R.id.imgViewScissors:
                         // do something
+                        ptlogUserInput = Input.Scissor.value;
                         Log.d("tag", "剪刀");
                         mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
                         if(iComPlay == 1){
                             result = R.string.text_tie;
-                            mMatchResult = MatchResult.Tie.value;
+                            ptlogMatchResult = MatchResult.Tie.value;
                         }else if(iComPlay == 2){
                             result = R.string.text_lose;
-                            mMatchResult = MatchResult.Lose.value;
+                            ptlogMatchResult = MatchResult.Lose.value;
                         }else{
                             result = R.string.text_win;
-                            mMatchResult = MatchResult.Win.value;
+                            ptlogMatchResult = MatchResult.Win.value;
                         }
                         break;
                     case R.id.imgViewRock:
                         // do something else
+                        ptlogUserInput = Input.Rock.value;
                         Log.d("tag", "石頭");
                         mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
                         if(iComPlay == 1){
                             result = R.string.text_win;
-                            mMatchResult = MatchResult.Win.value;
+                            ptlogMatchResult = MatchResult.Win.value;
                         }else if(iComPlay == 2){
                             result = R.string.text_tie;
-                            mMatchResult = MatchResult.Tie.value;
+                            ptlogMatchResult = MatchResult.Tie.value;
                         }else{
                             result = R.string.text_lose;
-                            mMatchResult = MatchResult.Lose.value;
+                            ptlogMatchResult = MatchResult.Lose.value;
                         }
                         break;
                     case R.id.imgViewPaper:
+                        ptlogUserInput = Input.Paper.value;
                         // i'm lazy, do nothing
                         Log.d("tag", "布");
                         mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
                         if(iComPlay == 1){
                             result = R.string.text_lose;
-                            mMatchResult = MatchResult.Lose.value;
+                            ptlogMatchResult = MatchResult.Lose.value;
                         }else if(iComPlay == 2){
                             result = R.string.text_win;
-                            mMatchResult = MatchResult.Win.value;
+                            ptlogMatchResult = MatchResult.Win.value;
                         }else{
                             result = R.string.text_tie;
-                            mMatchResult = MatchResult.Tie.value;
+                            ptlogMatchResult = MatchResult.Tie.value;
                         }
                         break;
                 }
@@ -290,9 +301,9 @@ public class PlayFragment extends Fragment {
                 }else{
                     mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
                 }
-                int mr = mMatchResult;
+                int mr = ptlogMatchResult;
                 int getScore = 0 , getLives = 0;
-                switch (mMatchResult){
+                switch (ptlogMatchResult){
                     case 1 :
                         mScore+=10;
                         mLives-=1;
@@ -308,9 +319,12 @@ public class PlayFragment extends Fragment {
 
                 }
 
+                ptlogScore = getScore;
+                ltlogTransaction = getLives;
+                ltlogType = LifeTransactionLife.PlayGame.value;
 
                 Log.d("Result:", String.valueOf(result)+","+mScore+","+mLives);
-
+                ptlogTotalScore = mScore;
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
 //                    mTxtViewResult.setText(result);
 
@@ -430,11 +444,22 @@ public class PlayFragment extends Fragment {
                     newUserData.put("score",Long.valueOf(mScore));
                 mWriteDatabase.updateChildren(newUserData);
 
-                mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId +"/transatinLogPlay/"+GetRightNow());
-                Map transatinLogPlay = new HashMap();
-                transatinLogPlay.put("test",1);
-                transatinLogPlay.put("ss",2);
-                mWriteDatabase.setValue(transatinLogPlay);
+                Long rightNow = GetRightNow();
+                mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId +"/transactionLogPlay/"+rightNow);
+                Map transactionLogPlay = new HashMap();
+                transactionLogPlay.put("multiple", ptlogMultiple);
+                transactionLogPlay.put("matchResult", ptlogMatchResult);
+                transactionLogPlay.put("score", ptlogScore);
+                transactionLogPlay.put("userInput", ptlogUserInput);
+                transactionLogPlay.put("computerInput", ptlogComputerInput);
+                transactionLogPlay.put("totalScore", ptlogTotalScore);
+                mWriteDatabase.setValue(transactionLogPlay);
+
+                mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId +"/transactionLogLife/"+rightNow);
+                Map transactionLogLife = new HashMap();
+                transactionLogLife.put("type", ltlogType);
+                transactionLogLife.put("transaction", ltlogTransaction);
+                mWriteDatabase.setValue(transactionLogLife);
             }
 
             @Override
@@ -454,7 +479,36 @@ public class PlayFragment extends Fragment {
         private MatchResult(int value) {
             this.value = value;
         }
+        public int MatchResult() {
+            return this.value;
+        }
+    }
 
+    public enum Input {
+        Paper(1),
+        Rock(2),
+        Scissor(3);
+
+        private int value;
+
+        private Input(int value) {
+            this.value = value;
+        }
+        public int MatchResult() {
+            return this.value;
+        }
+    }
+
+    public enum LifeTransactionLife {
+        SignUpReward(1),
+        PlayGame(2),
+        Purchase(3);
+
+        private int value;
+
+        private LifeTransactionLife(int value) {
+            this.value = value;
+        }
         public int MatchResult() {
             return this.value;
         }
