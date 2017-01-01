@@ -15,15 +15,19 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.kanhan.redpocket.Data.Board;
 import com.kanhan.redpocket.Data.User;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +53,7 @@ public class PlayFragment extends Fragment {
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private User iniUser;
-    private DatabaseReference mWriteDatabase, mReadDatabase;
+    private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives;
@@ -142,6 +146,7 @@ public class PlayFragment extends Fragment {
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
         iniUser = new User();
         readUser();
+        board();
 
 
 
@@ -383,6 +388,45 @@ public class PlayFragment extends Fragment {
         super.onStop();
     }
 
+    private void board() {
+        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
+        Query queryRef = mQueryDatabase.orderByValue().limitToLast(20);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+//                Log.w("☆firebase", snapshot.getKey()+""+snapshot.getValue());
+                ArrayList<HashMap<String, Object>> value = (ArrayList<HashMap<String, Object>>) snapshot.getValue();
+                for(HashMap<String, Object> b: value)
+                {
+                    Map<String, Object> map =  b;
+                    for (Object key : map.keySet()) {
+                        Log.w("☆firebase", key + " : " + map.get(key) + map.get(key).getClass());
+                    }
+                }
+
+                // do some stuff once
+//                Board b = snapshot.getValue(Board.class);
+//                if(b != null){
+//                   // 以下這段也可以用！
+//                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+//
+//                    //Adding it to a string
+//                    for (Object key : map.keySet()) {
+//                        Log.w("☆firebase", key + " : " + map.get(key) + map.get(key).getClass());
+//                    }
+//
+//                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+
+        });
+
+    }
     private void readUser() {
         Log.d("☆Firebase", "readUser");
         mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
