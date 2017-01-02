@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -30,6 +32,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 /**
@@ -50,13 +54,15 @@ public class PlayFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private int tsec=0,csec=0,cmin=0;
+    private boolean startflag=false;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private User iniUser;
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
-    private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives;
+    private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter;
     private int mCoins;
     private int mScore;
     private int mLives;
@@ -140,6 +146,7 @@ public class PlayFragment extends Fragment {
         mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
 
         mTxtViewCounter = (TextView) getView().findViewById(R.id.txtViewCounter);
+        mTxtViewPlayCounter = (TextView) getView().findViewById(R.id.txtViewPlayCounter);
         mTxtViewResult = (TextView) getView().findViewById(R.id.txtViewResult);
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScore);
@@ -148,7 +155,15 @@ public class PlayFragment extends Fragment {
         readUser();
         board();
 
+        //宣告Timer
 
+        Timer timer01 =new Timer();
+
+        //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
+        tsec=300;
+        timer01.schedule(task, 0,1000);
+
+        startflag=true;
 
     }
 
@@ -225,20 +240,20 @@ public class PlayFragment extends Fragment {
 
         Log.d("mCoins,S,L",mCoins+","+mScore+","+mLives);
         ptlogMatchResult = 0;
-        mTxtViewCounter.setVisibility(View.VISIBLE);
+        mTxtViewPlayCounter.setVisibility(View.VISIBLE);
 
         new CountDownTimer(4000, 1000) {
             //mTxtViewCounter.setVisibility(v.VISIBLE );
             @Override
             public void onTick(long millisUntilFinished) {
                 //倒數秒數中要做的事
-                mTxtViewCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
+                mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
             }
 
             @Override
             public void onFinish() {
                 //倒數完成後要做的事
-                mTxtViewCounter.setVisibility(View.INVISIBLE);
+                mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
                 int result=0;
                 //Player
                 int iComPlay = (int) (Math.random() * 3 + 1);
@@ -563,5 +578,51 @@ public class PlayFragment extends Fragment {
         String ts = tsLong.toString();
         return tsLong;
     }
+
+    //TimerTask無法直接改變元件因此要透過Handler來當橋樑
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            switch (msg.what) {
+                case 1:
+                    if(tsec != 0) {
+                        csec = tsec % 60;
+                        cmin = tsec / 60;
+                        String s = "";
+                        if (cmin < 10) {
+                            s = "0" + cmin;
+                        } else {
+                            s = "" + cmin;
+                        }
+                        if (csec < 10) {
+                            s = s + ":0" + csec;
+                        } else {
+                            s = s + ":" + csec;
+                        }
+                        //s字串為00:00格式
+                        mTxtViewCounter.setText(s);
+                        break;
+                    }else{
+                        tsec=300;
+                    }
+            }
+        }
+    };
+    private TimerTask task = new TimerTask(){
+        @Override
+        public void run() {
+        // TODO Auto-generated method stub
+//            Log.w("☆task",String.valueOf(startflag));
+            if (startflag){
+                //如果startflag是true則每秒tsec+1
+                tsec--;
+                Message message = new Message();
+                //傳送訊息1
+                message.what =1;
+                handler.sendMessage(message);
+            }
+        }
+    };
 
 }//程式結尾

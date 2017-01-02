@@ -93,7 +93,7 @@
                 android:textColor="@color/colorGray01"
                 android:textSize="12sp"
                 android:textAlignment="center"
-                android:id="@+id/textCounter"
+                android:id="@+id/txtViewCounter"
                 android:layout_alignBaseline="@+id/textBuyMore"
                 android:layout_alignBottom="@+id/textBuyMore"
                 android:layout_alignStart="@+id/txtViewLives" />
@@ -159,7 +159,7 @@
                 android:textSize="95dp"
                 android:textAlignment="center"
                 android:textColor="@color/colorAccent"
-                android:id="@+id/txtViewCounter"
+                android:id="@+id/txtViewPlayCounter"
                 android:visibility="invisible"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true" />
