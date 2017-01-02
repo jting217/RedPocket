@@ -68,6 +68,7 @@ public class PlayFragment extends Fragment {
     private int mLives;
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
+    private boolean updatePlayResult = false, updateGetLife = false;
 
     private static PlayFragment instance;
 
@@ -357,9 +358,8 @@ public class PlayFragment extends Fragment {
                 dialog.getWindow().setLayout(1200, 650);
 
 //                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
-                mTxtViewScore.setText(String.valueOf(mScore));
-                mTxtViewLives.setText(String.valueOf(mLives));
-                updateUser(user.getUid());
+
+                updateUser(user.getUid(),LifeTransactionLife.PlayGame.value);
                 new CountDownTimer(2000, 1000) {
                     //mTxtViewCounter.setVisibility(v.VISIBLE );
                     @Override
@@ -479,7 +479,7 @@ public class PlayFragment extends Fragment {
         });
     }
 
-    private void updateUser(final String userId) {
+    private void updateUser(final String userId, final int when) {
         Log.d("☆Firebase", "updateUser");
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
@@ -499,26 +499,38 @@ public class PlayFragment extends Fragment {
 //                mWriteDatabase.setValue(user);
 
                 Map newUserData = new HashMap();
+                if(when == LifeTransactionLife.PlayGame.value)
+                {
                     newUserData.put("lives", Long.valueOf(mLives));
-                    newUserData.put("score",Long.valueOf(mScore));
+                    newUserData.put("score", Long.valueOf(mScore));
+                }else if(when == LifeTransactionLife.FiveMinutesTimer.value) {
+                    newUserData.put("lives", Long.valueOf(mLives));
+                }
+
+
                 mWriteDatabase.updateChildren(newUserData);
 
                 Long rightNow = GetRightNow();
-                mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId +"/transactionLogPlay/"+rightNow);
-                Map transactionLogPlay = new HashMap();
-                transactionLogPlay.put("multiple", ptlogMultiple);
-                transactionLogPlay.put("matchResult", ptlogMatchResult);
-                transactionLogPlay.put("score", ptlogScore);
-                transactionLogPlay.put("userInput", ptlogUserInput);
-                transactionLogPlay.put("computerInput", ptlogComputerInput);
-                transactionLogPlay.put("totalScore", ptlogTotalScore);
-                mWriteDatabase.setValue(transactionLogPlay);
-
+                if(when == LifeTransactionLife.PlayGame.value) {
+                    mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId + "/transactionLogPlay/" + rightNow);
+                    Map transactionLogPlay = new HashMap();
+                    transactionLogPlay.put("multiple", ptlogMultiple);
+                    transactionLogPlay.put("matchResult", ptlogMatchResult);
+                    transactionLogPlay.put("score", ptlogScore);
+                    transactionLogPlay.put("userInput", ptlogUserInput);
+                    transactionLogPlay.put("computerInput", ptlogComputerInput);
+                    transactionLogPlay.put("totalScore", ptlogTotalScore);
+                    mWriteDatabase.setValue(transactionLogPlay);
+                }
                 mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId +"/transactionLogLife/"+rightNow);
                 Map transactionLogLife = new HashMap();
                 transactionLogLife.put("type", ltlogType);
                 transactionLogLife.put("transaction", ltlogTransaction);
                 mWriteDatabase.setValue(transactionLogLife);
+
+
+                mTxtViewScore.setText(String.valueOf(mScore));
+                mTxtViewLives.setText(String.valueOf(mLives));
             }
 
             @Override
@@ -527,6 +539,8 @@ public class PlayFragment extends Fragment {
             }
         });
     }
+
+
 
     public enum MatchResult {
         Lose(1),
@@ -561,7 +575,8 @@ public class PlayFragment extends Fragment {
     public enum LifeTransactionLife {
         SignUpReward(1),
         PlayGame(2),
-        Purchase(3);
+        Purchase(3),
+        FiveMinutesTimer(4);
 
         private int value;
 
@@ -605,6 +620,10 @@ public class PlayFragment extends Fragment {
                         break;
                     }else{
                         tsec=300;
+                        mLives+=1;
+                        ltlogTransaction = 1;
+                        ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
+                        updateUser(user.getUid(),LifeTransactionLife.FiveMinutesTimer.value);
                     }
             }
         }
