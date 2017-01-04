@@ -17,16 +17,13 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.kanhan.redpocket.Data.Board;
 import com.kanhan.redpocket.Data.User;
-
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,7 +51,7 @@ public class PlayFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private int tsec=0,csec=0,cmin=0;
+    private int tsec=0,csec=0,cmin=0,setTsec=120;
     private boolean startflag=false;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -161,7 +158,7 @@ public class PlayFragment extends Fragment {
         Timer timer01 =new Timer();
 
         //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
-        tsec=300;
+        tsec=setTsec;
         timer01.schedule(task, 0,1000);
 
         startflag=true;
@@ -619,7 +616,7 @@ public class PlayFragment extends Fragment {
                         mTxtViewCounter.setText(s);
                         break;
                     }else{
-                        tsec=300;
+                        tsec=setTsec;
                         mLives+=1;
                         ltlogTransaction = 1;
                         ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
