@@ -109,6 +109,8 @@ public class PlayFragment extends Fragment {
         return instance;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d("FragPlay","onCreate");
@@ -408,11 +410,12 @@ public class PlayFragment extends Fragment {
 
     @Override
     public void onStop() {
-        tmpTimer = GetRightNow();
-        Log.d("FragPlay","onStop->"+tmpTimer+","+tsec);
-        updateTimer(user.getUid(),tmpTimer);
         super.onStop();
+        Log.d("FragPlay","onStop->");
+        updateTimer(user.getUid());
+
     }
+
 
     @Override
     public void onStart() {
@@ -583,8 +586,9 @@ public class PlayFragment extends Fragment {
                 transactionLogLife.put("transaction", ltlogTransaction);
                 mWriteDatabase.setValue(transactionLogLife);
 
-
-                mTxtViewScore.setText(String.valueOf(mScore));
+                if(when == LifeTransactionLife.PlayGame.value) {
+                    mTxtViewScore.setText(String.valueOf(mScore));
+                }
                 mTxtViewLives.setText(String.valueOf(mLives));
             }
 
@@ -595,8 +599,9 @@ public class PlayFragment extends Fragment {
         });
     }
 
-    private void updateTimer(final String userId,final Long rightNow) {
-
+    private void updateTimer(final String userId) {
+        final Long rightNow = GetRightNow() - (mSystemPreferences.getCounterSec() - tsec);
+        Log.d("updateTimer",String.valueOf(rightNow));
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
         mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -721,7 +726,7 @@ public class PlayFragment extends Fragment {
     };
 
     private void CreateTimer(Long lifeCounter){
-        Log.d("CreateTimer",String.valueOf(lifeCounter));
+//        Log.d("CreateTimer",String.valueOf(lifeCounter));
         //(GetRightNow()-lifeCounter)/300=
         //宣告Timer
         if(timer01 != null){
@@ -748,7 +753,7 @@ public class PlayFragment extends Fragment {
                     updateUser(user.getUid(),LifeTransactionLife.FiveMinutesTimer.value);
                 }
                 tsec = (int)countSec;
-                Log.d("firstCreatTimer",rightNow+","+lifeCounter+","+countSec+","+getLife);
+                Log.d("firstCreatTimer",rightNow+","+lifeCounter+","+countSec+","+getLife+","+mSystemPreferences.getCounterSec());
             }
             isFirstCreatTimer = false;
         }
