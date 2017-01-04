@@ -87,7 +87,7 @@
                 android:layout_alignEnd="@+id/imageCoin" />
 
             <TextView
-                android:text="01:13"
+                android:text="00:00"
                 android:layout_width="92dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorGray01"

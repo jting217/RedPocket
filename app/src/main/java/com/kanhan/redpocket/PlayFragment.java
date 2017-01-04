@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
 import java.text.SimpleDateFormat;
@@ -70,6 +71,8 @@ public class PlayFragment extends Fragment {
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
     private boolean updatePlayResult = false, updateGetLife = false;
+    private static SystemPreferences mSystemPreferences;
+    private long mLifeCounter;
 
     private static PlayFragment instance;
 
@@ -407,7 +410,7 @@ public class PlayFragment extends Fragment {
     public void onStop() {
         tmpTimer = GetRightNow();
         Log.d("FragPlay","onStop->"+tmpTimer+","+tsec);
-
+        updateTimer(user.getUid(),tmpTimer);
         super.onStop();
     }
 
@@ -456,6 +459,38 @@ public class PlayFragment extends Fragment {
         });
 
     }
+
+    private void readSystemPreferences(final Long lifeCounter) {
+        Log.d("☆Firebase(playFrag)","readSystemPreferences");
+        mReadDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
+
+        mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                SystemPreferences sp = snapshot.getValue(SystemPreferences.class);
+                //以下這段也可以用！
+//                Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+//                //Adding it to a string
+//                for (Object key : map.keySet()) {
+//                    Log.w("firebase",key + " : " + map.get(key) +  map.get(key).getClass());
+//                }
+                mSystemPreferences = sp;
+                setTsec = mSystemPreferences.getCounterSec().intValue();
+                Log.w("☆firebase(playFrag)",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getCounterSec()));
+                CreateTimer(lifeCounter);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed(pF) " , databaseError.getMessage());
+            }
+
+        });
+
+    }
+
+
     private void readUser(final int when) {
         Log.d("☆Firebase", "readUser->"+String.valueOf(FragmentState.values()[when-1]));
         mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
@@ -483,7 +518,9 @@ public class PlayFragment extends Fragment {
                     chkReaded = true;
 
                     if(when == FragmentState.OnIni.value) {
-                        CreateTimer();
+//                        mLifeCounter = u.getLifeCounter();
+                        readSystemPreferences(u.getLifeCounter());
+                        //CreateTimer(u.getLifeCounter());
                     }
                 }
 
@@ -509,7 +546,7 @@ public class PlayFragment extends Fragment {
 
                 user.setCoins(Long.valueOf(mCoins));
                 user.setScore(Long.valueOf(mScore));
-                Map<String, Object> userValues = user.toMap();
+//                Map<String, Object> userValues = user.toMap();
 //                Map<String, Object> childUpdates = new HashMap<>();
 //                childUpdates.put("/posts/" + key, postValues);
 //                childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
@@ -549,6 +586,28 @@ public class PlayFragment extends Fragment {
 
                 mTxtViewScore.setText(String.valueOf(mScore));
                 mTxtViewLives.setText(String.valueOf(mLives));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+        });
+    }
+
+    private void updateTimer(final String userId,final Long rightNow) {
+
+        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+
+        mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                Map newUserData = new HashMap();
+
+                newUserData.put("lifeCounter", rightNow);
+
+                mWriteDatabase.updateChildren(newUserData);
             }
 
             @Override
@@ -651,7 +710,7 @@ public class PlayFragment extends Fragment {
                         break;
                     }else{
                         mLives = Integer.valueOf(mTxtViewLives.getText().toString());
-                        tsec = setTsec;
+                        tsec = mSystemPreferences.getCounterSec().intValue();
                         mLives+=1;
                         ltlogTransaction = 1;
                         ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
@@ -661,7 +720,9 @@ public class PlayFragment extends Fragment {
         }
     };
 
-    private void CreateTimer(){
+    private void CreateTimer(Long lifeCounter){
+        Log.d("CreateTimer",String.valueOf(lifeCounter));
+        //(GetRightNow()-lifeCounter)/300=
         //宣告Timer
         if(timer01 != null){
             timer01.purge();
@@ -672,7 +733,23 @@ public class PlayFragment extends Fragment {
         CreateTimerTask();;
         //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
         if(isFirstCreatTimer) {
-            tsec = setTsec;
+            if(lifeCounter == 0){
+                tsec = setTsec;
+            }else {
+                long rightNow = GetRightNow();
+                long countSec = mSystemPreferences.getCounterSec() - ((rightNow - lifeCounter) % mSystemPreferences.getCounterSec());
+                long getLife = ((rightNow - lifeCounter) / mSystemPreferences.getCounterSec());
+                if(getLife>0){
+                    mLives = Integer.valueOf(mTxtViewLives.getText().toString());
+//                    tsec = mSystemPreferences.getCounterSec().intValue();
+                    mLives+=getLife;
+                    ltlogTransaction = (int) getLife;
+                    ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
+                    updateUser(user.getUid(),LifeTransactionLife.FiveMinutesTimer.value);
+                }
+                tsec = (int)countSec;
+                Log.d("firstCreatTimer",rightNow+","+lifeCounter+","+countSec+","+getLife);
+            }
             isFirstCreatTimer = false;
         }
         timer01.schedule(timerTask, 0,1000);
