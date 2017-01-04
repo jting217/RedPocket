@@ -51,10 +51,12 @@ public class PlayFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private int tsec=0,csec=0,cmin=0,setTsec=50;
+    private static int tsec=0;
+    private int csec=0,cmin=0,setTsec=50;
     private static Timer timer01;
     private TimerTask timerTask;
     private boolean startflag=false;
+    private static long tmpTimer;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private User iniUser;
@@ -75,6 +77,7 @@ public class PlayFragment extends Fragment {
     private int mColor;
 
     private boolean chkReaded = false;
+    private static boolean isFirstCreatTimer = true;
 
     private OnFragmentInteractionListener mListener;
 
@@ -152,22 +155,22 @@ public class PlayFragment extends Fragment {
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScore);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
         iniUser = new User();
-        readUser();
+        readUser(FragmentState.OnIni.value);
         board();
 
-        //宣告Timer
-        if(timer01 != null){
-            timer01.purge();
-            timer01.cancel();
-            timer01 = null;
-        }
-        timer01 =new Timer();
-        CreateTimerTask();;
-        //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
-        tsec=setTsec;
-        timer01.schedule(timerTask, 0,1000);
-
-        startflag=true;
+//        //宣告Timer
+//        if(timer01 != null){
+//            timer01.purge();
+//            timer01.cancel();
+//            timer01 = null;
+//        }
+//        timer01 =new Timer();
+//        CreateTimerTask();;
+//        //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
+//        tsec=setTsec;
+//        timer01.schedule(timerTask, 0,1000);
+//
+//        startflag=true;
 
     }
 
@@ -396,14 +399,22 @@ public class PlayFragment extends Fragment {
 
     @Override
     public void onResume() {
-        Log.d("FragPlay","onResume");
+        Log.d("FragPlay","onResume->"+GetRightNow());
         super.onResume();
     }
 
     @Override
     public void onStop() {
-        Log.d("FragPlay","onStop");
+        tmpTimer = GetRightNow();
+        Log.d("FragPlay","onStop->"+tmpTimer+","+tsec);
+
         super.onStop();
+    }
+
+    @Override
+    public void onStart() {
+        Log.d("FragPlay","onStart->"+GetRightNow()+","+tmpTimer+","+tsec);
+        super.onStart();
     }
 
     private void board() {
@@ -445,8 +456,8 @@ public class PlayFragment extends Fragment {
         });
 
     }
-    private void readUser() {
-        Log.d("☆Firebase", "readUser");
+    private void readUser(final int when) {
+        Log.d("☆Firebase", "readUser->"+String.valueOf(FragmentState.values()[when-1]));
         mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -470,6 +481,10 @@ public class PlayFragment extends Fragment {
                     mTxtViewLives.setText(String.valueOf(u.getLives()));
 
                     chkReaded = true;
+
+                    if(when == FragmentState.OnIni.value) {
+                        CreateTimer();
+                    }
                 }
 
             }
@@ -543,6 +558,19 @@ public class PlayFragment extends Fragment {
         });
     }
 
+    public enum FragmentState {
+        OnIni(1),
+        OnStart(2);
+
+        private int value;
+
+        private FragmentState(int value) {
+            this.value = value;
+        }
+        public int FragmentState() {
+            return this.value;
+        }
+    }
 
 
     public enum MatchResult {
@@ -623,7 +651,7 @@ public class PlayFragment extends Fragment {
                         break;
                     }else{
                         mLives = Integer.valueOf(mTxtViewLives.getText().toString());
-                        tsec=setTsec;
+                        tsec = setTsec;
                         mLives+=1;
                         ltlogTransaction = 1;
                         ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
@@ -632,6 +660,25 @@ public class PlayFragment extends Fragment {
             }
         }
     };
+
+    private void CreateTimer(){
+        //宣告Timer
+        if(timer01 != null){
+            timer01.purge();
+            timer01.cancel();
+            timer01 = null;
+        }
+        timer01 =new Timer();
+        CreateTimerTask();;
+        //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
+        if(isFirstCreatTimer) {
+            tsec = setTsec;
+            isFirstCreatTimer = false;
+        }
+        timer01.schedule(timerTask, 0,1000);
+
+        startflag=true;
+    }
     private void CreateTimerTask(){
         timerTask = new TimerTask(){
             @Override
