@@ -51,7 +51,9 @@ public class PlayFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private int tsec=0,csec=0,cmin=0,setTsec=120;
+    private int tsec=0,csec=0,cmin=0,setTsec=50;
+    private static Timer timer01;
+    private TimerTask timerTask;
     private boolean startflag=false;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -154,12 +156,16 @@ public class PlayFragment extends Fragment {
         board();
 
         //宣告Timer
-
-        Timer timer01 =new Timer();
-
+        if(timer01 != null){
+            timer01.purge();
+            timer01.cancel();
+            timer01 = null;
+        }
+        timer01 =new Timer();
+        CreateTimerTask();;
         //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
         tsec=setTsec;
-        timer01.schedule(task, 0,1000);
+        timer01.schedule(timerTask, 0,1000);
 
         startflag=true;
 
@@ -477,7 +483,7 @@ public class PlayFragment extends Fragment {
     }
 
     private void updateUser(final String userId, final int when) {
-        Log.d("☆Firebase", "updateUser");
+        Log.d("☆Firebase",String.valueOf(LifeTransactionLife.values()[when-1]));
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
         mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -616,6 +622,7 @@ public class PlayFragment extends Fragment {
                         mTxtViewCounter.setText(s);
                         break;
                     }else{
+                        mLives = Integer.valueOf(mTxtViewLives.getText().toString());
                         tsec=setTsec;
                         mLives+=1;
                         ltlogTransaction = 1;
@@ -625,20 +632,22 @@ public class PlayFragment extends Fragment {
             }
         }
     };
-    private TimerTask task = new TimerTask(){
-        @Override
-        public void run() {
-        // TODO Auto-generated method stub
+    private void CreateTimerTask(){
+        timerTask = new TimerTask(){
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
 //            Log.w("☆task",String.valueOf(startflag));
-            if (startflag){
-                //如果startflag是true則每秒tsec+1
-                tsec--;
-                Message message = new Message();
-                //傳送訊息1
-                message.what =1;
-                handler.sendMessage(message);
+                if (startflag){
+                    //如果startflag是true則每秒tsec+1
+                    tsec--;
+                    Message message = new Message();
+                    //傳送訊息1
+                    message.what =1;
+                    handler.sendMessage(message);
+                }
             }
-        }
-    };
+        };
+    }
 
 }//程式結尾
