@@ -662,7 +662,7 @@ public class PlayFragment extends Fragment {
         private Input(int value) {
             this.value = value;
         }
-        public int MatchResult() {
+        public int Input() {
             return this.value;
         }
     }
@@ -678,7 +678,7 @@ public class PlayFragment extends Fragment {
         private LifeTransactionLife(int value) {
             this.value = value;
         }
-        public int MatchResult() {
+        public int LifeTransactionLife() {
             return this.value;
         }
     }
