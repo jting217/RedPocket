@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity {
         stopService(svc);
     }
 
+
+
+
     @Override
     protected void onPause() {
         Log.d("MainActivity","onPause");
@@ -181,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
 //                frag = MenuFragment.newInstance(getString(R.string.text_play),
 //                        getColorFromRes(R.color.color_home));
                 frag = null;
-                frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite));
+                frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
                 break;
             case R.id.shops:
                 Log.d("selectFragment","shops");
@@ -230,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void recallPlayFragment(){
         Log.d("MainActivity","");
-        Fragment frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite));
+        Fragment frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 //        ft.add(R.id.container, frag, frag.getTag());
@@ -430,6 +433,14 @@ public class MainActivity extends AppCompatActivity {
     {
         stopService(svc);
         textPlayMusic.setText("0");
+    }
+
+
+
+    private Long GetRightNow(){
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        return tsLong;
     }
 
 

@@ -1,6 +1,8 @@
 package com.kanhan.redpocket;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -48,16 +50,19 @@ public class PlayFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_COLOR = "arg_color";
+    private static final String ARG_PALY_SOUND = "arg_play_sound";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private String mPlaySound;
     private static int tsec=0;
     private int csec=0,cmin=0,setTsec=50;
     private static Timer timer01;
     private TimerTask timerTask;
     private boolean startflag=false;
     private static long tmpTimer;
+    private Intent countDownSound;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private User iniUser;
@@ -94,14 +99,14 @@ public class PlayFragment extends Fragment {
      * @return A new instance of fragment PlayFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PlayFragment newInstance(String param1, int param2) {
+    public static PlayFragment newInstance(String param1, int param2, String playSound) {
         Log.d("FragPlay","newInstance");
 //        if(instance == null){
             instance = new PlayFragment();
             Bundle args = new Bundle();
             args.putString(ARG_PARAM1, param1);
             args.putInt(ARG_COLOR, param2);
-
+            args.putString(ARG_PALY_SOUND, playSound);
             instance.setArguments(args);
 //        }
 //        PlayFragment fragment = new PlayFragment();
@@ -120,6 +125,7 @@ public class PlayFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
             mColor = getArguments().getInt(ARG_COLOR);
+            mPlaySound = getArguments().getString(ARG_PALY_SOUND);
         }else {
 //            mText = savedInstanceState.getString(ARG_TEXT);
             mColor = savedInstanceState.getInt(ARG_COLOR);
@@ -162,6 +168,9 @@ public class PlayFragment extends Fragment {
         iniUser = new User();
         readUser(FragmentState.OnIni.value);
         board();
+
+
+
 
 //        //宣告Timer
 //        if(timer01 != null){
@@ -254,18 +263,27 @@ public class PlayFragment extends Fragment {
         ptlogMatchResult = 0;
         mTxtViewPlayCounter.setVisibility(View.VISIBLE);
 
+        countDownSound = new Intent(getActivity(),CountDownSoundService.class);
+        if(mPlaySound.equals("1")) {
+            getActivity().startService(countDownSound);
+        }
         new CountDownTimer(4000, 1000) {
             //mTxtViewCounter.setVisibility(v.VISIBLE );
+
             @Override
             public void onTick(long millisUntilFinished) {
                 //倒數秒數中要做的事
+
                 mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
             }
 
             @Override
             public void onFinish() {
                 //倒數完成後要做的事
-                mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
+                getActivity().stopService(countDownSound);
+                if(mPlaySound.equals("1")) {
+                    mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
+                }
                 int result=0;
                 //Player
                 int iComPlay = (int) (Math.random() * 3 + 1);
@@ -336,17 +354,37 @@ public class PlayFragment extends Fragment {
                 int mr = ptlogMatchResult;
                 int getScore = 0 , getLives = 0;
                 switch (ptlogMatchResult){
+
                     case 1 :
                         mScore+=10;
                         mLives-=1;
                         getScore = 10;
                         getLives = -1;
+                        if(mPlaySound.equals("1")) {
+                            MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.lose);
+                            mpLose.start();
+                            mpLose.seekTo(0);
+                        }
+//                        mpLose.release();
                         break;
                     case 2 :
                         mScore+=100;
                         mLives-=1;
                         getScore = 100;
                         getLives = -1;
+                        if(mPlaySound.equals("1")) {
+                            MediaPlayer mpWin = MediaPlayer.create(getActivity(), R.raw.win);
+                            mpWin.start();
+                            mpWin.seekTo(0);
+                        }
+//                        mpWin.release();
+                        break;
+                    default:
+                        if(mPlaySound.equals("1")) {
+                            MediaPlayer mpTie = MediaPlayer.create(getActivity(), R.raw.excitement);
+                            mpTie.start();
+                            mpTie.seekTo(0);
+                        }
                         break;
 
                 }
