@@ -332,6 +332,8 @@ public class MainActivity extends AppCompatActivity {
                     user.setWinWithPaper(iniVal);
                     user.setWinWithRock(iniVal);
                     user.setWinWithScissor(iniVal);
+                    user.setStartDateInterval(iniVal);
+                    user.setEndDateInterval(iniVal);
                     user.setLives(mSystemPreferences.getSignupReward());
                     mWriteDatabase.child(userId).setValue(user);
                 }

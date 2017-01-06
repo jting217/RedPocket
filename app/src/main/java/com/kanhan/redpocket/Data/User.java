@@ -18,6 +18,7 @@ public class User {
     private Long dailyResetDate;
     private Long dailyWinTimes;
     private Long dice;
+    private Long endDateInterval;
     private Long goldenHand;
     private Long ironFirst;
     private Long lifeCounter;
@@ -25,6 +26,7 @@ public class User {
     private Long mindControl;
     private Long score;
     private Long specialTimeRewardGetDate;
+    private Long startDateInterval;
     private Long timer;
     private Long victory;
     private Long winWithPaper;
@@ -78,7 +80,13 @@ public class User {
         this.dice = dice;
     }
 
+    public Long getEndDateInterval() {
+        return endDateInterval;
+    }
 
+    public void setEndDateInterval(Long endDateInterval) {
+        this.endDateInterval = endDateInterval;
+    }
 
     public Long getGoldenHand() {
         return goldenHand;
@@ -136,7 +144,13 @@ public class User {
         this.specialTimeRewardGetDate = specialTimeRewardGetDate;
     }
 
+    public Long getStartDateInterval() {
+        return startDateInterval;
+    }
 
+    public void setStartDateInterval(Long startDateInterval) {
+        this.startDateInterval = startDateInterval;
+    }
 
     public Long getTimer() {
         return timer;
@@ -210,8 +224,8 @@ public class User {
         this.transactionLogTool = transactionLogTool;
     }
 
-    public User(Long coins, Long dailyPlayTimes, Long dailyResetDate, Long dailyWinTimes, Long dice, Long goldenHand,
-                Long ironFirst, Long lifeCounter, Long lives, Long mindControl, Long score, Long specialTimeRewardGetDate,
+    public User(Long coins, Long dailyPlayTimes, Long dailyResetDate, Long dailyWinTimes, Long dice, Long startDateInterval, Long goldenHand,
+                Long ironFirst, Long lifeCounter, Long lives, Long mindControl, Long score, Long specialTimeRewardGetDate, Long endDateInterval,
                 Long timer, Long victory, Long winWithPaper, Long winWithRock, Long winWithScissor){//(String userId, String nickName, String email){
 //        this.userId = userId;
         this.coins = coins;
@@ -219,6 +233,7 @@ public class User {
         this.dailyResetDate = dailyResetDate;
         this.dailyWinTimes = dailyWinTimes;
         this.dice = dice;
+        this.startDateInterval = startDateInterval;
         this.goldenHand = goldenHand;
         this.ironFirst = ironFirst;
         this.lifeCounter = lifeCounter;
@@ -226,6 +241,7 @@ public class User {
         this.mindControl = mindControl;
         this.score = score;
         this.specialTimeRewardGetDate = specialTimeRewardGetDate;
+        this.endDateInterval = endDateInterval;
         this.victory = victory;
         this.winWithPaper = winWithPaper;
         this.winWithRock = winWithRock;
@@ -241,12 +257,14 @@ public class User {
         result.put("dailyResetDate", dailyResetDate);
         result.put("dailyWinTimes", dailyWinTimes);
         result.put("dice", dice);
+        result.put("startDateInterval", startDateInterval);
         result.put("goldenHand", goldenHand);
         result.put("ironFirst", ironFirst);
         result.put("lifeCounter", lifeCounter);
         result.put("lives", lives);
         result.put("mindControl", mindControl);
         result.put("specialTimeRewardGetDate", specialTimeRewardGetDate);
+        result.put("endDateInterval", endDateInterval);
         result.put("victory", victory);
         result.put("winWithPaper", winWithPaper);
         result.put("winWithRock", winWithRock);
