@@ -529,7 +529,7 @@ public class PlayFragment extends Fragment {
         Log.e("Get Data2","--------------"+sTime);
 
         mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
-        Query queryRef = mQueryDatabase.orderByChild("startDateInterval").equalTo(sTime);;
+        Query queryRef = mQueryDatabase.orderByChild("startDateInterval").equalTo(sTime);
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
