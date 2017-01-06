@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.kanhan.redpocket.Data.Board;
 import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
@@ -78,6 +79,8 @@ public class PlayFragment extends Fragment {
     private boolean updatePlayResult = false, updateGetLife = false;
     private static SystemPreferences mSystemPreferences;
     private long mLifeCounter;
+    private long mStartDateInterval, mEndDateInterval;
+    private static String mBoardNode = "";
 
     private static PlayFragment instance;
 
@@ -167,7 +170,7 @@ public class PlayFragment extends Fragment {
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
         iniUser = new User();
         readUser(FragmentState.OnIni.value);
-        board();
+
 
 
 
@@ -413,7 +416,7 @@ public class PlayFragment extends Fragment {
 
 //                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
 
-                updateUser(user.getUid(),LifeTransactionLife.PlayGame.value);
+                updateUser(user.getUid(),UpdateUserTimer.PlayGame.value);
                 new CountDownTimer(2000, 1000) {
                     //mTxtViewCounter.setVisibility(v.VISIBLE );
                     @Override
@@ -467,20 +470,36 @@ public class PlayFragment extends Fragment {
     }
 
     private void board() {
+        final Long rightNow = GetRightNow();
         mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
-        Query queryRef = mQueryDatabase.orderByValue().limitToLast(20);
+        Query queryRef = mQueryDatabase.orderByValue().limitToLast(100);
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-//                Log.w("☆firebase", snapshot.getKey()+""+snapshot.getValue());
-                ArrayList<HashMap<String, Object>> value = (ArrayList<HashMap<String, Object>>) snapshot.getValue();
-                for(HashMap<String, Object> b: value)
-                {
-                    Map<String, Object> map =  b;
-                    for (Object key : map.keySet()) {
-                        Log.w("☆firebase", key + " : " + map.get(key) + map.get(key).getClass());
+                Long targetTime = 0L;
+                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
+                    Board b = boardSnapshot.getValue(Board.class);
+                    Log.e("Get Data", boardSnapshot.getKey()+","+b.getStartDateInterval()+","+b.getEndDateInterval());
+                    if(b.getStartDateInterval()<=rightNow && b.getEndDateInterval()>=rightNow){
+                        Log.e("Get Data", boardSnapshot.getKey());
+                        targetTime = b.getStartDateInterval();
+                        mStartDateInterval = b.getStartDateInterval();
+                        mEndDateInterval = b.getEndDateInterval();
+                        updateUser(user.getUid(),UpdateUserTimer.GetNewIntervalDate.value);
+                        break;
                     }
                 }
+
+
+//                ArrayList<HashMap<String, Object>> value = (ArrayList<HashMap<String, Object>>) snapshot.getValue();
+//                for(HashMap<String, Object> b: value)
+//                {
+//
+//                    Map<String, Object> map =  b;
+//                    for (Object key : map.keySet()) {
+//                       Log.w("☆firebase", key + " : " + map.get(key) + map.get(key).getClass());
+//                    }
+//                }
 
                 // do some stuff once
 //                Board b = snapshot.getValue(Board.class);
@@ -502,6 +521,29 @@ public class PlayFragment extends Fragment {
                 Log.e("☆firebase failed: ", databaseError.getMessage());
             }
 
+        });
+
+    }
+
+    private void boardNode(Long sTime) {
+        Log.e("Get Data2","--------------"+sTime);
+
+        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
+        Query queryRef = mQueryDatabase.orderByChild("startDateInterval").equalTo(sTime);;
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
+                    Board b = boardSnapshot.getValue(Board.class);
+                    Log.e("Get Data2", boardSnapshot.getKey()+","+b.getStartDateInterval()+","+b.getEndDateInterval());
+                    mBoardNode = boardSnapshot.getKey();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
         });
 
     }
@@ -548,6 +590,7 @@ public class PlayFragment extends Fragment {
                 User u = snapshot.getValue(User.class);
                 if(u != null){
                     //以下這段也可以用！
+                    Long rightNow = GetRightNow();
                     Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 
                     //Adding it to a string
@@ -568,6 +611,10 @@ public class PlayFragment extends Fragment {
                         readSystemPreferences(u.getLifeCounter());
                         //CreateTimer(u.getLifeCounter());
                     }
+                    if( !(rightNow>=u.getStartDateInterval() && rightNow <= u.getEndDateInterval()) ){
+                        board();
+                    }
+
                 }else{
                     readUser(FragmentState.OnIni.value);
                 }
@@ -583,7 +630,7 @@ public class PlayFragment extends Fragment {
     }
 
     private void updateUser(final String userId, final int when) {
-        Log.d("☆Firebase",String.valueOf(LifeTransactionLife.values()[when-1]));
+        Log.d("☆Firebase",String.valueOf(UpdateUserTimer.values()[when-1]));
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
         mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -602,39 +649,62 @@ public class PlayFragment extends Fragment {
 //                mWriteDatabase.setValue(user);
 
                 Map newUserData = new HashMap();
-                if(when == LifeTransactionLife.PlayGame.value)
+                if(when == UpdateUserTimer.PlayGame.value)
                 {
                     newUserData.put("lives", Long.valueOf(mLives));
                     newUserData.put("score", Long.valueOf(mScore));
-                }else if(when == LifeTransactionLife.FiveMinutesTimer.value) {
+                }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
+                }else if(when == UpdateUserTimer.GetNewIntervalDate.value){
+                    newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
+                    newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
+                    iniUser.setStartDateInterval(mStartDateInterval);
                 }
 
-
+               // mBoardNode
                 mWriteDatabase.updateChildren(newUserData);
 
-                Long rightNow = GetRightNow();
-                if(when == LifeTransactionLife.PlayGame.value) {
-                    mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId + "/transactionLogPlay/" + rightNow);
-                    Map transactionLogPlay = new HashMap();
-                    transactionLogPlay.put("multiple", ptlogMultiple);
-                    transactionLogPlay.put("matchResult", ptlogMatchResult);
-                    transactionLogPlay.put("score", ptlogScore);
-                    transactionLogPlay.put("userInput", ptlogUserInput);
-                    transactionLogPlay.put("computerInput", ptlogComputerInput);
-                    transactionLogPlay.put("totalScore", ptlogTotalScore);
-                    mWriteDatabase.setValue(transactionLogPlay);
-                }
-                mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId +"/transactionLogLife/"+rightNow);
-                Map transactionLogLife = new HashMap();
-                transactionLogLife.put("type", ltlogType);
-                transactionLogLife.put("transaction", ltlogTransaction);
-                mWriteDatabase.setValue(transactionLogLife);
+                if(when != UpdateUserTimer.GetNewIntervalDate.value) {//需要寫log
+                    Long rightNow = GetRightNow();
+                    if (when == UpdateUserTimer.PlayGame.value) {
+                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId + "/transactionLogPlay/" + rightNow);
+                        Map transactionLogPlay = new HashMap();
+                        transactionLogPlay.put("multiple", ptlogMultiple);
+                        transactionLogPlay.put("matchResult", ptlogMatchResult);
+                        transactionLogPlay.put("score", ptlogScore);
+                        transactionLogPlay.put("userInput", ptlogUserInput);
+                        transactionLogPlay.put("computerInput", ptlogComputerInput);
+                        transactionLogPlay.put("totalScore", ptlogTotalScore);
+                        mWriteDatabase.setValue(transactionLogPlay);
+                    }
+                    mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId + "/transactionLogLife/" + rightNow);
+                    Map transactionLogLife = new HashMap();
+                    transactionLogLife.put("type", ltlogType);
+                    transactionLogLife.put("transaction", ltlogTransaction);
+                    mWriteDatabase.setValue(transactionLogLife);
 
-                if(when == LifeTransactionLife.PlayGame.value) {
-                    mTxtViewScore.setText(String.valueOf(mScore));
+                    if (when == UpdateUserTimer.PlayGame.value) {
+                        mTxtViewScore.setText(String.valueOf(mScore));
+                    }
+                    mTxtViewLives.setText(String.valueOf(mLives));
                 }
-                mTxtViewLives.setText(String.valueOf(mLives));
+
+                if (when == UpdateUserTimer.PlayGame.value) {
+                    if(mBoardNode.equals("")){
+                        boardNode(iniUser.getStartDateInterval());
+                    }
+                    boolean runUpdate = true;
+                    while(runUpdate){
+                        if(!mBoardNode.equals("")) {
+                            DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + mBoardNode + "/scores/" + userId);
+                            Map board = new HashMap();
+                            board.put("displayName", "test");
+                            board.put("score", mScore);
+                            wRef.setValue(board);
+                            runUpdate = false;
+                        }
+                    }
+                }
             }
 
             @Override
@@ -712,6 +782,24 @@ public class PlayFragment extends Fragment {
         }
     }
 
+
+    public enum UpdateUserTimer {
+        SignUpReward(1),
+        PlayGame(2),
+        Purchase(3),//購買
+        FiveMinutesTimer(4),
+        GetNewIntervalDate(5);
+
+        private int value;
+
+        private UpdateUserTimer(int value) {
+            this.value = value;
+        }
+        public int UpdateUserTimer() {
+            return this.value;
+        }
+    }
+
     public enum LifeTransactionLife {
         SignUpReward(1),
         PlayGame(2),
@@ -764,7 +852,7 @@ public class PlayFragment extends Fragment {
                         mLives+=1;
                         ltlogTransaction = 1;
                         ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
-                        updateUser(user.getUid(),LifeTransactionLife.FiveMinutesTimer.value);
+                        updateUser(user.getUid(),UpdateUserTimer.FiveMinutesTimer.value);
                     }
             }
         }
@@ -795,7 +883,7 @@ public class PlayFragment extends Fragment {
                     mLives+=getLife;
                     ltlogTransaction = (int) getLife;
                     ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
-                    updateUser(user.getUid(),LifeTransactionLife.FiveMinutesTimer.value);
+                    updateUser(user.getUid(),UpdateUserTimer.FiveMinutesTimer.value);
                 }
                 tsec = (int)countSec;
                 Log.d("firstCreatTimer",rightNow+","+lifeCounter+","+countSec+","+getLife+","+mSystemPreferences.getCounterSec());
