@@ -264,10 +264,15 @@ public class PlayFragment extends Fragment {
         mTxtViewPlayCounter.setVisibility(View.VISIBLE);
 
         countDownSound = new Intent(getActivity(),CountDownSoundService.class);
+//        if(mPlaySound.equals("1")) {
+//            getActivity().startService(countDownSound);
+//        }
         if(mPlaySound.equals("1")) {
-            getActivity().startService(countDownSound);
+            MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.game_start_countdown);
+            mpLose.start();
+            mpLose.seekTo(0);
         }
-        new CountDownTimer(4000, 1000) {
+        new CountDownTimer(6000, 1000) {
             //mTxtViewCounter.setVisibility(v.VISIBLE );
 
             @Override
@@ -280,7 +285,7 @@ public class PlayFragment extends Fragment {
             @Override
             public void onFinish() {
                 //倒數完成後要做的事
-                getActivity().stopService(countDownSound);
+//                getActivity().stopService(countDownSound);
                 if(mPlaySound.equals("1")) {
                     mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
                 }
@@ -563,6 +568,8 @@ public class PlayFragment extends Fragment {
                         readSystemPreferences(u.getLifeCounter());
                         //CreateTimer(u.getLifeCounter());
                     }
+                }else{
+                    readUser(FragmentState.OnIni.value);
                 }
 
             }
