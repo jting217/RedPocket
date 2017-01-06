@@ -263,7 +263,7 @@ public class PlayFragment extends Fragment {
         ptlogMatchResult = 0;
         mTxtViewPlayCounter.setVisibility(View.VISIBLE);
 
-        countDownSound = new Intent(getActivity(),CountDownSoundService.class);
+//        countDownSound = new Intent(getActivity(),CountDownSoundService.class);
 //        if(mPlaySound.equals("1")) {
 //            getActivity().startService(countDownSound);
 //        }
