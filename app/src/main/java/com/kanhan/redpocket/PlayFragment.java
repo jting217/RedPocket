@@ -232,6 +232,7 @@ public class PlayFragment extends Fragment {
 
 
     public void PlayGame(final View v){
+
         Log.d("FragPlay","PlayGame");
         ptlogMultiple = 1;
 
@@ -450,7 +451,7 @@ public class PlayFragment extends Fragment {
     }
 
     /*目前的board*/
-    private void board(final String userId) {
+    private void updateBoard(final String userId) {
         final Long rightNow = GetRightNow();
         mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
         Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
@@ -469,6 +470,7 @@ public class PlayFragment extends Fragment {
                         board.put("displayName", "test");
                         board.put("score", mScore);
                         wRef.setValue(board);
+                        break;//新加的，怕有錯註記一下
                     }
 
                 }
@@ -537,6 +539,38 @@ public class PlayFragment extends Fragment {
     }
 
 
+    /*找top100*/
+    private void boardOrderby() {
+        Log.d("☆Firebase(playFrag)","boardOrderby");
+
+        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards/0/scores");
+        Query queryRef = mQueryDatabase.orderByChild("score").limitToLast(3);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
+                    Log.w("firebase+",boardSnapshot.toString());
+//                    Map<String, Object> map = (HashMap<String, Object>) boardSnapshot.getValue();
+//
+//                    //Adding it to a string
+//                    for (Object key : map.keySet()) {
+//                        Log.w("firebase+", key + " : " + map.get(key) + map.get(key).getClass());
+//                    }
+//                    Board b = boardSnapshot.getValue(Board.class);
+//                    Log.e("Get Data2", boardSnapshot.getKey()+","+b.getStartDateInterval()+","+b.getEndDateInterval());
+//                    mBoardNode = boardSnapshot.getKey();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+        });
+
+
+    }
+
     private void readUser(final int when) {
         Log.d("☆Firebase", "readUser->"+String.valueOf(FragmentState.values()[when-1]));
         mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
@@ -566,7 +600,7 @@ public class PlayFragment extends Fragment {
 
                     if(when == FragmentState.OnIni.value) {
 //                        mLifeCounter = u.getLifeCounter();
-                        readSystemPreferences(u.getLifeCounter());
+                        readSystemPreferences(u.getLifeCounter()/1000);
                         //CreateTimer(u.getLifeCounter());
                     }
 //                    if( !(rightNow>=u.getStartDateInterval() && rightNow <= u.getEndDateInterval()) ){
@@ -648,22 +682,7 @@ public class PlayFragment extends Fragment {
                 }
 
                 if (when == UpdateUserTimer.PlayGame.value) {
-                    board(userId);
-//                    if(mBoardNode.equals("")){
-//                        Log.w("boardNode","null");
-//                        boardNode(iniUser.getStartDateInterval());
-//                    }
-//                    boolean runUpdate = true;
-//                    while(runUpdate){
-//                        if(!mBoardNode.equals("")) {
-//                            DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + mBoardNode + "/scores/" + userId);
-//                            Map board = new HashMap();
-//                            board.put("displayName", "test");
-//                            board.put("score", mScore);
-//                            wRef.setValue(board);
-//                            runUpdate = false;
-//                        }
-//                    }
+                    updateBoard(userId);
                 }
             }
 
