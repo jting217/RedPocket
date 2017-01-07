@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.kanhan.redpocket.Data.Board;
 import com.kanhan.redpocket.Data.SystemPreferences;
@@ -170,25 +171,6 @@ public class PlayFragment extends Fragment {
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
         iniUser = new User();
         readUser(FragmentState.OnIni.value);
-
-
-
-
-
-//        //宣告Timer
-//        if(timer01 != null){
-//            timer01.purge();
-//            timer01.cancel();
-//            timer01 = null;
-//        }
-//        timer01 =new Timer();
-//        CreateTimerTask();;
-//        //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
-//        tsec=setTsec;
-//        timer01.schedule(timerTask, 0,1000);
-//
-//        startflag=true;
-
     }
 
     @Override
@@ -422,7 +404,6 @@ public class PlayFragment extends Fragment {
                     @Override
                     public void onTick(long millisUntilFinished) {
                         //倒數秒數中要做的事
-
                     }
                     @Override
                     public void onFinish() {
@@ -461,7 +442,6 @@ public class PlayFragment extends Fragment {
         updateTimer(user.getUid());
 
     }
-
 
     @Override
     public void onStart() {
@@ -695,19 +675,16 @@ public class PlayFragment extends Fragment {
     }
 
     private void updateTimer(final String userId) {
-        final Long rightNow = GetRightNow() - (mSystemPreferences.getCounterSec() - tsec);
-        Log.d("updateTimer",String.valueOf(rightNow));
+        Log.d("updateTimer",userId);
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
-
+        Map newUserData = new HashMap();
+        newUserData.put("lifeCounter", ServerValue.TIMESTAMP);
+        mWriteDatabase.updateChildren(newUserData);
         mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                // do some stuff once
-                Map newUserData = new HashMap();
-
-                newUserData.put("lifeCounter", rightNow);
-
-                mWriteDatabase.updateChildren(newUserData);
+                    User u = snapshot.getValue(User.class);
+                    Log.d("updateTimer",u.getLifeCounter().toString());
             }
 
             @Override
