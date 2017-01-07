@@ -469,51 +469,29 @@ public class PlayFragment extends Fragment {
         super.onStart();
     }
 
-    private void board() {
+    /*目前的board*/
+    private void board(final String userId) {
         final Long rightNow = GetRightNow();
         mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
-        Query queryRef = mQueryDatabase.orderByValue().limitToLast(100);
+        Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 Long targetTime = 0L;
+                Log.d("board",rightNow.toString());
                 for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
                     Board b = boardSnapshot.getValue(Board.class);
-                    Log.e("Get Data", boardSnapshot.getKey()+","+b.getStartDateInterval()+","+b.getEndDateInterval());
-                    if(b.getStartDateInterval()<=rightNow && b.getEndDateInterval()>=rightNow){
-                        Log.e("Get Data", boardSnapshot.getKey());
-                        targetTime = b.getStartDateInterval();
-                        mStartDateInterval = b.getStartDateInterval();
-                        mEndDateInterval = b.getEndDateInterval();
-                        updateUser(user.getUid(),UpdateUserTimer.GetNewIntervalDate.value);
-                        break;
+                    if(rightNow >= b.getStartDateInterval()) {
+                        Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
+
+                        DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + boardSnapshot.getKey() + "/scores/" + userId);
+                        Map board = new HashMap();
+                        board.put("displayName", "test");
+                        board.put("score", mScore);
+                        wRef.setValue(board);
                     }
+
                 }
-
-
-//                ArrayList<HashMap<String, Object>> value = (ArrayList<HashMap<String, Object>>) snapshot.getValue();
-//                for(HashMap<String, Object> b: value)
-//                {
-//
-//                    Map<String, Object> map =  b;
-//                    for (Object key : map.keySet()) {
-//                       Log.w("☆firebase", key + " : " + map.get(key) + map.get(key).getClass());
-//                    }
-//                }
-
-                // do some stuff once
-//                Board b = snapshot.getValue(Board.class);
-//                if(b != null){
-//                   // 以下這段也可以用！
-//                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
-//
-//                    //Adding it to a string
-//                    for (Object key : map.keySet()) {
-//                        Log.w("☆firebase", key + " : " + map.get(key) + map.get(key).getClass());
-//                    }
-//
-//                }
-
             }
 
             @Override
@@ -611,9 +589,9 @@ public class PlayFragment extends Fragment {
                         readSystemPreferences(u.getLifeCounter());
                         //CreateTimer(u.getLifeCounter());
                     }
-                    if( !(rightNow>=u.getStartDateInterval() && rightNow <= u.getEndDateInterval()) ){
-                        board();
-                    }
+//                    if( !(rightNow>=u.getStartDateInterval() && rightNow <= u.getEndDateInterval()) ){
+//                        board();
+//                    }
 
                 }else{
                     readUser(FragmentState.OnIni.value);
@@ -690,20 +668,22 @@ public class PlayFragment extends Fragment {
                 }
 
                 if (when == UpdateUserTimer.PlayGame.value) {
-                    if(mBoardNode.equals("")){
-                        boardNode(iniUser.getStartDateInterval());
-                    }
-                    boolean runUpdate = true;
-                    while(runUpdate){
-                        if(!mBoardNode.equals("")) {
-                            DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + mBoardNode + "/scores/" + userId);
-                            Map board = new HashMap();
-                            board.put("displayName", "test");
-                            board.put("score", mScore);
-                            wRef.setValue(board);
-                            runUpdate = false;
-                        }
-                    }
+                    board(userId);
+//                    if(mBoardNode.equals("")){
+//                        Log.w("boardNode","null");
+//                        boardNode(iniUser.getStartDateInterval());
+//                    }
+//                    boolean runUpdate = true;
+//                    while(runUpdate){
+//                        if(!mBoardNode.equals("")) {
+//                            DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + mBoardNode + "/scores/" + userId);
+//                            Map board = new HashMap();
+//                            board.put("displayName", "test");
+//                            board.put("score", mScore);
+//                            wRef.setValue(board);
+//                            runUpdate = false;
+//                        }
+//                    }
                 }
             }
 
