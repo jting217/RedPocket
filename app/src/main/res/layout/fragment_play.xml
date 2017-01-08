@@ -3,207 +3,238 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/outerRegiion"
     tools:context="com.kanhan.redpocket.PlayFragment">
 
-
-    <LinearLayout
-        android:orientation="vertical"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1"
-        android:id="@+id/mainRegion"
-        android:background="@color/colorWhite">
-
-        <RelativeLayout
+        android:id="@+id/coorRegion">
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/topRegion"
-            android:background="@drawable/border_set">
-
-            <ImageView
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/top_display_score"
-                android:id="@+id/imageScore"
-                android:layout_alignTop="@+id/imageLives"
-                android:layout_centerHorizontal="true" />
-
-            <ImageView
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/top_display_coin"
-                android:id="@+id/imageCoin"
-                android:layout_alignTop="@+id/imageScore"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="20dp" />
-
-            <TextView
-                android:text="0"
-                android:layout_width="92dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="26sp"
-                android:textAlignment="center"
-                android:id="@+id/txtViewLives"
-                android:layout_alignStart="@+id/imageLives"
-                android:layout_alignBottom="@+id/txtViewScore"
-                android:layout_below="@+id/imageLives" />
-
-            <TextView
-                android:text="0"
-                android:layout_width="92dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="30sp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:id="@+id/txtViewScore"
-                android:layout_below="@+id/imageScore"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
-                android:text="BUY MORE"
-                android:layout_width="92dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorRed"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:id="@+id/textBuyMore"
-                android:layout_below="@+id/txtViewCoins"
-                android:layout_alignStart="@+id/imageCoin"
-                android:layout_alignEnd="@+id/imageCoin" />
-
-            <TextView
-                android:text="0"
-                android:layout_width="92dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorAccent"
-                android:textSize="26sp"
-                android:textAlignment="center"
-                android:id="@+id/txtViewCoins"
-                android:layout_below="@+id/imageCoin"
-                android:layout_alignStart="@+id/textBuyMore"
-                android:layout_alignEnd="@+id/imageCoin" />
-
-            <TextView
-                android:text="00:00"
-                android:layout_width="92dp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorGray01"
-                android:textSize="12sp"
-                android:textAlignment="center"
-                android:id="@+id/txtViewCounter"
-                android:layout_alignBaseline="@+id/textBuyMore"
-                android:layout_alignBottom="@+id/textBuyMore"
-                android:layout_alignStart="@+id/txtViewLives" />
-
-            <ImageView
-                android:layout_width="69dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/top_display_live"
-                android:id="@+id/imageLives"
-                android:layout_marginEnd="33dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true" />
-
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/centerRegion"
-            android:layout_width="match_parent"
-            android:layout_above="@+id/topRegion"
-            android:layout_toEndOf="@+id/bottomRegion"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.98"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:id="@+id/mainRegion"
             android:background="@color/colorWhite">
 
-
-
-            <ImageView
-                app:srcCompat="@drawable/img_cardback"
-                android:id="@+id/imgViewNpc"
-                android:layout_height="130dp"
-                android:layout_width="130dp"
-                android:layout_marginTop="33dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/imgViewPlayer" />
-
-            <ImageView
-                app:srcCompat="@drawable/img_cardback"
-                android:id="@+id/imgViewPlayer"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="29dp" />
-
-            <TextView
-                android:text="YOU WIN !!"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorRed"
-                android:id="@+id/txtViewResult"
-                android:textColor="@color/colorWhite"
-                android:textAlignment="center"
-                android:textSize="30dp"
-                android:visibility="invisible"
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true" />
+                android:id="@+id/topRegion"
+                android:background="@drawable/border_set">
 
-            <TextView
-                android:text="3"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:layout_width="69dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/top_display_score"
+                    android:id="@+id/imageScore"
+                    android:layout_alignTop="@+id/imageLives"
+                    android:layout_centerHorizontal="true" />
+
+                <ImageView
+                    android:layout_width="69dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/top_display_coin"
+                    android:id="@+id/imageCoin"
+                    android:layout_alignTop="@+id/imageScore"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="20dp" />
+
+                <TextView
+                    android:text="0"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="26sp"
+                    android:textAlignment="center"
+                    android:id="@+id/txtViewLives"
+                    android:layout_alignStart="@+id/imageLives"
+                    android:layout_alignBottom="@+id/txtViewScore"
+                    android:layout_below="@+id/imageLives" />
+
+                <TextView
+                    android:text="0"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:id="@+id/txtViewScore"
+                    android:layout_below="@+id/imageScore"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:text="BUY MORE"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorRed"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:id="@+id/textBuyMore"
+                    android:layout_below="@+id/txtViewCoins"
+                    android:layout_alignStart="@+id/imageCoin"
+                    android:layout_alignEnd="@+id/imageCoin" />
+
+                <TextView
+                    android:text="0"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="26sp"
+                    android:textAlignment="center"
+                    android:id="@+id/txtViewCoins"
+                    android:layout_below="@+id/imageCoin"
+                    android:layout_alignStart="@+id/textBuyMore"
+                    android:layout_alignEnd="@+id/imageCoin" />
+
+                <TextView
+                    android:text="00:00"
+                    android:layout_width="92dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorGray01"
+                    android:textSize="12sp"
+                    android:textAlignment="center"
+                    android:id="@+id/txtViewCounter"
+                    android:layout_alignBaseline="@+id/textBuyMore"
+                    android:layout_alignBottom="@+id/textBuyMore"
+                    android:layout_alignStart="@+id/txtViewLives" />
+
+                <ImageView
+                    android:layout_width="69dp"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/top_display_live"
+                    android:id="@+id/imageLives"
+                    android:layout_marginEnd="33dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/centerRegion"
+                android:layout_width="match_parent"
+                android:layout_above="@+id/topRegion"
+                android:layout_toEndOf="@+id/bottomRegion"
                 android:layout_height="wrap_content"
-                android:textSize="95dp"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:id="@+id/txtViewPlayCounter"
-                android:visibility="invisible"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/bottomRegion"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/centerRegion"
-            android:background="@color/colorWhite">
+                android:layout_weight="0.98"
+                android:background="@color/colorWhite">
 
 
-            <ImageView
+
+                <ImageView
+                    app:srcCompat="@drawable/img_cardback"
+                    android:id="@+id/imgViewNpc"
+                    android:layout_height="130dp"
+                    android:layout_width="130dp"
+                    android:layout_marginTop="33dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/imgViewPlayer" />
+
+                <ImageView
+                    app:srcCompat="@drawable/img_cardback"
+                    android:id="@+id/imgViewPlayer"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="29dp" />
+
+                <TextView
+                    android:text="YOU WIN !!"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorRed"
+                    android:id="@+id/txtViewResult"
+                    android:textColor="@color/colorWhite"
+                    android:textAlignment="center"
+                    android:textSize="30dp"
+                    android:visibility="invisible"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true" />
+
+                <TextView
+                    android:text="3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="95dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorAccent"
+                    android:id="@+id/txtViewPlayCounter"
+                    android:visibility="invisible"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+                <ImageView
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/icon_tool"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="22dp"
+                    android:id="@+id/imageView"
+                    android:layout_width="50dp" />
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/bottomRegion"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/centerRegion"
+                android:background="@color/colorWhite">
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/button_paper"
+                    android:id="@+id/imgViewPaper"
+                    android:layout_weight="0.25"
+                    android:layout_height="58dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    app:srcCompat="@drawable/button_rock"
+                    android:id="@+id/imgViewRock"
+                    android:layout_weight="0.25"
+                    android:layout_height="58dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="58dp"
+                    app:srcCompat="@drawable/button_scissor"
+                    android:id="@+id/imgViewScissors"
+                    android:layout_weight="0.25"/>
+
+                <ImageView
                 android:layout_width="wrap_content"
-                app:srcCompat="@drawable/button_paper"
-                android:id="@+id/imgViewPaper"
+                    app:srcCompat="@drawable/button_auto"
+                android:id="@+id/imgViewAuto"
                 android:layout_weight="0.25"
-                android:layout_height="58dp" />
+                android:layout_alignParentBottom="true"
+                    android:layout_height="58dp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                app:srcCompat="@drawable/button_rock"
-                android:id="@+id/imgViewRock"
-                android:layout_weight="0.25"
-                android:layout_height="58dp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="58dp"
-                app:srcCompat="@drawable/button_scissor"
-                android:id="@+id/imgViewScissors"
-                android:layout_weight="0.25"/>
-
-            <ImageView
-            android:layout_width="wrap_content"
-                app:srcCompat="@drawable/button_auto"
-            android:id="@+id/imgViewAuto"
-            android:layout_weight="0.25"
-            android:layout_alignParentBottom="true"
-                android:layout_height="58dp" />
+            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1"
+            android:id="@+id/coorContentRegion"
+            android:background="@color/colorGray09"
+            android:visibility="invisible">
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout >
+
+    </android.support.design.widget.CoordinatorLayout>
 </FrameLayout>

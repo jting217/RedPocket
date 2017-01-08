@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 /**
  * Created by jting on 2016/12/20.
@@ -53,6 +54,7 @@ public class BackgroundSoundService extends Service {
     }
     @Override
     public void onDestroy() {
+        Log.w("bkSoundService","onDestroy");
         player.stop();
         player.release();
     }

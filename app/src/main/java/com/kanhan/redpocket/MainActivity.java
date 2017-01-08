@@ -148,7 +148,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.d("MainActivity","onDestroy");
         super.onDestroy();
-        stopService(svc);
+//        PlayFragment fragment = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
+//        fragment.updateTimer(user.getUid());
+//        stopService(svc);
     }
 
 
@@ -435,14 +437,6 @@ public class MainActivity extends AppCompatActivity {
     {
         stopService(svc);
         textPlayMusic.setText("0");
-    }
-
-
-
-    private Long GetRightNow(){
-        Long tsLong = System.currentTimeMillis()/1000;
-        String ts = tsLong.toString();
-        return tsLong;
     }
 
 
