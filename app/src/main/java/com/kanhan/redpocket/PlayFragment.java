@@ -253,28 +253,28 @@ public class PlayFragment extends Fragment {
 //        if(mPlaySound.equals("1")) {
 //            getActivity().startService(countDownSound);
 //        }
-        if(mPlaySound.equals("1")) {
-            MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.game_start_countdown);
-            mpLose.start();
-            mpLose.seekTo(0);
-        }
+
         new CountDownTimer(6000, 1000) {
             //mTxtViewCounter.setVisibility(v.VISIBLE );
 
             @Override
             public void onTick(long millisUntilFinished) {
                 //倒數秒數中要做的事
-
+                if(new SimpleDateFormat("s").format(millisUntilFinished).equals("5") && mPlaySound.equals("1") ){
+                    MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.game_start_countdown);
+                    mpLose.start();
+                    mpLose.seekTo(0);
+                }
                 mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
             }
 
             @Override
             public void onFinish() {
                 //倒數完成後要做的事
-//                getActivity().stopService(countDownSound);
-                if(mPlaySound.equals("1")) {
-                    mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
-                }
+//                if(mPlaySound.equals("1")) {
+//                    getActivity().stopService(countDownSound);
+//                }
+                mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
                 int result=0;
                 //Player
                 int iComPlay = (int) (Math.random() * 3 + 1);
@@ -582,7 +582,6 @@ public class PlayFragment extends Fragment {
                 User u = snapshot.getValue(User.class);
                 if(u != null){
                     //以下這段也可以用！
-                    Long rightNow = GetRightNow();
                     Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 
                     //Adding it to a string
@@ -599,18 +598,12 @@ public class PlayFragment extends Fragment {
                     chkReaded = true;
 
                     if(when == FragmentState.OnIni.value) {
-//                        mLifeCounter = u.getLifeCounter();
                         readSystemPreferences(u.getLifeCounter()/1000);
-                        //CreateTimer(u.getLifeCounter());
                     }
-//                    if( !(rightNow>=u.getStartDateInterval() && rightNow <= u.getEndDateInterval()) ){
-//                        board();
-//                    }
 
                 }else{
                     readUser(FragmentState.OnIni.value);
                 }
-
             }
 
             @Override
@@ -647,13 +640,13 @@ public class PlayFragment extends Fragment {
                     newUserData.put("score", Long.valueOf(mScore));
                 }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
+                    updateTimer(userId);
                 }else if(when == UpdateUserTimer.GetNewIntervalDate.value){
                     newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
                     newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
                     iniUser.setStartDateInterval(mStartDateInterval);
                 }
 
-               // mBoardNode
                 mWriteDatabase.updateChildren(newUserData);
 
                 if(when != UpdateUserTimer.GetNewIntervalDate.value) {//需要寫log
@@ -683,6 +676,7 @@ public class PlayFragment extends Fragment {
 
                 if (when == UpdateUserTimer.PlayGame.value) {
                     updateBoard(userId);
+                    updateTimer(userId);
                 }
             }
 
@@ -862,7 +856,7 @@ public class PlayFragment extends Fragment {
                     updateUser(user.getUid(),UpdateUserTimer.FiveMinutesTimer.value);
                 }
                 tsec = (int)countSec;
-                Log.d("firstCreatTimer",rightNow+","+lifeCounter+","+countSec+","+getLife+","+mSystemPreferences.getCounterSec());
+                Log.d("firstCreatTimer","rightNow:"+rightNow+",lifeCounter:"+lifeCounter+",countSec:"+countSec+",getLife:"+getLife+","+mSystemPreferences.getCounterSec());
             }
             isFirstCreatTimer = false;
         }
@@ -877,7 +871,7 @@ public class PlayFragment extends Fragment {
                 // TODO Auto-generated method stub
 //            Log.w("☆task",String.valueOf(startflag));
                 if (startflag){
-                    //如果startflag是true則每秒tsec+1
+                    //如果startflag是true則每秒tsec-1
                     tsec--;
                     Message message = new Message();
                     //傳送訊息1
