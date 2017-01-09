@@ -50,7 +50,7 @@
                     android:textAlignment="center"
                     android:id="@+id/txtViewLives"
                     android:layout_alignStart="@+id/imageLives"
-                    android:layout_alignBottom="@+id/txtViewScore"
+                    android:layout_alignBottom="@+id/txtViewEmail"
                     android:layout_below="@+id/imageLives" />
 
                 <TextView
@@ -61,7 +61,7 @@
                     android:textSize="30sp"
                     android:textStyle="bold"
                     android:textAlignment="center"
-                    android:id="@+id/txtViewScore"
+                    android:id="@+id/txtViewEmail"
                     android:layout_below="@+id/imageScore"
                     android:layout_centerHorizontal="true" />
 

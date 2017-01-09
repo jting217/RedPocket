@@ -31,7 +31,6 @@ import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -167,7 +166,7 @@ public class PlayFragment extends Fragment {
         mTxtViewPlayCounter = (TextView) getView().findViewById(R.id.txtViewPlayCounter);
         mTxtViewResult = (TextView) getView().findViewById(R.id.txtViewResult);
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
-        mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScore);
+        mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewEmail);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
         iniUser = new User();
         readUser(FragmentState.OnIni.value);
@@ -289,7 +288,6 @@ public class PlayFragment extends Fragment {
                     case R.id.imgViewScissors:
                         // do something
                         ptlogUserInput = Input.Scissor.value;
-                        Log.d("tag", "剪刀");
                         mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
                         if(iComPlay == 1){
                             result = R.string.text_tie;
@@ -303,9 +301,7 @@ public class PlayFragment extends Fragment {
                         }
                         break;
                     case R.id.imgViewRock:
-                        // do something else
                         ptlogUserInput = Input.Rock.value;
-                        Log.d("tag", "石頭");
                         mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
                         if(iComPlay == 1){
                             result = R.string.text_win;
@@ -320,8 +316,6 @@ public class PlayFragment extends Fragment {
                         break;
                     case R.id.imgViewPaper:
                         ptlogUserInput = Input.Paper.value;
-                        // i'm lazy, do nothing
-                        Log.d("tag", "布");
                         mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
                         if(iComPlay == 1){
                             result = R.string.text_lose;
@@ -356,7 +350,6 @@ public class PlayFragment extends Fragment {
                             mpLose.start();
                             mpLose.seekTo(0);
                         }
-//                        mpLose.release();
                         break;
                     case 2 :
                         mScore+=100;
@@ -368,7 +361,6 @@ public class PlayFragment extends Fragment {
                             mpWin.start();
                             mpWin.seekTo(0);
                         }
-//                        mpWin.release();
                         break;
                     default:
                         if(mPlaySound.equals("1")) {
@@ -399,7 +391,7 @@ public class PlayFragment extends Fragment {
 
 //                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
 
-                updateUser(user.getUid(),UpdateUserTimer.PlayGame.value);
+                updateUser(user,UpdateUserTimer.PlayGame.value);
                 new CountDownTimer(2000, 1000) {
                     //mTxtViewCounter.setVisibility(v.VISIBLE );
                     @Override
@@ -451,7 +443,7 @@ public class PlayFragment extends Fragment {
     }
 
     /*目前的board*/
-    private void updateBoard(final String userId) {
+    private void updateBoard(final FirebaseUser fUser) {
         final Long rightNow = GetRightNow();
         mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
         Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
@@ -465,9 +457,10 @@ public class PlayFragment extends Fragment {
                     if(rightNow >= b.getStartDateInterval()) {
                         Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
 
-                        DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + boardSnapshot.getKey() + "/scores/" + userId);
+                        DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + boardSnapshot.getKey() + "/scores/" + fUser.getUid());
                         Map board = new HashMap();
-                        board.put("displayName", "test");
+                        board.put("displayName", fUser.getDisplayName());
+                        Log.w("displayName",fUser.getDisplayName());
                         board.put("score", mScore);
                         wRef.setValue(board);
                         break;//新加的，怕有錯註記一下
@@ -515,7 +508,6 @@ public class PlayFragment extends Fragment {
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                // do some stuff once
                 SystemPreferences sp = snapshot.getValue(SystemPreferences.class);
                 //以下這段也可以用！
 //                Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
@@ -584,7 +576,6 @@ public class PlayFragment extends Fragment {
                     //以下這段也可以用！
                     Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 
-                    //Adding it to a string
                     for (Object key : map.keySet()) {
                         Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
                     }
@@ -614,7 +605,7 @@ public class PlayFragment extends Fragment {
         });
     }
 
-    private void updateUser(final String userId, final int when) {
+    private void updateUser(final FirebaseUser fUser, final int when) {
         Log.d("☆Firebase",String.valueOf(UpdateUserTimer.values()[when-1]));
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
@@ -640,7 +631,7 @@ public class PlayFragment extends Fragment {
                     newUserData.put("score", Long.valueOf(mScore));
                 }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
-                    updateTimer(userId);
+                    updateTimer(fUser.getUid());
                 }else if(when == UpdateUserTimer.GetNewIntervalDate.value){
                     newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
                     newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
@@ -652,7 +643,7 @@ public class PlayFragment extends Fragment {
                 if(when != UpdateUserTimer.GetNewIntervalDate.value) {//需要寫log
                     Long rightNow = GetRightNow();
                     if (when == UpdateUserTimer.PlayGame.value) {
-                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId + "/transactionLogPlay/" + rightNow);
+                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogPlay/" + rightNow);
                         Map transactionLogPlay = new HashMap();
                         transactionLogPlay.put("multiple", ptlogMultiple);
                         transactionLogPlay.put("matchResult", ptlogMatchResult);
@@ -662,7 +653,7 @@ public class PlayFragment extends Fragment {
                         transactionLogPlay.put("totalScore", ptlogTotalScore);
                         mWriteDatabase.setValue(transactionLogPlay);
                     }
-                    mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + userId + "/transactionLogLife/" + rightNow);
+                    mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogLife/" + rightNow);
                     Map transactionLogLife = new HashMap();
                     transactionLogLife.put("type", ltlogType);
                     transactionLogLife.put("transaction", ltlogTransaction);
@@ -675,8 +666,8 @@ public class PlayFragment extends Fragment {
                 }
 
                 if (when == UpdateUserTimer.PlayGame.value) {
-                    updateBoard(userId);
-                    updateTimer(userId);
+                    updateBoard(fUser);
+                    updateTimer(fUser.getUid());
                 }
             }
 
@@ -822,7 +813,7 @@ public class PlayFragment extends Fragment {
                         mLives+=1;
                         ltlogTransaction = 1;
                         ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
-                        updateUser(user.getUid(),UpdateUserTimer.FiveMinutesTimer.value);
+                        updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);
                     }
             }
         }
@@ -853,7 +844,7 @@ public class PlayFragment extends Fragment {
                     mLives+=getLife;
                     ltlogTransaction = (int) getLife;
                     ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
-                    updateUser(user.getUid(),UpdateUserTimer.FiveMinutesTimer.value);
+                    updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);
                 }
                 tsec = (int)countSec;
                 Log.d("firstCreatTimer","rightNow:"+rightNow+",lifeCounter:"+lifeCounter+",countSec:"+countSec+",getLife:"+getLife+","+mSystemPreferences.getCounterSec());

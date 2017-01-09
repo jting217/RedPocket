@@ -13,21 +13,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.SignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 public class SinginActivity extends AppCompatActivity {
 
-    private EditText emailText;
-    private EditText passWordText;
-    private EditText passWordText2;
+    private EditText mEditTxtEmail;
+    private EditText mEditTxtNickname;
+    private EditText mEditTxtPassword;
+    private EditText mEditTxtConfirm;
     private FirebaseAuth mfirebaseAuth;
-    private Button buttonDone;
-    private Button buttonCancel;
+    private Button btnDone;
+    private Button btnCancel;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,19 +47,20 @@ public class SinginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        Button buttonDone = (Button)findViewById(R.id.button5);
-        Button buttonCancel = (Button)findViewById(R.id.button4);
-        emailText =(EditText)findViewById(R.id.editText);
-        passWordText = (EditText)findViewById(R.id.editText2);
-        passWordText2 = (EditText)findViewById(R.id.editText3);
+        btnDone = (Button)findViewById(R.id.btnDone);
+        btnCancel = (Button)findViewById(R.id.btnCancel);
+        mEditTxtEmail = (EditText)findViewById(R.id.editTxtEmail);
+        mEditTxtNickname =(EditText)findViewById(R.id.editTxtNickName);
+        mEditTxtPassword = (EditText)findViewById(R.id.editTxtPassword);
+        mEditTxtConfirm = (EditText)findViewById(R.id.editTxtConfirmPassword);
 
-        buttonCancel.setOnClickListener(new View.OnClickListener() {
+        btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        buttonDone.setOnClickListener(new View.OnClickListener() {
+        btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 creatUser();
@@ -61,27 +70,113 @@ public class SinginActivity extends AppCompatActivity {
 
     }
     private void creatUser() {
-        String email = emailText.getText().toString();
-        String password = passWordText.getText().toString();
-        String password2 = passWordText2.getText().toString();
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        String email = mEditTxtEmail.getText().toString();
+        final String nickname = mEditTxtNickname.getText().toString();
+        String password = mEditTxtPassword.getText().toString();
+        String passwordConfrim = mEditTxtConfirm.getText().toString();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)||TextUtils.isEmpty(password2)) {
-            Toast.makeText(this, "帳密不能為空", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(nickname) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfrim)) {
+            Toast.makeText(this, "帳密或暱稱不能為空", Toast.LENGTH_LONG).show();
         } else {
             mfirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
+
                     if (!task.isSuccessful()) {
                         Log.w("TAG", "signInWithEmail:failed", task.getException());
                     }else{
-                        goMainScreen();
+                        Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
+                        setUserDisplayName();
+//                        reAuthFirebase();
                     }
                 }
+
+
             });
+//            mAuthListener = new FirebaseAuth.AuthStateListener() {
+//                @Override
+//                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                    FirebaseUser user = firebaseAuth.getCurrentUser();
+//                    if(user!=null){
+//                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+//                                .setDisplayName("try a name").build();
+//                        user.updateProfile(profileUpdates);
+//
+//                        FirebaseUser u = FirebaseAuth.getInstance().getCurrentUser();
+//                        Log.w("user888"," "+u.getUid());
+//                        if (user != null) {
+//                            // Name, email address etc
+//                            String name = u.getDisplayName();
+//                            String email = u.getEmail();
+//                            Log.w("user888"," "+name);
+//                            Log.w("user888"," "+email);
+//                        }
+//
+//                    }
+//                }
+//            };
+
+
         }
 
+
     }
+
+
+    private void reAuthFirebase(){
+        String email = mEditTxtEmail.getText().toString();
+        final String nickname = mEditTxtNickname.getText().toString();
+        String password = mEditTxtPassword.getText().toString();
+        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        AuthCredential credential = EmailAuthProvider
+                .getCredential(firebaseUser.getEmail(), password);
+
+        firebaseUser.reauthenticate(credential)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("999", firebaseUser.getDisplayName());
+                        goMainScreen();
+
+                    }
+                });
+    }
+
+
+
+    private void setUserDisplayName(){
+
+
+        String email = mEditTxtEmail.getText().toString();
+        final String nickname = mEditTxtNickname.getText().toString();
+        String password = mEditTxtPassword.getText().toString();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(nickname)
+//                .setPhotoUri(Uri.parse("http://serviceapi.skholingua.com/logo.png"))
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("user888", "User profile updated.");
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            Log.w("user888"," "+user.getUid());
+                            reAuthFirebase();//firebase bug... that re-authenticating the user at the time of their registration may fix the problem
+                        }
+                    }
+                });
+
+
+    }
+
+
+
 
     private void goMainScreen() {
         Intent intent = new Intent(SinginActivity.this, MainActivity.class);
