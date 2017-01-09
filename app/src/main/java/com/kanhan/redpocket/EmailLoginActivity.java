@@ -35,10 +35,10 @@ public class EmailLoginActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emaillogin);
         mfirebaseAuth = FirebaseAuth.getInstance();
-        emailText = (EditText) findViewById(R.id.editText);
+        emailText = (EditText) findViewById(R.id.editTxtEmail);
         passWordText = (EditText) findViewById(R.id.editTxtPassword);
-        Button buttonDone = (Button)findViewById(R.id.button6);
-        Button buttonCancel = (Button)findViewById(R.id.button3);
+        Button buttonDone = (Button)findViewById(R.id.btnDone);
+        Button buttonCancel = (Button)findViewById(R.id.btnCancel);
         Toolbar toolbar ;
         toolbar = (Toolbar)findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
