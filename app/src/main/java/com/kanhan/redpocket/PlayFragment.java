@@ -27,6 +27,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.kanhan.redpocket.Data.Board;
+import com.kanhan.redpocket.Data.Score;
 import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
@@ -69,10 +70,10 @@ public class PlayFragment extends Fragment {
     private User iniUser;
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
-    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewPlayer, mImgViewNpc;
+    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter;
     private int mCoins;
-    private int mScore;
+    private static int mScore;
     private int mLives;
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
@@ -155,6 +156,7 @@ public class PlayFragment extends Fragment {
         mImgViewScissors = (ImageView) getView().findViewById(R.id.imgViewScissors);
         mImgViewRock = (ImageView) getView().findViewById(R.id.imgViewRock);
         mImgViewPaper = (ImageView) getView().findViewById(R.id.imgViewPaper);
+        mImgViewAuto = (ImageView) getView().findViewById(R.id.imgViewAuto);
 
         mImgViewPlayer = (ImageView) getView().findViewById(R.id.imgViewPlayer);
         mImgViewNpc  = (ImageView) getView().findViewById(R.id.imgViewNpc);
@@ -169,7 +171,7 @@ public class PlayFragment extends Fragment {
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewEmail);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
         iniUser = new User();
-        readUser(FragmentState.OnIni.value);
+        readUser(UpdateUserTimer.OnIni.value);
     }
 
     @Override
@@ -442,8 +444,82 @@ public class PlayFragment extends Fragment {
         super.onStart();
     }
 
-    /*目前的board*/
-    private void updateBoard(final FirebaseUser fUser) {
+    /*先找到目前的board，再Update*/
+    private void updateBoard(final int when) {
+        final Long rightNow = GetRightNow();
+        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
+        Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Log.d("board",rightNow.toString());
+                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
+                    Board b = boardSnapshot.getValue(Board.class);
+                    if(rightNow >= b.getStartDateInterval()) {
+                        Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
+                        updateUserScore(b.getId(),when);
+//                        DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + boardSnapshot.getKey() + "/scores/" + fUser.getUid());
+//                        Map board = new HashMap();
+//                        board.put("displayName", fUser.getDisplayName());
+//                        Log.w("displayName",fUser.getDisplayName());
+//                        board.put("score", mScore);
+//                        wRef.setValue(board);
+//                        mTxtViewScore.setText(String.valueOf(u.getScore()));
+//                        chkReaded = true;
+                        break;//新加的，怕有錯註記一下
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+
+        });
+
+    }
+
+    private void updateUserScore(final String boardId, final int when) {
+        Log.d("☆Firebase", "readScores->"+boardId);
+        mReadDatabase = FirebaseDatabase.getInstance().getReference("scores/" + boardId+ "/" + user.getUid());
+
+        mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                Log.w("updateUserScore",snapshot.toString()+","+snapshot.getChildrenCount());
+                Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+                if(snapshot.getChildrenCount() == 0){
+                    Score s = new Score();
+                    s.setDisplayName(user.getDisplayName());
+                    s.setScore(0L);
+                    mReadDatabase.setValue(s);
+                    mTxtViewScore.setText("0");
+                }else{
+                    Score s = snapshot.getValue(Score.class);
+                    Map newScore = new HashMap();
+                    if(when == UpdateUserTimer.OnIni.value)
+                    {
+                        mScore = s.getScore().intValue();
+                    }
+                    newScore.put("score", Long.valueOf(mScore));
+                    mReadDatabase.updateChildren(newScore);
+                    mTxtViewScore.setText(String.valueOf(mScore));
+                }
+                chkReaded = true;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+
+        });
+    }
+
+    private void readBoard(final FirebaseUser fUser) {
         final Long rightNow = GetRightNow();
         mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
         Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
@@ -457,12 +533,37 @@ public class PlayFragment extends Fragment {
                     if(rightNow >= b.getStartDateInterval()) {
                         Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
 
-                        DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + boardSnapshot.getKey() + "/scores/" + fUser.getUid());
-                        Map board = new HashMap();
-                        board.put("displayName", fUser.getDisplayName());
-                        Log.w("displayName",fUser.getDisplayName());
-                        board.put("score", mScore);
-                        wRef.setValue(board);
+
+                        break;//新加的，怕有錯註記一下
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+
+        });
+
+    }
+
+    private void readScores(final String boardID) {
+        final Long rightNow = GetRightNow();
+        mQueryDatabase = FirebaseDatabase.getInstance().getReference("scores/"+boardID+"/"+user.getUid());
+        Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
+        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                Long targetTime = 0L;
+                Log.d("board",rightNow.toString());
+                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
+                    Board b = boardSnapshot.getValue(Board.class);
+                    if(rightNow >= b.getStartDateInterval()) {
+                        Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
+
+
                         break;//新加的，怕有錯註記一下
                     }
 
@@ -564,7 +665,7 @@ public class PlayFragment extends Fragment {
     }
 
     private void readUser(final int when) {
-        Log.d("☆Firebase", "readUser->"+String.valueOf(FragmentState.values()[when-1]));
+        Log.d("☆Firebase", "readUser->"+String.valueOf(UpdateUserTimer.values()[when-1]));
         mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -583,17 +684,20 @@ public class PlayFragment extends Fragment {
                     Log.d("firebase",String.valueOf(u.getLives()));
 
                     mTxtViewCoins.setText(String.valueOf(u.getCoins()));
-                    mTxtViewScore.setText(String.valueOf(u.getScore()));
+//                    mTxtViewScore.setText(String.valueOf(u.getScore()));
                     mTxtViewLives.setText(String.valueOf(u.getLives()));
 
-                    chkReaded = true;
+//                    updateBoard(user);
+//                    chkReaded = true;
 
-                    if(when == FragmentState.OnIni.value) {
+                    if(when == UpdateUserTimer.OnIni.value) {
                         readSystemPreferences(u.getLifeCounter()/1000);
+                        updateBoard(UpdateUserTimer.OnIni.value);
+//                        mTxtViewScore.setText(String.valueOf(0));
                     }
 
                 }else{
-                    readUser(FragmentState.OnIni.value);
+                    readUser(UpdateUserTimer.OnIni.value);
                 }
             }
 
@@ -616,7 +720,7 @@ public class PlayFragment extends Fragment {
                 User user = new User();
 
                 user.setCoins(Long.valueOf(mCoins));
-                user.setScore(Long.valueOf(mScore));
+//                user.setScore(Long.valueOf(mScore));
 //                Map<String, Object> userValues = user.toMap();
 //                Map<String, Object> childUpdates = new HashMap<>();
 //                childUpdates.put("/posts/" + key, postValues);
@@ -628,7 +732,7 @@ public class PlayFragment extends Fragment {
                 if(when == UpdateUserTimer.PlayGame.value)
                 {
                     newUserData.put("lives", Long.valueOf(mLives));
-                    newUserData.put("score", Long.valueOf(mScore));
+//                    newUserData.put("score", Long.valueOf(mScore));
                 }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
                     updateTimer(fUser.getUid());
@@ -666,7 +770,7 @@ public class PlayFragment extends Fragment {
                 }
 
                 if (when == UpdateUserTimer.PlayGame.value) {
-                    updateBoard(fUser);
+                    updateBoard(UpdateUserTimer.PlayGame.value);
                     updateTimer(fUser.getUid());
                 }
             }
@@ -698,19 +802,7 @@ public class PlayFragment extends Fragment {
         });
     }
 
-    public enum FragmentState {
-        OnIni(1),
-        OnStart(2);
 
-        private int value;
-
-        private FragmentState(int value) {
-            this.value = value;
-        }
-        public int FragmentState() {
-            return this.value;
-        }
-    }
 
 
     public enum MatchResult {
@@ -749,7 +841,8 @@ public class PlayFragment extends Fragment {
         PlayGame(2),
         Purchase(3),//購買
         FiveMinutesTimer(4),
-        GetNewIntervalDate(5);
+        GetNewIntervalDate(5),
+        OnIni(6);
 
         private int value;
 

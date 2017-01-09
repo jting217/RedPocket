@@ -14,7 +14,8 @@ import java.util.Map;
 public class Board {
 //    public String userId;
     private Long endDateInterval;
-    public Map<String, Object> scores = new HashMap<>();
+//    public Map<String, Object> scores = new HashMap<>();
+    private String id;
     private Long startDateInterval;
 
     public Board() {
@@ -28,12 +29,21 @@ public class Board {
         this.endDateInterval = endDateInterval;
     }
 
-    public Map<String, Object> getScores() {
-        return scores;
+//    public Map<String, Object> getScores() {
+//        return scores;
+//    }
+//
+//    public void setScores(Map<String, Object> scores) {
+//        this.scores = scores;
+//    }
+
+
+    public String getId() {
+        return id;
     }
 
-    public void setScores(Map<String, Object> scores) {
-        this.scores = scores;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public Long getStartDateInterval() {
@@ -44,9 +54,10 @@ public class Board {
         this.startDateInterval = startDateInterval;
     }
 
-    public Board(Long endDateInterval, Long startDateInterval){
+    public Board(Long endDateInterval, String id, Long startDateInterval){
 //        this.userId = userId;
         this.endDateInterval = endDateInterval;
+        this.id = id;
         this.startDateInterval = startDateInterval;
     }
 
@@ -54,7 +65,8 @@ public class Board {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("endDateInterval", endDateInterval);
-        result.put("scores", scores);
+        result.put("id", id);
+//        result.put("scores", scores);
         result.put("startDateInterval", startDateInterval);
         return result;
     }

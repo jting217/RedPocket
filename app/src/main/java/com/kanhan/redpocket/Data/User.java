@@ -24,7 +24,8 @@ public class User {
     private Long lifeCounter;
     private Long lives;
     private Long mindControl;
-    private Long score;
+    private boolean signupRewardRedeemed;
+//    private Long score;
     private Long specialTimeRewardGetDate;
     private Long startDateInterval;
     private Long timer;
@@ -128,13 +129,21 @@ public class User {
         this.mindControl = mindControl;
     }
 
-    public Long getScore() {
-        return score;
+    public boolean isSignupRewardRedeemed() {
+        return signupRewardRedeemed;
     }
 
-    public void setScore(Long score) {
-        this.score = score;
+    public void setSignupRewardRedeemed(boolean signupRewardRedeemed) {
+        this.signupRewardRedeemed = signupRewardRedeemed;
     }
+
+    //    public Long getScore() {
+//        return score;
+//    }
+//
+//    public void setScore(Long score) {
+//        this.score = score;
+//    }
 
     public Long getSpecialTimeRewardGetDate() {
         return specialTimeRewardGetDate;
@@ -225,7 +234,7 @@ public class User {
     }
 
     public User(Long coins, Long dailyPlayTimes, Long dailyResetDate, Long dailyWinTimes, Long dice, Long startDateInterval, Long goldenHand,
-                Long ironFirst, Long lifeCounter, Long lives, Long mindControl, Long score, Long specialTimeRewardGetDate, Long endDateInterval,
+                Long ironFirst, Long lifeCounter, Long lives, Long mindControl, boolean signupRewardRedeemed, Long specialTimeRewardGetDate, Long endDateInterval,
                 Long timer, Long victory, Long winWithPaper, Long winWithRock, Long winWithScissor){//(String userId, String nickName, String email){
 //        this.userId = userId;
         this.coins = coins;
@@ -239,7 +248,8 @@ public class User {
         this.lifeCounter = lifeCounter;
         this.lives = lives;
         this.mindControl = mindControl;
-        this.score = score;
+        this.signupRewardRedeemed = signupRewardRedeemed;
+        //this.score = score;
         this.specialTimeRewardGetDate = specialTimeRewardGetDate;
         this.endDateInterval = endDateInterval;
         this.victory = victory;
@@ -263,6 +273,7 @@ public class User {
         result.put("lifeCounter", lifeCounter);
         result.put("lives", lives);
         result.put("mindControl", mindControl);
+        result.put("signupRewardRedeemed", signupRewardRedeemed);
         result.put("specialTimeRewardGetDate", specialTimeRewardGetDate);
         result.put("endDateInterval", endDateInterval);
         result.put("victory", victory);

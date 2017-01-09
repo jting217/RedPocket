@@ -327,7 +327,8 @@ public class MainActivity extends AppCompatActivity {
                     user.setIronFirst(iniVal);
                     user.setLifeCounter(iniVal);
                     user.setMindControl(iniVal);
-                    user.setScore(iniVal);
+                    user.setSignupRewardRedeemed(true);
+//                    user.setScore(iniVal);
                     user.setSpecialTimeRewardGetDate(iniVal);
                     user.setTimer(iniVal);
                     user.setVictory(iniVal);
