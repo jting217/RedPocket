@@ -675,11 +675,13 @@ public class PlayFragment extends Fragment {
                 User u = snapshot.getValue(User.class);
                 if(u != null){
                     //以下這段也可以用！
-                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+                    /*
+                                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 
-                    for (Object key : map.keySet()) {
-                        Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
-                    }
+                                    for (Object key : map.keySet()) {
+                                        Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
+                                    }
+                                    */
                     iniUser = u;
                     Log.d("firebase",String.valueOf(u.getLives()));
 
