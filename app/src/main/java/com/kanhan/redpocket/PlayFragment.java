@@ -88,7 +88,7 @@ public class PlayFragment extends Fragment {
 
     private int mColor;
 
-    private boolean chkReaded = false;
+    private boolean chkReaded = false, autoPlay = false, isPlaying = false;
     private static boolean isFirstCreatTimer = true;
 
     private OnFragmentInteractionListener mListener;
@@ -163,6 +163,7 @@ public class PlayFragment extends Fragment {
         mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
         mImgViewRock.setOnClickListener(imgViewPlayOnClick);
         mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
+        mImgViewAuto.setOnClickListener(imgViewAutoPlayOnClick);
 
         mTxtViewCounter = (TextView) getView().findViewById(R.id.txtViewCounter);
         mTxtViewPlayCounter = (TextView) getView().findViewById(R.id.txtViewPlayCounter);
@@ -187,6 +188,31 @@ public class PlayFragment extends Fragment {
             Log.d("FragPlay","OnClickListener");
             if(chkReaded) {
                 PlayGame(v);
+            }
+        }
+    };
+
+    private View.OnClickListener imgViewAutoPlayOnClick = new View.OnClickListener() {
+        public void onClick(final View v) {
+            Log.d("FragPlay","OnAutoPlayClickListener");
+            if(chkReaded) {
+                Log.d("FragPlay","OnAutoPlayClickListener->chkReaded");
+                if(autoPlay == false){
+                    Log.d("FragPlay","OnAutoPlayClickListener->auto=false--->true");
+                    autoPlay = true;
+                    mImgViewAuto.setImageResource(R.drawable.button_auto_active);
+                }else{
+                    Log.d("FragPlay","OnAutoPlayClickListener->auto=true--->false");
+                    autoPlay = false;
+                    mImgViewAuto.setImageResource(R.drawable.button_auto);
+                }
+
+                Log.d("FragPlay","autoPlay->"+autoPlay+",isPlaying->"+isPlaying);
+                if(autoPlay == true && isPlaying == false) {
+                    Log.d("FragPlay","OnAutoPlayClickListener->playing"+",mLives="+mLives);
+                    isPlaying = true;
+                    PlayGame(v);
+                }
             }
         }
     };
@@ -233,189 +259,261 @@ public class PlayFragment extends Fragment {
 
 
     public void PlayGame(final View v){
+        if(mLives>0) {
 
-        Log.d("FragPlay","PlayGame");
-        ptlogMultiple = 1;
+            Log.d("FragPlay", "PlayGame");
+            ptlogMultiple = 1;
 
-        ((MainActivity)getActivity()).removeBottomNavListener();
-        mImgViewScissors.setOnClickListener(null);
-        mImgViewRock.setOnClickListener(null);
-        mImgViewPaper.setOnClickListener(null);
+            ((MainActivity) getActivity()).removeBottomNavListener();
+            mImgViewScissors.setOnClickListener(null);
+            mImgViewRock.setOnClickListener(null);
+            mImgViewPaper.setOnClickListener(null);
+            if(autoPlay == false){
+                mImgViewAuto.setOnClickListener(null);
+            }
 
-        mCoins = Integer.valueOf(mTxtViewCoins.getText().toString());
-        mScore = Integer.valueOf(mTxtViewScore.getText().toString());
-        mLives = Integer.valueOf(mTxtViewLives.getText().toString());
+            mCoins = Integer.valueOf(mTxtViewCoins.getText().toString());
+            mScore = Integer.valueOf(mTxtViewScore.getText().toString());
+            mLives = Integer.valueOf(mTxtViewLives.getText().toString());
 
-        Log.d("mCoins,S,L",mCoins+","+mScore+","+mLives);
-        ptlogMatchResult = 0;
-        mTxtViewPlayCounter.setVisibility(View.VISIBLE);
+            Log.d("mCoins,S,L", mCoins + "," + mScore + "," + mLives);
+            ptlogMatchResult = 0;
+            mTxtViewPlayCounter.setVisibility(View.VISIBLE);
 
 //        countDownSound = new Intent(getActivity(),CountDownSoundService.class);
 //        if(mPlaySound.equals("1")) {
 //            getActivity().startService(countDownSound);
 //        }
 
-        new CountDownTimer(6000, 1000) {
-            //mTxtViewCounter.setVisibility(v.VISIBLE );
+            new CountDownTimer(6000, 1000) {
+                //mTxtViewCounter.setVisibility(v.VISIBLE );
 
-            @Override
-            public void onTick(long millisUntilFinished) {
-                //倒數秒數中要做的事
-                if(new SimpleDateFormat("s").format(millisUntilFinished).equals("5") && mPlaySound.equals("1") ){
-                    MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.game_start_countdown);
-                    mpLose.start();
-                    mpLose.seekTo(0);
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    //倒數秒數中要做的事
+                    if (new SimpleDateFormat("s").format(millisUntilFinished).equals("5") && mPlaySound.equals("1")) {
+                        MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.game_start_countdown);
+                        mpLose.start();
+                        mpLose.seekTo(0);
+                    }
+                    mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
                 }
-                mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
-            }
 
-            @Override
-            public void onFinish() {
-                //倒數完成後要做的事
+                @Override
+                public void onFinish() {
+                    //倒數完成後要做的事
 //                if(mPlaySound.equals("1")) {
 //                    getActivity().stopService(countDownSound);
 //                }
-                mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
-                int result=0;
-                //Player
-                int iComPlay = (int) (Math.random() * 3 + 1);
-                if(iComPlay == 1){
-                    ptlogComputerInput = Input.Scissor.value;
-                }else if(iComPlay == 2){
-                    ptlogComputerInput = Input.Rock.value;
-                }else{
-                    ptlogComputerInput = Input.Paper.value;
-                }
-                switch (v.getId()) {
-                    case R.id.imgViewScissors:
-                        // do something
-                        ptlogUserInput = Input.Scissor.value;
-                        mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
-                        if(iComPlay == 1){
-                            result = R.string.text_tie;
-                            ptlogMatchResult = MatchResult.Tie.value;
-                        }else if(iComPlay == 2){
-                            result = R.string.text_lose;
-                            ptlogMatchResult = MatchResult.Lose.value;
-                        }else{
-                            result = R.string.text_win;
-                            ptlogMatchResult = MatchResult.Win.value;
-                        }
-                        break;
-                    case R.id.imgViewRock:
-                        ptlogUserInput = Input.Rock.value;
-                        mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
-                        if(iComPlay == 1){
-                            result = R.string.text_win;
-                            ptlogMatchResult = MatchResult.Win.value;
-                        }else if(iComPlay == 2){
-                            result = R.string.text_tie;
-                            ptlogMatchResult = MatchResult.Tie.value;
-                        }else{
-                            result = R.string.text_lose;
-                            ptlogMatchResult = MatchResult.Lose.value;
-                        }
-                        break;
-                    case R.id.imgViewPaper:
-                        ptlogUserInput = Input.Paper.value;
-                        mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
-                        if(iComPlay == 1){
-                            result = R.string.text_lose;
-                            ptlogMatchResult = MatchResult.Lose.value;
-                        }else if(iComPlay == 2){
-                            result = R.string.text_win;
-                            ptlogMatchResult = MatchResult.Win.value;
-                        }else{
-                            result = R.string.text_tie;
-                            ptlogMatchResult = MatchResult.Tie.value;
-                        }
-                        break;
-                }
-                if(iComPlay == 1){
-                    mImgViewNpc.setImageResource(R.drawable.img_card_scissor_black);
-                }else if(iComPlay == 2) {
-                    mImgViewNpc.setImageResource(R.drawable.img_card_rock_black);
-                }else{
-                    mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
-                }
-                int mr = ptlogMatchResult;
-                int getScore = 0 , getLives = 0;
-                switch (ptlogMatchResult){
+                    mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
+                    int result = 0;
+                    //Player
+                    int iComPlay = (int) (Math.random() * 3 + 1);
+                    if (iComPlay == 1) {
+                        ptlogComputerInput = Input.Scissor.value;
+                    } else if (iComPlay == 2) {
+                        ptlogComputerInput = Input.Rock.value;
+                    } else {
+                        ptlogComputerInput = Input.Paper.value;
+                    }
 
-                    case 1 :
-                        mScore+=10;
-                        mLives-=1;
-                        getScore = 10;
-                        getLives = -1;
-                        if(mPlaySound.equals("1")) {
-                            MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.lose);
-                            mpLose.start();
-                            mpLose.seekTo(0);
+                    if(autoPlay == true || isPlaying == true) {//自動玩
+                        int iUserPlay = (int) (Math.random() * 3 + 1);
+                        if (iUserPlay == Input.Scissor.value) {//剪刀
+                            ptlogUserInput = Input.Scissor.value;
+                            mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
+                            if (iComPlay == 1) {
+                                result = R.string.text_tie;
+                                ptlogMatchResult = MatchResult.Tie.value;
+                            } else if (iComPlay == 2) {
+                                result = R.string.text_lose;
+                                ptlogMatchResult = MatchResult.Lose.value;
+                            } else {
+                                result = R.string.text_win;
+                                ptlogMatchResult = MatchResult.Win.value;
+                            }
+                        } else if (iUserPlay == Input.Rock.value) {//石頭
+                            ptlogUserInput = Input.Rock.value;
+                            mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
+                            if (iComPlay == 1) {
+                                result = R.string.text_win;
+                                ptlogMatchResult = MatchResult.Win.value;
+                            } else if (iComPlay == 2) {
+                                result = R.string.text_tie;
+                                ptlogMatchResult = MatchResult.Tie.value;
+                            } else {
+                                result = R.string.text_lose;
+                                ptlogMatchResult = MatchResult.Lose.value;
+                            }
+                        } else {//布
+                            ptlogUserInput = Input.Paper.value;
+                            mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
+                            if (iComPlay == 1) {
+                                result = R.string.text_lose;
+                                ptlogMatchResult = MatchResult.Lose.value;
+                            } else if (iComPlay == 2) {
+                                result = R.string.text_win;
+                                ptlogMatchResult = MatchResult.Win.value;
+                            } else {
+                                result = R.string.text_tie;
+                                ptlogMatchResult = MatchResult.Tie.value;
+                            }
                         }
-                        break;
-                    case 2 :
-                        mScore+=100;
-                        mLives-=1;
-                        getScore = 100;
-                        getLives = -1;
-                        if(mPlaySound.equals("1")) {
-                            MediaPlayer mpWin = MediaPlayer.create(getActivity(), R.raw.win);
-                            mpWin.start();
-                            mpWin.seekTo(0);
-                        }
-                        break;
-                    default:
-                        if(mPlaySound.equals("1")) {
-                            MediaPlayer mpTie = MediaPlayer.create(getActivity(), R.raw.excitement);
-                            mpTie.start();
-                            mpTie.seekTo(0);
-                        }
-                        break;
 
-                }
+                    }else{//非自動
+                            switch (v.getId()) {
+                                case R.id.imgViewScissors:
+                                    // do something
+                                    ptlogUserInput = Input.Scissor.value;
+                                    mImgViewPlayer.setImageResource(R.drawable.img_card_scissor_red);
+                                    if (iComPlay == 1) {
+                                        result = R.string.text_tie;
+                                        ptlogMatchResult = MatchResult.Tie.value;
+                                    } else if (iComPlay == 2) {
+                                        result = R.string.text_lose;
+                                        ptlogMatchResult = MatchResult.Lose.value;
+                                    } else {
+                                        result = R.string.text_win;
+                                        ptlogMatchResult = MatchResult.Win.value;
+                                    }
+                                    break;
+                                case R.id.imgViewRock:
+                                    ptlogUserInput = Input.Rock.value;
+                                    mImgViewPlayer.setImageResource(R.drawable.img_card_rock_red);
+                                    if (iComPlay == 1) {
+                                        result = R.string.text_win;
+                                        ptlogMatchResult = MatchResult.Win.value;
+                                    } else if (iComPlay == 2) {
+                                        result = R.string.text_tie;
+                                        ptlogMatchResult = MatchResult.Tie.value;
+                                    } else {
+                                        result = R.string.text_lose;
+                                        ptlogMatchResult = MatchResult.Lose.value;
+                                    }
+                                    break;
+                                case R.id.imgViewPaper:
+                                    ptlogUserInput = Input.Paper.value;
+                                    mImgViewPlayer.setImageResource(R.drawable.img_card_paper_red);
+                                    if (iComPlay == 1) {
+                                        result = R.string.text_lose;
+                                        ptlogMatchResult = MatchResult.Lose.value;
+                                    } else if (iComPlay == 2) {
+                                        result = R.string.text_win;
+                                        ptlogMatchResult = MatchResult.Win.value;
+                                    } else {
+                                        result = R.string.text_tie;
+                                        ptlogMatchResult = MatchResult.Tie.value;
+                                    }
+                                    break;
+                            }
 
-                ptlogScore = getScore;
-                ltlogTransaction = getLives;
-                ltlogType = LifeTransactionLife.PlayGame.value;
+                    }
+                    if (iComPlay == 1) {
+                        mImgViewNpc.setImageResource(R.drawable.img_card_scissor_black);
+                    } else if (iComPlay == 2) {
+                        mImgViewNpc.setImageResource(R.drawable.img_card_rock_black);
+                    } else {
+                        mImgViewNpc.setImageResource(R.drawable.img_card_paper_black);
+                    }
+                    int mr = ptlogMatchResult;
+                    int getScore = 0, getLives = 0;
+                    switch (ptlogMatchResult) {
 
-                Log.d("Result:", String.valueOf(result)+","+mScore+","+mLives);
-                ptlogTotalScore = mScore;
+                        case 1:
+                            mScore += 10;
+                            mLives -= 1;
+                            getScore = 10;
+                            getLives = -1;
+                            if (mPlaySound.equals("1")) {
+                                MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.lose);
+                                mpLose.start();
+                                mpLose.seekTo(0);
+                            }
+                            break;
+                        case 2:
+                            mScore += 100;
+                            mLives -= 1;
+                            getScore = 100;
+                            getLives = -1;
+                            if (mPlaySound.equals("1")) {
+                                MediaPlayer mpWin = MediaPlayer.create(getActivity(), R.raw.win);
+                                mpWin.start();
+                                mpWin.seekTo(0);
+                            }
+                            break;
+                        default:
+                            if (mPlaySound.equals("1")) {
+                                MediaPlayer mpTie = MediaPlayer.create(getActivity(), R.raw.excitement);
+                                mpTie.start();
+                                mpTie.seekTo(0);
+                            }
+                            break;
+
+                    }
+
+                    ptlogScore = getScore;
+                    ltlogTransaction = getLives;
+                    ltlogType = LifeTransactionLife.PlayGame.value;
+
+                    Log.d("Result:", String.valueOf(result) + "," + mScore + "," + mLives);
+                    ptlogTotalScore = mScore;
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
 //                    mTxtViewResult.setText(result);
 
-                CustomDialog dialog = new  CustomDialog(v.getContext(),getString(result),String.valueOf(getLives),String.valueOf(getScore),new CustomDialog.ICustomDialogEventListener() {
-                    @Override
-                    public void customDialogEvent(int id) {
-                    }
-                },R.style.dialog);
-                dialog.show();
-                dialog.getWindow().setLayout(1200, 650);
+                    final CustomDialog dialog = new CustomDialog(v.getContext(), getString(result), String.valueOf(getLives), String.valueOf(getScore), new CustomDialog.ICustomDialogEventListener() {
+                        @Override
+                        public void customDialogEvent(int id) {
+                        }
+                    }, R.style.dialog);
+                    dialog.show();
+                    dialog.getWindow().setLayout(1200, 650);
 
 //                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
 
-                updateUser(user,UpdateUserTimer.PlayGame.value);
-                new CountDownTimer(2000, 1000) {
-                    //mTxtViewCounter.setVisibility(v.VISIBLE );
-                    @Override
-                    public void onTick(long millisUntilFinished) {
-                        //倒數秒數中要做的事
-                    }
-                    @Override
-                    public void onFinish() {
+                    updateUser(user, UpdateUserTimer.PlayGame.value);
+                    new CountDownTimer(3000, 1000) {
+                        //mTxtViewCounter.setVisibility(v.VISIBLE );
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            //倒數秒數中要做的事
+                            if (new SimpleDateFormat("s").format(millisUntilFinished).equals("1") && (autoPlay == true || isPlaying == true)) {
+                                dialog.cancel();
+                            }
+                        }
+
+                        @Override
+                        public void onFinish() {
 //                            ((MainActivity)getActivity()).recallPlayFragment();
-                        mImgViewNpc.setImageResource(R.drawable.img_cardback);
-                        mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
-                        mImgViewRock.setOnClickListener(imgViewPlayOnClick);
-                        mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
-                        mImgViewPlayer.setImageResource(R.drawable.img_cardback);
 
-                        ((MainActivity)getActivity()).setBottomNavListener();
-                    }
-                }.start();
+                            mImgViewNpc.setImageResource(R.drawable.img_cardback);
+                            mImgViewPlayer.setImageResource(R.drawable.img_cardback);
+                            if(autoPlay == false) {
+                                mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
+                                mImgViewRock.setOnClickListener(imgViewPlayOnClick);
+                                mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
+                                mImgViewAuto.setOnClickListener(imgViewAutoPlayOnClick);
+
+                                isPlaying = false;
+                                ((MainActivity) getActivity()).setBottomNavListener();
+                            }else{
+                                PlayGame(v);
+                            }
+
+                        }
+                    }.start();
+                }
+            }.start();
+
+        }else{//若無 Life
+            if(autoPlay == true){
+                autoPlay = false;
+                mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
+                mImgViewRock.setOnClickListener(imgViewPlayOnClick);
+                mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
+                ((MainActivity) getActivity()).setBottomNavListener();
+                mImgViewAuto.setImageResource(R.drawable.button_auto);
             }
-        }.start();
-
-
+        }
     }
 
     @Override
@@ -688,6 +786,7 @@ public class PlayFragment extends Fragment {
                     mTxtViewCoins.setText(String.valueOf(u.getCoins()));
 //                    mTxtViewScore.setText(String.valueOf(u.getScore()));
                     mTxtViewLives.setText(String.valueOf(u.getLives()));
+                    mLives = u.getLives().intValue();
 
 //                    updateBoard(user);
 //                    chkReaded = true;
