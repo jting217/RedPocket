@@ -32,6 +32,7 @@ import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -862,6 +863,7 @@ public class PlayFragment extends Fragment {
                     Map transactionLogLife = new HashMap();
                     transactionLogLife.put("type", ltlogType);
                     transactionLogLife.put("transaction", ltlogTransaction);
+                    transactionLogLife.put("totalLives", mLives);
                     mWriteDatabase.setValue(transactionLogLife);
 
                     if (when == UpdateUserTimer.PlayGame.value) {
@@ -892,8 +894,17 @@ public class PlayFragment extends Fragment {
         mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                    User u = snapshot.getValue(User.class);
-                    Log.d("updateTimer",u.getLifeCounter().toString());
+                User u = snapshot.getValue(User.class);
+                Log.d("updateTimer",u.getLifeCounter().toString());
+
+                /*timestamp to date*/
+                Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis( u.getLifeCounter() );
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH)+1;
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                Log.d("updateTimer",year+"-"+month+"-"+day);
+
             }
 
             @Override
@@ -1014,7 +1025,7 @@ public class PlayFragment extends Fragment {
     };
 
     private void CreateTimer(Long lifeCounter){
-//        Log.d("CreateTimer",String.valueOf(lifeCounter));
+        Log.d("CreateTimer",String.valueOf(lifeCounter));
         //(GetRightNow()-lifeCounter)/300=
         //宣告Timer
         if(timer01 != null){
