@@ -10,12 +10,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -73,8 +75,9 @@ public class PlayFragment extends Fragment {
     private User iniUser;
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
-    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc;
+    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter;
+    private RelativeLayout mCoorContentRegion;
     private int mCoins;
     private static int mScore;
     private int mLives;
@@ -174,8 +177,16 @@ public class PlayFragment extends Fragment {
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewEmail);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
+
+        mCoorContentRegion = (RelativeLayout) getView().findViewById(R.id.coorContentRegion);
+        mCoorContentRegion.setOnClickListener(layoutViewToolsOnClick);
+
+        mImgViewTools = (ImageView) getView().findViewById(R.id.imgViewTools);
+        mImgViewTools.setOnClickListener(imgViewToolsOnClick);
+
         mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
         mListViewTools.setAdapter(new ToolsAdapter());
+
 
         iniUser = new User();
         readUser(UpdateUserTimer.OnIni.value);
@@ -189,9 +200,23 @@ public class PlayFragment extends Fragment {
 
     }
 
-    private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
+    private View.OnClickListener imgViewToolsOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
             Log.d("FragPlay","OnClickListener");
+
+            mCoorContentRegion.setVisibility(View.VISIBLE);
+        }
+    };
+    private View.OnClickListener layoutViewToolsOnClick = new View.OnClickListener() {
+        public void onClick(final View v) {
+            Log.d("FragPlay","layoutViewToolsOnClick");
+            mCoorContentRegion.setVisibility(View.INVISIBLE);
+        }
+    };
+
+    private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
+        public void onClick(final View v) {
+            Log.d("FragPlay","imgViewPlayOnClick");
             if(chkReaded) {
                 PlayGame(v);
             }
