@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/coorRegion">
+
+
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -221,20 +224,23 @@
             </LinearLayout>
 
         </LinearLayout>
-
         <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="1"
             android:id="@+id/coorContentRegion"
-            android:background="@color/colorGray09"
-            android:visibility="invisible">
+            android:background="@color/colorTest"
+            android:clickable="true">
             <ListView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_centerInParent="true"/>
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_centerVertical="true"
+                android:id="@+id/listViewTools"
+                android:background="@color/colorWhite"/>
         </RelativeLayout >
+
 
     </android.support.design.widget.CoordinatorLayout>
 </FrameLayout>

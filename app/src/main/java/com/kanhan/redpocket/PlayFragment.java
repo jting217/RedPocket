@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,6 +67,7 @@ public class PlayFragment extends Fragment {
     private boolean startflag=false;
     private static long tmpTimer;
     private Intent countDownSound;
+    private ListView mListViewTools;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private User iniUser;
@@ -172,6 +174,9 @@ public class PlayFragment extends Fragment {
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewEmail);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
+        mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
+        mListViewTools.setAdapter(new ToolsAdapter());
+
         iniUser = new User();
         readUser(UpdateUserTimer.OnIni.value);
     }

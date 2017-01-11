@@ -42,7 +42,7 @@ public class ShopsFragment extends Fragment {
         mListViewCoins = (ListView) getView().findViewById(R.id.listViewCoins);
         mListViewCoins.setAdapter(new CoinsAdapter());
         mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
-        mListViewTools.setAdapter(new ToolsAdapter());
+        mListViewTools.setAdapter(new ShopsAdapter());
         super.onActivityCreated(savedInstanceState);
     }
 

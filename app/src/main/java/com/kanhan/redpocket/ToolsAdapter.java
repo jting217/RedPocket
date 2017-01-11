@@ -34,12 +34,12 @@ public class ToolsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
         if(convertView == null){
-            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.shops_list_adapter, null);
+            convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.tools_list_adapter, null);
             holder = new ToolsAdapter.Holder();
-            holder.image = (ImageView) convertView.findViewById(R.id.imageItem);
-            holder.txtPrice = (TextView) convertView.findViewById(R.id.txtPrice);
-            holder.txtInfo = (TextView) convertView.findViewById(R.id.txtInfo);
-            holder.btnBuy = (Button) convertView.findViewById(R.id.btnBuy);
+            holder.mImageItem = (ImageView) convertView.findViewById(R.id.imageItem);
+            holder.mTxtViewName = (TextView) convertView.findViewById(R.id.txtViewName);
+            holder.mTxtViewInfo = (TextView) convertView.findViewById(R.id.txtViewInfo);
+            holder.mBtnAmount = (Button) convertView.findViewById(R.id.btnAmount);
 
             convertView.setTag(holder);
         } else{
@@ -47,40 +47,40 @@ public class ToolsAdapter extends BaseAdapter {
         }
         switch(position) {
             case 0:
-                holder.image.setImageResource(R.drawable.icon_ironfist);
-                holder.txtPrice.setText("Iron First");
-                holder.txtInfo.setText("Tool Information");
-                holder.btnBuy.setText("100 Coins");
+                holder.mImageItem.setImageResource(R.drawable.icon_ironfist);
+                holder.mTxtViewName.setText("Iron First");
+                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mBtnAmount.setText("3");
                 break;
             case 1:
-                holder.image.setImageResource(R.drawable.icon_mindcontrol);
-                holder.txtPrice.setText("Mind Control");
-                holder.txtInfo.setText("Tool Information");
-                holder.btnBuy.setText("200 Coins");
+                holder.mImageItem.setImageResource(R.drawable.icon_mindcontrol);
+                holder.mTxtViewName.setText("Mind Control");
+                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mBtnAmount.setText("3");
                 break;
             case 2:
-                holder.image.setImageResource(R.drawable.icon_goldenhand);
-                holder.txtPrice.setText("Golden Hand");
-                holder.txtInfo.setText("Tool Information");
-                holder.btnBuy.setText("150 Coins");
+                holder.mImageItem.setImageResource(R.drawable.icon_goldenhand);
+                holder.mTxtViewName.setText("Golden Hand");
+                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mBtnAmount.setText("3");
                 break;
             case 3:
-                holder.image.setImageResource(R.drawable.life_icon);
-                holder.txtPrice.setText("Life");
-                holder.txtInfo.setText("Tool Information");
-                holder.btnBuy.setText("100 Coins");
+                holder.mImageItem.setImageResource(R.drawable.life_icon);
+                holder.mTxtViewName.setText("Life");
+                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mBtnAmount.setText("3");
                 break;
             case 4:
-                holder.image.setImageResource(R.drawable.dice_icon);
-                holder.txtPrice.setText("Dice");
-                holder.txtInfo.setText("Tool Information");
-                holder.btnBuy.setText("100 Coins");
+                holder.mImageItem.setImageResource(R.drawable.dice_icon);
+                holder.mTxtViewName.setText("Dice");
+                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mBtnAmount.setText("3");
                 break;
             case 5:
-                holder.image.setImageResource(R.drawable.victory_icon);
-                holder.txtPrice.setText("Victory");
-                holder.txtInfo.setText("Tool Information");
-                holder.btnBuy.setText("100 Coins");
+                holder.mImageItem.setImageResource(R.drawable.victory_icon);
+                holder.mTxtViewName.setText("Victory");
+                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mBtnAmount.setText("0");
                 break;
 //            case 2:
 //                holder.image.setImageResource(R.drawable.panda);
@@ -90,10 +90,10 @@ public class ToolsAdapter extends BaseAdapter {
         return convertView;
     }
     class Holder{
-        ImageView image;
-        TextView txtPrice;
-        TextView txtInfo;
-        Button btnBuy;
+        ImageView mImageItem;
+        TextView mTxtViewName;
+        TextView mTxtViewInfo;
+        Button mBtnAmount;
     }
 
 }
