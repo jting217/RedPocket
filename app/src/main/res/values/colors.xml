@@ -16,7 +16,8 @@
     <color name="colorGray07">#8f8e94</color>
     <color name="colorGray08">#cdced2</color>
     <color name="colorGray09">#1a666666</color>
-    <color name="colorTest">#e0000000</color>
+    <color name="colorGray10">#909090</color>
+    <color name="colorTest">#e8888888</color>
     <color name="colorFragmentTitle"> #e6f9f9f9</color>
     <color name="color_home">#009688</color>
     <color name="color_search">#2196F3</color>

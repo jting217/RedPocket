@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.kanhan.redpocket.LeagueFragment">
 
     <LinearLayout
@@ -21,6 +22,62 @@
             android:paddingBottom="10dp"
             android:text="@string/text_league" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="58dp"
+                android:id="@+id/imgViewNoLeague"
+                app:srcCompat="@drawable/no_league_message_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="130dp"/>
+            <TextView
+                android:text="@string/text_sorry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-light"
+                android:textAlignment="center"
+                android:id="@+id/txtViewSorry"
+                android:layout_below="@+id/imgViewNoLeague"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"/>
+            <TextView
+                android:text="@string/text_no_ranking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorAccent"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif-light"
+                android:textAlignment="center"
+                android:id="@+id/txtViewNoRanking"
+                android:layout_below="@+id/txtViewSorry"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"/>
+            <TextView
+                android:text="Update time: 2017/1/11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGray10"
+                android:textSize="13sp"
+                android:textAlignment="center"
+                android:id="@+id/txtViewUpdateTime"
+                android:layout_below="@+id/txtViewNoRanking"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"/>
+
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
 
 
     </LinearLayout>

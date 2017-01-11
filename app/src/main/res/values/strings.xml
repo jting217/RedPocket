@@ -27,6 +27,8 @@
     <string name="password">Password</string>
     <string name="nickname">Nickname</string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="text_sorry">Sorry !!</string>
+    <string name="text_no_ranking">No ranking yet</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
