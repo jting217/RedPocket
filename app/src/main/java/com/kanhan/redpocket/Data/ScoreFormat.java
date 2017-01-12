@@ -11,12 +11,12 @@ import java.util.Map;
  */
 
 @IgnoreExtraProperties
-public class Score {
+public class ScoreFormat {
 
     private String displayName;
-    private Long score;
+    private String score;
 
-    public Score() {
+    public ScoreFormat() {
     }
 
     public String getDisplayName() {
@@ -27,15 +27,15 @@ public class Score {
         this.displayName = displayName;
     }
 
-    public Long getScore() {
+    public String getScore() {
         return score;
     }
 
-    public void setScore(Long score) {
+    public void setScore(String score) {
         this.score = score;
     }
 
-    public Score(String displayName, Long score){
+    public ScoreFormat(String displayName,  String score){
 
         this.displayName = displayName;
         this.score = score;

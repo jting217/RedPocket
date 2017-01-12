@@ -1,6 +1,9 @@
 package com.kanhan.redpocket;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kanhan.redpocket.Data.Score;
+import com.kanhan.redpocket.Data.ScoreFormat;
 
 import java.util.List;
 
@@ -21,11 +24,14 @@ import static com.facebook.FacebookSdk.getApplicationContext;
 public class LeagueAdapter extends BaseAdapter {
 
     private LayoutInflater mLayInf;
-    List<Score> mItemList;
-    public LeagueAdapter(Context context, List<Score> itemList)
+    private List<ScoreFormat> mItemList;
+    private Context mContext;
+    public LeagueAdapter(Context context, List<ScoreFormat> itemList)
     {
+        Log.w("LeagueAdapter",String.valueOf(itemList.size()));
         mLayInf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mItemList = itemList;
+        mContext = context;
     }
 
     @Override
@@ -49,10 +55,12 @@ public class LeagueAdapter extends BaseAdapter {
         return position;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Holder holder;
         if(convertView == null){
+//            Log.w("holer","convertView == null");
             convertView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.league_list_adapter, null);
             holder = new LeagueAdapter.Holder();
             holder.mTxtViewOrder = (TextView) convertView.findViewById(R.id.txtViewOrder);
@@ -63,38 +71,45 @@ public class LeagueAdapter extends BaseAdapter {
 
             convertView.setTag(holder);
         } else{
+//            Log.w("holer","convertView != null");
             holder = (Holder) convertView.getTag();
         }
         switch(position) {
             case 0:
+//                Log.w("holer",mItemList.get(position).getDisplayName());
                 holder.mTxtViewOrder.setText(String.valueOf(position+1));
                 holder.mImgViewTag.setImageResource(R.drawable.img_no1);
-                holder.mTxtViewDisplayName.setText(mItemList.get(0).getDisplayName());
-                holder.mTxtViewScore.setText(String.valueOf(mItemList.get(0).getScore().intValue()));
+
 
                 break;
             case 1:
                 holder.mTxtViewOrder.setText(String.valueOf(position+1));
                 holder.mImgViewTag.setImageResource(R.drawable.img_no2);
-                holder.mTxtViewDisplayName.setText(mItemList.get(1).getDisplayName());
-                holder.mTxtViewScore.setText(String.valueOf(mItemList.get(1).getScore().intValue()));
+
                 break;
             case 2:
                 holder.mTxtViewOrder.setText(String.valueOf(position+1));
                 holder.mImgViewTag.setImageResource(R.drawable.img_no3);
-                holder.mTxtViewDisplayName.setText(mItemList.get(2).getDisplayName());
-                holder.mTxtViewScore.setText(String.valueOf(mItemList.get(2).getScore().intValue()));
+
                 break;
             default:
                 holder.mTxtViewOrder.setText(String.valueOf(position+1));
                 holder.mImgViewTag.setVisibility(View.INVISIBLE);
-                holder.mTxtViewDisplayName.setText(mItemList.get(position).getDisplayName());
-                holder.mTxtViewScore.setText(String.valueOf(mItemList.get(position).getScore().intValue()));
+
 
 //            case 2:
 //                holder.image.setImageResource(R.drawable.panda);
 //                holder.text.setText("panda");
 //                break;
+        }
+        if(position<3){
+            holder.mTxtViewDisplayName.setTextColor(mContext.getResources().getColor(R.color.colorAccent,null));
+            holder.mTxtViewScore.setTextColor(mContext.getResources().getColor(R.color.colorAccent,null));
+        }
+//        Log.w("holer",mItemList.get(position).getDisplayName());
+        if(mContext != null) {
+            holder.mTxtViewDisplayName.setText(mItemList.get(position).getDisplayName());
+            holder.mTxtViewScore.setText(String.valueOf(mItemList.get(position).getScore()));
         }
         return convertView;
     }

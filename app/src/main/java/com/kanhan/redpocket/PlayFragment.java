@@ -761,37 +761,7 @@ public class PlayFragment extends Fragment {
     }
 
 
-    /*找top100*/
-    private void boardOrderby() {
-        Log.d("☆Firebase(playFrag)","boardOrderby");
 
-        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards/0/scores");
-        Query queryRef = mQueryDatabase.orderByChild("score").limitToLast(3);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
-                    Log.w("firebase+",boardSnapshot.toString());
-//                    Map<String, Object> map = (HashMap<String, Object>) boardSnapshot.getValue();
-//
-//                    //Adding it to a string
-//                    for (Object key : map.keySet()) {
-//                        Log.w("firebase+", key + " : " + map.get(key) + map.get(key).getClass());
-//                    }
-//                    Board b = boardSnapshot.getValue(Board.class);
-//                    Log.e("Get Data2", boardSnapshot.getKey()+","+b.getStartDateInterval()+","+b.getEndDateInterval());
-//                    mBoardNode = boardSnapshot.getKey();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("☆firebase failed: ", databaseError.getMessage());
-            }
-        });
-
-
-    }
 
     private void readUser(final int when) {
         Log.d("☆Firebase", "readUser->"+String.valueOf(UpdateUserTimer.values()[when-1]));

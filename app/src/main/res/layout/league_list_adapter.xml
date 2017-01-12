@@ -25,27 +25,28 @@
         app:srcCompat="@drawable/img_no1"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/txtViewOrder"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="0dp"
         android:id="@+id/imgViewTag" />
 
     <TextView
-        android:text="10325"
+        android:text="10,325"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="28dp"
-        android:layout_centerVertical="true"
         android:id="@+id/txtViewScore"
-        android:textSize="20dp"
-        android:layout_alignTop="@+id/imgViewTag"
+        android:textColor="@color/colorGray11"
+        android:textSize="16dp"
+        android:layout_alignBaseline="@+id/txtViewDisplayName"
+        android:layout_alignBottom="@+id/txtViewDisplayName"
         android:layout_alignParentEnd="true" />
 
     <TextView
         android:text="John Lee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
         android:id="@+id/txtViewDisplayName"
-        android:textSize="20dp"
+        android:textColor="@color/colorBlack"
+        android:textSize="16dp"
         android:layout_alignBaseline="@+id/txtViewOrder"
         android:layout_alignBottom="@+id/txtViewOrder"
         android:layout_toEndOf="@+id/imgViewTag" />
