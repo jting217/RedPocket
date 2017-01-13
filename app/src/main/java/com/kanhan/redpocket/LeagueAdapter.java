@@ -3,6 +3,7 @@ package com.kanhan.redpocket;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,8 +104,10 @@ public class LeagueAdapter extends BaseAdapter {
 //                break;
         }
         if(position<3){
-            holder.mTxtViewDisplayName.setTextColor(mContext.getResources().getColor(R.color.colorAccent,null));
-            holder.mTxtViewScore.setTextColor(mContext.getResources().getColor(R.color.colorAccent,null));
+            holder.mTxtViewDisplayName.setTextColor(ContextCompat.getColor(mContext,R.color.colorAccent));
+            holder.mTxtViewScore.setTextColor(ContextCompat.getColor(mContext,R.color.colorAccent));
+//            holder.mTxtViewDisplayName.setTextColor(mContext.getResources().getColor(R.color.colorAccent,null));
+//            holder.mTxtViewScore.setTextColor(mContext.getResources().getColor(R.color.colorAccent,null));
         }
 //        Log.w("holer",mItemList.get(position).getDisplayName());
         if(mContext != null) {
