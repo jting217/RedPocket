@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -769,7 +768,7 @@ public class PlayFragment extends Fragment {
 
     }
 
-    private void readSystemPreferences(final Long lifeCounter) {
+    private void readSystemPreferences(final Long lifeCounter, final Long userDailyResetDate) {
         Log.d("☆Firebase(playFrag)","readSystemPreferences");
         mReadDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
 
@@ -787,6 +786,15 @@ public class PlayFragment extends Fragment {
                 setTsec = mSystemPreferences.getCounterSec().intValue();
                 Log.w("☆firebase(playFrag)",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getCounterSec()));
                 CreateTimer(lifeCounter);
+
+                if(!isTheSameDate(userDailyResetDate/1000)){
+
+                    mCoins = mCoins + mSystemPreferences.getDailyReward().intValue();
+                    mDailyPlayTimes = 0;
+                    mDailyWinTimes = 0;
+                    updateUser(user,UpdateUserTimer.DailyReset.value);
+
+                }
             }
 
             @Override
@@ -832,11 +840,14 @@ public class PlayFragment extends Fragment {
                     mDailyPlayTimes = u.getDailyPlayTimes().intValue();
                     mDailyWinTimes = u.getDailyWinTimes().intValue();
 
+
+
 //                    updateBoard(user);
 //                    chkReaded = true;
 
                     if(when == UpdateUserTimer.OnIni.value) {
-                        readSystemPreferences(u.getLifeCounter()/1000);
+                        Log.w("DailyResetDate",String.valueOf(u.getDailyResetDate()));
+                        readSystemPreferences(u.getLifeCounter()/1000,u.getDailyResetDate());
                         updateBoard(UpdateUserTimer.OnIni.value);
 //                        mTxtViewScore.setText(String.valueOf(0));
                     }
@@ -890,6 +901,15 @@ public class PlayFragment extends Fragment {
                     newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
                     newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
 //                    iniUser.setStartDateInterval(mStartDateInterval);
+                }else if(when == UpdateUserTimer.DailyReset.value){
+//                    mCoins = u.getCoins().intValue() + mSystemPreferences.getDailyReward().intValue();
+//                    mDailyPlayTimes = 0;
+//                    mDailyWinTimes = 0;
+                    newUserData.put("dailyPlayTimes", Long.valueOf(mDailyPlayTimes));
+                    newUserData.put("dailyWinTimes", Long.valueOf(mDailyWinTimes));
+                    newUserData.put("dailyResetDate", ServerValue.TIMESTAMP);
+                    newUserData.put("coins", Long.valueOf(mCoins));
+                    mTxtViewCoins.setText(String.valueOf(mCoins));
                 }
 
                 mWriteDatabase.updateChildren(newUserData);
@@ -907,13 +927,22 @@ public class PlayFragment extends Fragment {
                         transactionLogPlay.put("totalScore", ptlogTotalScore);
                         mWriteDatabase.setValue(transactionLogPlay);
                     }
-                    mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogLife/" + rightNow);
-                    Map transactionLogLife = new HashMap();
-                    transactionLogLife.put("type", ltlogType);
-                    transactionLogLife.put("transaction", ltlogTransaction);
-                    transactionLogLife.put("totalLives", mLives);
-                    mWriteDatabase.setValue(transactionLogLife);
-
+                    if (when == UpdateUserTimer.PlayGame.value || when == UpdateUserTimer.FiveMinutesTimer.value) {
+                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogLife/" + rightNow);
+                        Map transactionLogLife = new HashMap();
+                        transactionLogLife.put("type", ltlogType);
+                        transactionLogLife.put("transaction", ltlogTransaction);
+                        transactionLogLife.put("totalLives", mLives);
+                        mWriteDatabase.setValue(transactionLogLife);
+                    }
+                    if (when == UpdateUserTimer.DailyReset.value){
+                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogCoin/" + rightNow);
+                        Map transactionLogCoin = new HashMap();
+                        transactionLogCoin.put( "type", CoinTransactionType.DailyReward.value);
+                        transactionLogCoin.put( "transaction", mSystemPreferences.getDailyReward());
+                        transactionLogCoin.put( "totalCoins", mCoins);
+                        mWriteDatabase.setValue(transactionLogCoin);
+                    }
                     if (when == UpdateUserTimer.PlayGame.value) {
                         mTxtViewScore.setText(String.valueOf(mScore));
                     }
@@ -946,12 +975,12 @@ public class PlayFragment extends Fragment {
                 Log.d("updateTimer",u.getLifeCounter().toString());
 
                 /*timestamp to date*/
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis( u.getLifeCounter() );
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH)+1;
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-                Log.d("updateTimer",year+"-"+month+"-"+day);
+//                Calendar cal = Calendar.getInstance();
+//                cal.setTimeInMillis( u.getLifeCounter() );
+//                int year = cal.get(Calendar.YEAR);
+//                int month = cal.get(Calendar.MONTH)+1;
+//                int day = cal.get(Calendar.DAY_OF_MONTH);
+//                Log.d("updateTimer",year+"-"+month+"-"+day);
 
             }
 
@@ -1002,7 +1031,8 @@ public class PlayFragment extends Fragment {
         Purchase(3),//購買
         FiveMinutesTimer(4),
         GetNewIntervalDate(5),
-        OnIni(6);
+        OnIni(6),
+        DailyReset(7);
 
         private int value;
 
@@ -1030,10 +1060,49 @@ public class PlayFragment extends Fragment {
         }
     }
 
+    public enum CoinTransactionType {
+        DailyReward(1),
+        BuyLife(2);
+
+        private int value;
+
+        private CoinTransactionType(int value) {
+            this.value = value;
+        }
+        public int CoinTransactionType() {
+            return this.value;
+        }
+    }
+
     private Long GetRightNow(){
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();
         return tsLong;
+    }
+    private boolean isTheSameDate(Long userDate){
+        boolean isTheSameDate = true;
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis( userDate );
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String strUserDate = String.valueOf(year)+String.valueOf(String.format("%02d", month))+String.valueOf(String.format("%02d", day));
+
+        Long rightNow = GetRightNow();
+        Calendar calR = Calendar.getInstance();
+        calR.setTimeInMillis( rightNow );
+        int yearR = calR.get(Calendar.YEAR);
+        int monthR = calR.get(Calendar.MONTH)+1;
+        int dayR = calR.get(Calendar.DAY_OF_MONTH);
+        String strRightDate = String.valueOf(yearR)+String.valueOf(String.format("%02d", monthR))+String.valueOf(String.format("%02d", dayR));
+
+        if(Integer.valueOf(strRightDate) > Integer.valueOf(strUserDate)){
+            isTheSameDate = false;
+        }
+        Log.w("isTheSameDate",userDate+","+rightNow+","+isTheSameDate+",rightNow:"+strRightDate+","+strUserDate);
+        return isTheSameDate;
     }
 
     //TimerTask無法直接改變元件因此要透過Handler來當橋樑
