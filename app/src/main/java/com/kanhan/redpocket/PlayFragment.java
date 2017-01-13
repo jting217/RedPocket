@@ -78,9 +78,8 @@ public class PlayFragment extends Fragment {
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter;
     private RelativeLayout mCoorContentRegion;
-    private int mCoins;
+    private int mCoins, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
     private static int mScore;
-    private int mLives;
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
     private boolean updatePlayResult = false, updateGetLife = false;
@@ -488,6 +487,19 @@ public class PlayFragment extends Fragment {
 
                     Log.d("Result:", String.valueOf(result) + "," + mScore + "," + mLives);
                     ptlogTotalScore = mScore;
+
+                    if(ptlogMatchResult == MatchResult.Win.value)
+                    {
+                        mDailyWinTimes += 1;
+                        if(ptlogUserInput == Input.Scissor.value){
+                            mWinWithScissor += 1;
+                        }else if(ptlogUserInput == Input.Rock.value){
+                            mWinWithRock += 1;
+                        }else if(ptlogUserInput == Input.Paper.value){
+                            mWinWithPaper += 1;
+                        }
+                    }
+                    mDailyPlayTimes += 1;
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
 //                    mTxtViewResult.setText(result);
 
@@ -788,6 +800,11 @@ public class PlayFragment extends Fragment {
 //                    mTxtViewScore.setText(String.valueOf(u.getScore()));
                     mTxtViewLives.setText(String.valueOf(u.getLives()));
                     mLives = u.getLives().intValue();
+                    mWinWithScissor = u.getWinWithScissor().intValue();
+                    mWinWithRock = u.getWinWithRock().intValue();
+                    mWinWithPaper = u.getWinWithPaper().intValue();
+                    mDailyPlayTimes = u.getDailyPlayTimes().intValue();
+                    mDailyWinTimes = u.getDailyWinTimes().intValue();
 
 //                    updateBoard(user);
 //                    chkReaded = true;
@@ -834,6 +851,11 @@ public class PlayFragment extends Fragment {
                 if(when == UpdateUserTimer.PlayGame.value)
                 {
                     newUserData.put("lives", Long.valueOf(mLives));
+                    newUserData.put("dailyPlayTimes",Long.valueOf(mDailyPlayTimes));
+                    newUserData.put("dailyWinTimes",Long.valueOf(mDailyWinTimes));
+                    newUserData.put("winWithScissor",Long.valueOf(mWinWithScissor));
+                    newUserData.put("winWithRock",Long.valueOf(mWinWithRock));
+                    newUserData.put("winWithPaper",Long.valueOf(mWinWithPaper));
 //                    newUserData.put("score", Long.valueOf(mScore));
                 }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
@@ -841,7 +863,7 @@ public class PlayFragment extends Fragment {
                 }else if(when == UpdateUserTimer.GetNewIntervalDate.value){
                     newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
                     newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
-                    iniUser.setStartDateInterval(mStartDateInterval);
+//                    iniUser.setStartDateInterval(mStartDateInterval);
                 }
 
                 mWriteDatabase.updateChildren(newUserData);

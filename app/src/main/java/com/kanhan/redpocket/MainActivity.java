@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        //取消螢幕休眠
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
 
         //------------------------login start---------------
@@ -335,8 +338,8 @@ public class MainActivity extends AppCompatActivity {
                     user.setWinWithPaper(iniVal);
                     user.setWinWithRock(iniVal);
                     user.setWinWithScissor(iniVal);
-                    user.setStartDateInterval(iniVal);
-                    user.setEndDateInterval(iniVal);
+//                    user.setStartDateInterval(iniVal);
+//                    user.setEndDateInterval(iniVal);
                     user.setLives(mSystemPreferences.getSignupReward());
                     mWriteDatabase.child(userId).setValue(user);
                 }
