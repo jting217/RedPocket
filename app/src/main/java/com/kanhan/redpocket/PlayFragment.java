@@ -300,6 +300,19 @@ public class PlayFragment extends Fragment {
             mImgViewPaper.setOnClickListener(null);
             if(autoPlay == false){
                 mImgViewAuto.setOnClickListener(null);
+                if(!(autoPlay == true || isPlaying == true)) {
+                    switch (v.getId()) {
+                        case R.id.imgViewScissors:
+                            mImgViewScissors.setImageResource(R.drawable.button_scissor_active);
+                            break;
+                        case R.id.imgViewRock:
+                            mImgViewRock.setImageResource(R.drawable.button_rock_active);
+                            break;
+                        case R.id.imgViewPaper:
+                            mImgViewPaper.setImageResource(R.drawable.button_paper_active);
+                            break;
+                    }
+                }
             }
 
             mCoins = Integer.valueOf(mTxtViewCoins.getText().toString());
@@ -531,6 +544,19 @@ public class PlayFragment extends Fragment {
                             mImgViewNpc.setImageResource(R.drawable.img_cardback);
                             mImgViewPlayer.setImageResource(R.drawable.img_cardback);
                             if(autoPlay == false) {
+                                if(!(autoPlay == true || isPlaying == true)) {
+                                    switch (v.getId()) {
+                                        case R.id.imgViewScissors:
+                                            mImgViewScissors.setImageResource(R.drawable.button_scissor);
+                                            break;
+                                        case R.id.imgViewRock:
+                                            mImgViewRock.setImageResource(R.drawable.button_rock);
+                                            break;
+                                        case R.id.imgViewPaper:
+                                            mImgViewPaper.setImageResource(R.drawable.button_paper);
+                                            break;
+                                    }
+                                }
                                 mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
                                 mImgViewRock.setOnClickListener(imgViewPlayOnClick);
                                 mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
