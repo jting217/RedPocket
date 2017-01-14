@@ -787,11 +787,12 @@ public class PlayFragment extends Fragment {
                 Log.w("☆firebase(playFrag)",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getCounterSec()));
                 CreateTimer(lifeCounter);
 
-                if(!isTheSameDate(userDailyResetDate/1000)){
-
+                if(!isTheSameDate(userDailyResetDate)){
+                    Log.w("mCoins",String.valueOf(mCoins));
                     mCoins = mCoins + mSystemPreferences.getDailyReward().intValue();
                     mDailyPlayTimes = 0;
                     mDailyWinTimes = 0;
+                    Log.w("mCoins",String.valueOf(mCoins));
                     updateUser(user,UpdateUserTimer.DailyReset.value);
 
                 }
@@ -839,7 +840,7 @@ public class PlayFragment extends Fragment {
                     mWinWithPaper = u.getWinWithPaper().intValue();
                     mDailyPlayTimes = u.getDailyPlayTimes().intValue();
                     mDailyWinTimes = u.getDailyWinTimes().intValue();
-
+                    mCoins = u.getCoins().intValue();
 
 
 //                    updateBoard(user);
@@ -1089,19 +1090,19 @@ public class PlayFragment extends Fragment {
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
         String strUserDate = String.valueOf(year)+String.valueOf(String.format("%02d", month))+String.valueOf(String.format("%02d", day));
+        Log.w("isTheSameDate",year+","+month+","+day);
 
-        Long rightNow = GetRightNow();
         Calendar calR = Calendar.getInstance();
-        calR.setTimeInMillis( rightNow );
+        calR.setTimeInMillis(System.currentTimeMillis());
         int yearR = calR.get(Calendar.YEAR);
         int monthR = calR.get(Calendar.MONTH)+1;
         int dayR = calR.get(Calendar.DAY_OF_MONTH);
         String strRightDate = String.valueOf(yearR)+String.valueOf(String.format("%02d", monthR))+String.valueOf(String.format("%02d", dayR));
-
+        Log.w("isTheSameDate",yearR+","+monthR+","+dayR);
         if(Integer.valueOf(strRightDate) > Integer.valueOf(strUserDate)){
             isTheSameDate = false;
         }
-        Log.w("isTheSameDate",userDate+","+rightNow+","+isTheSameDate+",rightNow:"+strRightDate+","+strUserDate);
+        Log.w("isTheSameDate",userDate+","+isTheSameDate+",rightNow:"+strRightDate+","+strUserDate);
         return isTheSameDate;
     }
 
