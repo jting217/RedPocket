@@ -54,7 +54,7 @@
                     android:id="@+id/txtViewLives"
                     android:layout_alignStart="@+id/imageLives"
                     android:layout_alignBottom="@+id/txtViewScores"
-                    android:layout_below="@+id/imageLives" />
+                    android:layout_below="@+id/imageLives"/>
 
                 <TextView
                     android:text="0"
@@ -76,33 +76,33 @@
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:textAlignment="center"
-                    android:id="@+id/textBuyMore"
+                    android:id="@+id/txtViewBuyMore"
                     android:layout_below="@+id/txtViewCoins"
                     android:layout_alignStart="@+id/imageCoin"
                     android:layout_alignEnd="@+id/imageCoin" />
 
                 <TextView
                     android:text="0"
-                    android:layout_width="92dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
                     android:textSize="26sp"
                     android:textAlignment="center"
                     android:id="@+id/txtViewCoins"
                     android:layout_below="@+id/imageCoin"
-                    android:layout_alignStart="@+id/textBuyMore"
+                    android:layout_alignStart="@+id/txtViewBuyMore"
                     android:layout_alignEnd="@+id/imageCoin" />
 
                 <TextView
                     android:text="00:00"
-                    android:layout_width="92dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorGray01"
                     android:textSize="12sp"
                     android:textAlignment="center"
                     android:id="@+id/txtViewCounter"
-                    android:layout_alignBaseline="@+id/textBuyMore"
-                    android:layout_alignBottom="@+id/textBuyMore"
+                    android:layout_alignBaseline="@+id/txtViewBuyMore"
+                    android:layout_alignBottom="@+id/txtViewBuyMore"
                     android:layout_alignStart="@+id/txtViewLives" />
 
                 <ImageView
@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     app:srcCompat="@drawable/top_display_live"
                     android:id="@+id/imageLives"
-                    android:layout_marginEnd="33dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true" />
 
@@ -233,13 +233,14 @@
             android:background="@color/colorTest"
             android:clickable="true"
             android:visibility="invisible">
+
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
-                android:layout_centerVertical="true"
                 android:id="@+id/listViewTools"
-                android:background="@color/colorWhite"/>
+                android:background="@color/colorWhite"
+                android:layout_centerVertical="true"/>
         </RelativeLayout >
 
 
