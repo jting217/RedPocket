@@ -173,7 +173,7 @@ public class PlayFragment extends Fragment {
         mTxtViewPlayCounter = (TextView) getView().findViewById(R.id.txtViewPlayCounter);
         mTxtViewResult = (TextView) getView().findViewById(R.id.txtViewResult);
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
-        mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewEmail);
+        mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScores);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
 
         mCoorContentRegion = (RelativeLayout) getView().findViewById(R.id.coorContentRegion);

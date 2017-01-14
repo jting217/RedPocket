@@ -53,18 +53,18 @@
                     android:textAlignment="center"
                     android:id="@+id/txtViewLives"
                     android:layout_alignStart="@+id/imageLives"
-                    android:layout_alignBottom="@+id/txtViewEmail"
+                    android:layout_alignBottom="@+id/txtViewScores"
                     android:layout_below="@+id/imageLives" />
 
                 <TextView
                     android:text="0"
-                    android:layout_width="92dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
                     android:textSize="30sp"
                     android:textStyle="bold"
                     android:textAlignment="center"
-                    android:id="@+id/txtViewEmail"
+                    android:id="@+id/txtViewScores"
                     android:layout_below="@+id/imageScore"
                     android:layout_centerHorizontal="true" />
 

@@ -129,7 +129,7 @@
         android:layout_width="150dp"
         android:paddingTop="10dp"
         android:layout_height="wrap_content"
-        android:id="@+id/txtViewEmail"
+        android:id="@+id/txtViewScores"
         android:layout_below="@+id/toolbar"
         android:layout_alignParentStart="true"
         android:textSize="12sp"
@@ -161,7 +161,7 @@
         android:fontFamily="sans-serif"
         android:textColor="#574751"
         android:textStyle="normal"
-        android:layout_below="@+id/txtViewEmail"
+        android:layout_below="@+id/txtViewScores"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/editTxtPassword" />
 
