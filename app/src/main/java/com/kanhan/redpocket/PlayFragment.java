@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -69,6 +70,7 @@ public class PlayFragment extends Fragment {
     private static long tmpTimer;
     private Intent countDownSound;
     private ListView mListViewTools;
+    private ListAdapter mToolsAdapter;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private User iniUser;
@@ -180,10 +182,12 @@ public class PlayFragment extends Fragment {
         mCoorContentRegion.setOnClickListener(layoutViewToolsOnClick);
 
         mImgViewTools = (ImageView) getView().findViewById(R.id.imgViewTools);
-        mImgViewTools.setOnClickListener(imgViewToolsOnClick);
+//        mImgViewTools.setOnClickListener(imgViewToolsOnClick);
 
         mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
-        mListViewTools.setAdapter(new ToolsAdapter());
+//        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(),iniUser);
+//        mListViewTools.setAdapter(mToolsAdapter);
+        //mLeagueAdapter = new LeagueAdapter(getActivity().getApplicationContext(), mUserScoreOrderList);
 
 
         iniUser = new User();
@@ -201,7 +205,7 @@ public class PlayFragment extends Fragment {
     private View.OnClickListener imgViewToolsOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
             Log.d("FragPlay","OnClickListener");
-
+            readUser(UpdateUserTimer.OnIni.value);
             mCoorContentRegion.setVisibility(View.VISIBLE);
         }
     };
@@ -821,13 +825,13 @@ public class PlayFragment extends Fragment {
                 User u = snapshot.getValue(User.class);
                 if(u != null){
                     //以下這段也可以用！
-                    /*
-                                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+/*
+                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 
-                                    for (Object key : map.keySet()) {
-                                        Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
-                                    }
-                                    */
+                    for (Object key : map.keySet()) {
+                        Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
+                    }
+*/
                     iniUser = u;
                     Log.d("firebase",String.valueOf(u.getLives()));
 
@@ -842,7 +846,11 @@ public class PlayFragment extends Fragment {
                     mDailyWinTimes = u.getDailyWinTimes().intValue();
                     mCoins = u.getCoins().intValue();
 
-
+                    if(getActivity() != null) {
+                        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(), iniUser);
+                        mListViewTools.setAdapter(mToolsAdapter);
+                        mImgViewTools.setOnClickListener(imgViewToolsOnClick);
+                    }
 //                    updateBoard(user);
 //                    chkReaded = true;
 
