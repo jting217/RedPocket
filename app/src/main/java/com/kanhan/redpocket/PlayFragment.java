@@ -79,7 +79,8 @@ public class PlayFragment extends Fragment {
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter;
     private RelativeLayout mCoorContentRegion;
-    private int mCoins, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
+    private int mCoins, mDice, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
+    private boolean mWinWithPaperFlag = false, mWinWithRockFlag = false, mWinWithScissorFlag = false, mDailyWinTimesFlag = false;
     private static int mScore;
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
@@ -499,7 +500,7 @@ public class PlayFragment extends Fragment {
 
                     ptlogScore = getScore;
                     ltlogTransaction = getLives;
-                    ltlogType = LifeTransactionLife.PlayGame.value;
+                    ltlogType = LifeTransactionType.PlayGame.value;
 
                     Log.d("Result:", String.valueOf(result) + "," + mScore + "," + mLives);
                     ptlogTotalScore = mScore;
@@ -507,12 +508,16 @@ public class PlayFragment extends Fragment {
                     if(ptlogMatchResult == MatchResult.Win.value)
                     {
                         mDailyWinTimes += 1;
+                        mDailyWinTimesFlag = true;
                         if(ptlogUserInput == Input.Scissor.value){
                             mWinWithScissor += 1;
+                            mWinWithScissorFlag = true;
                         }else if(ptlogUserInput == Input.Rock.value){
                             mWinWithRock += 1;
+                            mWinWithRockFlag = true;
                         }else if(ptlogUserInput == Input.Paper.value){
                             mWinWithPaper += 1;
+                            mWinWithPaperFlag = true;
                         }
                     }
                     mDailyPlayTimes += 1;
@@ -845,6 +850,7 @@ public class PlayFragment extends Fragment {
                     mDailyPlayTimes = u.getDailyPlayTimes().intValue();
                     mDailyWinTimes = u.getDailyWinTimes().intValue();
                     mCoins = u.getCoins().intValue();
+                    mDice = u.getDice().intValue();
 
                     if(getActivity() != null) {
                         mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(), iniUser);
@@ -892,6 +898,44 @@ public class PlayFragment extends Fragment {
 //                childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
 //                mWriteDatabase.updateChildren(userValues);
 //                mWriteDatabase.setValue(user);
+                long[] mTotalDice= {0L,0L,0L,0L,0L,0L};
+                if(mDailyPlayTimes/mSystemPreferences.getPlayTimesPerDice() == 1 &&
+                        mDailyPlayTimes%mSystemPreferences.getPlayTimesPerDice() == 0){
+                    mDice+=1;
+                    mTotalDice[0] = mDice;
+                    Log.w("totalDice0",String.valueOf(mDice));
+                }
+                if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceFirst() == 1 &&
+                        mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceFirst() == 0 && mDailyWinTimesFlag){
+                    mDice+=1;
+                    mTotalDice[1] = mDice;
+                    Log.w("totalDice1",String.valueOf(mDice));
+                }
+                if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceSecond() == 1 &&
+                        mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceSecond() == 0 && mDailyWinTimesFlag){
+                    mDice+=1;
+                    mTotalDice[2] = mDice;
+                    Log.w("totalDice2",String.valueOf(mDice));
+                }
+                if(mWinWithScissor/mSystemPreferences.getWinWithMatchResult() == 1 &&
+                        mWinWithScissor%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithScissorFlag){
+                    mDice+=1;
+                    mTotalDice[3] = mDice;
+                    Log.w("totalDice3",String.valueOf(mDice));
+                }
+                if(mWinWithRock/mSystemPreferences.getWinWithMatchResult() == 1 &&
+                        mWinWithRock%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithRockFlag){
+                    mDice+=1;
+                    mTotalDice[4] = mDice;
+                    Log.w("totalDice4",String.valueOf(mDice));
+                }
+                if(mWinWithPaper/mSystemPreferences.getWinWithMatchResult() == 1 &&
+                        mWinWithPaper%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithPaperFlag){
+                    mDice+=1;
+                    mTotalDice[5] = mDice;
+                    Log.w("totalDice5",String.valueOf(mDice));
+                }
+                Log.w("totalDice",mTotalDice[0]+","+mTotalDice[1]+","+mTotalDice[2]+","+mTotalDice[3]+","+mTotalDice[4]+","+mTotalDice[5]);
 
                 Map newUserData = new HashMap();
                 if(when == UpdateUserTimer.PlayGame.value)
@@ -902,6 +946,7 @@ public class PlayFragment extends Fragment {
                     newUserData.put("winWithScissor",Long.valueOf(mWinWithScissor));
                     newUserData.put("winWithRock",Long.valueOf(mWinWithRock));
                     newUserData.put("winWithPaper",Long.valueOf(mWinWithPaper));
+                    newUserData.put("dice", Long.valueOf(mDice));
 //                    newUserData.put("score", Long.valueOf(mScore));
                 }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
@@ -935,7 +980,74 @@ public class PlayFragment extends Fragment {
                         transactionLogPlay.put("computerInput", ptlogComputerInput);
                         transactionLogPlay.put("totalScore", ptlogTotalScore);
                         mWriteDatabase.setValue(transactionLogPlay);
+
+                        if(mDailyPlayTimes/mSystemPreferences.getPlayTimesPerDice() == 1 &&
+                                mDailyPlayTimes%mSystemPreferences.getPlayTimesPerDice() == 0){
+                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            Map transactionLogTool = new HashMap();
+                            transactionLogTool.put("type", ToolTransactionType.PlayTimesPerDice.value);
+                            transactionLogTool.put("product", ProductType.Dice.value);
+                            transactionLogTool.put("transaction", 1);
+                            transactionLogTool.put("total", mTotalDice[0]);
+                            mWriteDatabase.setValue(transactionLogTool);
+                        }
+                        if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceFirst() == 1 &&
+                                mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceFirst() == 0 && mDailyWinTimesFlag){
+                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            Map transactionLogTool = new HashMap();
+                            transactionLogTool.put("type", ToolTransactionType.WinTimesGetOneDiceFirst.value);
+                            transactionLogTool.put("product", ProductType.Dice.value);
+                            transactionLogTool.put("transaction", 1);
+                            transactionLogTool.put("total", mTotalDice[1]);
+                            mWriteDatabase.setValue(transactionLogTool);
+                            mDailyWinTimesFlag = false;
+                        }
+                        if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceSecond() == 1 &&
+                                mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceSecond() == 0 && mDailyWinTimesFlag){
+                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            Map transactionLogTool = new HashMap();
+                            transactionLogTool.put("type", ToolTransactionType.WinTimesGetOneDiceSecond.value);
+                            transactionLogTool.put("product", ProductType.Dice.value);
+                            transactionLogTool.put("transaction", 1);
+                            transactionLogTool.put("total", mTotalDice[2]);
+                            mWriteDatabase.setValue(transactionLogTool);
+                            mDailyWinTimesFlag = false;
+                        }
+                        if(mWinWithScissor/mSystemPreferences.getWinWithMatchResult() > 0 &&
+                                mWinWithScissor%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithScissorFlag){
+                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            Map transactionLogTool = new HashMap();
+                            transactionLogTool.put("type", ToolTransactionType.WinWithMatchResult.value);
+                            transactionLogTool.put("product", ProductType.Dice.value);
+                            transactionLogTool.put("transaction", 1);
+                            transactionLogTool.put("total", mTotalDice[3]);
+                            mWriteDatabase.setValue(transactionLogTool);
+                            mWinWithScissorFlag = false;
+                        }
+                        if(mWinWithRock/mSystemPreferences.getWinWithMatchResult() > 0 &&
+                                mWinWithRock%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithRockFlag){
+                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            Map transactionLogTool = new HashMap();
+                            transactionLogTool.put("type", ToolTransactionType.WinWithMatchResult.value);
+                            transactionLogTool.put("product", ProductType.Dice.value);
+                            transactionLogTool.put("transaction", 1);
+                            transactionLogTool.put("total", mTotalDice[4]);
+                            mWriteDatabase.setValue(transactionLogTool);
+                            mWinWithRockFlag = false;
+                        }
+                        if(mWinWithPaper/mSystemPreferences.getWinWithMatchResult() > 0 &&
+                                mWinWithPaper%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithPaperFlag) {
+                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            Map transactionLogTool = new HashMap();
+                            transactionLogTool.put("type", ToolTransactionType.WinWithMatchResult.value);
+                            transactionLogTool.put("product", ProductType.Dice.value);
+                            transactionLogTool.put("transaction", 1);
+                            transactionLogTool.put("total", mTotalDice[5]);
+                            mWriteDatabase.setValue(transactionLogTool);
+                            mWinWithPaperFlag = false;
+                        }
                     }
+
                     if (when == UpdateUserTimer.PlayGame.value || when == UpdateUserTimer.FiveMinutesTimer.value) {
                         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogLife/" + rightNow);
                         Map transactionLogLife = new HashMap();
@@ -1001,7 +1113,24 @@ public class PlayFragment extends Fragment {
     }
 
 
+    public enum ProductType {
+        Life(1),
+        Dice(2),
+        IronFirst(3),
+        Timer(4),
+        MindControl(5),
+        GoldenHand(6),
+        Victory(7);
 
+        private int value;
+
+        private ProductType(int value) {
+            this.value = value;
+        }
+        public int ProductType() {
+            return this.value;
+        }
+    }
 
     public enum MatchResult {
         Lose(1),
@@ -1053,7 +1182,7 @@ public class PlayFragment extends Fragment {
         }
     }
 
-    public enum LifeTransactionLife {
+    public enum LifeTransactionType {
         SignUpReward(1),
         PlayGame(2),
         Purchase(3),
@@ -1061,7 +1190,7 @@ public class PlayFragment extends Fragment {
 
         private int value;
 
-        private LifeTransactionLife(int value) {
+        private LifeTransactionType(int value) {
             this.value = value;
         }
         public int LifeTransactionLife() {
@@ -1079,6 +1208,23 @@ public class PlayFragment extends Fragment {
             this.value = value;
         }
         public int CoinTransactionType() {
+            return this.value;
+        }
+    }
+
+    public enum ToolTransactionType {
+        Purchase(1),
+        PlayTimesPerDice(2),
+        WinTimesGetOneDiceFirst(3),
+        WinTimesGetOneDiceSecond(4),
+        WinWithMatchResult(5);
+
+        private int value;
+
+        private ToolTransactionType(int value) {
+            this.value = value;
+        }
+        public int ToolTransactionType() {
             return this.value;
         }
     }
@@ -1143,7 +1289,7 @@ public class PlayFragment extends Fragment {
                         tsec = mSystemPreferences.getCounterSec().intValue();
                         mLives+=1;
                         ltlogTransaction = 1;
-                        ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
+                        ltlogType = LifeTransactionType.FiveMinutesTimer.value;
                         updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);
                     }
             }
@@ -1174,7 +1320,7 @@ public class PlayFragment extends Fragment {
 //                    tsec = mSystemPreferences.getCounterSec().intValue();
                     mLives+=getLife;
                     ltlogTransaction = (int) getLife;
-                    ltlogType = LifeTransactionLife.FiveMinutesTimer.value;
+                    ltlogType = LifeTransactionType.FiveMinutesTimer.value;
                     updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);
                 }
                 tsec = (int)countSec;

@@ -21,6 +21,7 @@ public class SystemPreferences {
     private Long specialTimeStartDateInterval;
     private Long winTimesGetOneDiceFirst;
     private Long winTimesGetOneDiceSecond;
+    private Long winWithMatchResult;
 
     public SystemPreferences() {
 
@@ -98,8 +99,17 @@ public class SystemPreferences {
         this.winTimesGetOneDiceSecond = winTimesGetOneDiceSecond;
     }
 
+    public Long getWinWithMatchResult() {
+        return winWithMatchResult;
+    }
+
+    public void setWinWithMatchResult(Long winWithMatchResult) {
+        this.winWithMatchResult = winWithMatchResult;
+    }
+
     public SystemPreferences(Long counterSec, Long dailyReward, Long playTimesPerDice, Long signupReward, Long specialTimeEndDateInterval,
-                             Long specialTimeReward, Long specialTimeStartDateInterval, Long winTimesGetOneDiceFirst, Long winTimesGetOneDiceSecond){
+                             Long specialTimeReward, Long specialTimeStartDateInterval, Long winTimesGetOneDiceFirst, Long winTimesGetOneDiceSecond,
+                             Long winWithMatchResult){
         this.counterSec = counterSec;
         this.dailyReward = dailyReward;
         this.playTimesPerDice = playTimesPerDice;
@@ -109,6 +119,7 @@ public class SystemPreferences {
         this.specialTimeStartDateInterval = specialTimeStartDateInterval;
         this.winTimesGetOneDiceFirst = winTimesGetOneDiceFirst;
         this.winTimesGetOneDiceSecond = winTimesGetOneDiceSecond;
+        this.winWithMatchResult = winWithMatchResult;
     }
 
     @Exclude
@@ -123,6 +134,7 @@ public class SystemPreferences {
         result.put("specialTimeStartDateInterval", specialTimeStartDateInterval);
         result.put("winTimesGetOneDiceFirst", winTimesGetOneDiceFirst);
         result.put("winTimesGetOneDiceSecond", winTimesGetOneDiceSecond);
+        result.put("winWithMatchResult", winWithMatchResult);
         return result;
     }
 
