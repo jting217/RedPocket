@@ -145,15 +145,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         Log.d("MainActivity","onStart");
         super.onStart();
+        playMusicByFlag();
     }
 
     @Override
     protected void onDestroy() {
         Log.d("MainActivity","onDestroy");
         super.onDestroy();
+//        stopMusic();
 //        PlayFragment fragment = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
 //        fragment.updateTimer(user.getUid());
-//        stopService(svc);
+        stopService(svc);
     }
 
 
@@ -164,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity","onPause");
         super.onPause();
         stopService(svc);
+//        stopMusic();
     }
 
     @Override
@@ -444,5 +447,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void playMusicByFlag(){
+        String isPlay = textPlayMusic.getText().toString();
+        if(isPlay.equals("1")){
+            startService(svc);
+        }
+    }
 
 }
