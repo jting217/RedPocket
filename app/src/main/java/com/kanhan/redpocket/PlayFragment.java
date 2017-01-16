@@ -895,6 +895,7 @@ public class PlayFragment extends Fragment {
                     if(when == UpdateUserTimer.OnIni.value) {
                         Log.w("DailyResetDate",String.valueOf(u.getDailyResetDate()));
                         readSystemPreferences(u.getLifeCounter()/1000,u.getDailyResetDate());
+                        Log.w("getLifeCounter",u.getLifeCounter()/1000+",");
                         updateBoard(UpdateUserTimer.OnIni.value);
 //                        mTxtViewScore.setText(String.valueOf(0));
                     }
@@ -985,6 +986,7 @@ public class PlayFragment extends Fragment {
                 }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
                     updateTimer(fUser.getUid());
+                    Log.w("LifeCounter",Long.valueOf(mLives)+",");
                 }else if(when == UpdateUserTimer.GetNewIntervalDate.value){
                     newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
                     newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
@@ -1423,6 +1425,7 @@ public class PlayFragment extends Fragment {
         timer01 =new Timer();
         CreateTimerTask();
         //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
+        Log.w("CreateTimer",isFirstCreatTimer+",");
         if(isFirstCreatTimer) {
             if(lifeCounter == 0){
                 tsec = setTsec;
@@ -1500,6 +1503,9 @@ public class PlayFragment extends Fragment {
 
     }
 
+    public void setIsFirstCreatTimer(){
+        isFirstCreatTimer = true;
+    }
 
 
 }//程式結尾

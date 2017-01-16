@@ -73,6 +73,9 @@ public class EmailLoginActivity  extends AppCompatActivity {
                     Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
                     if (!task.isSuccessful()) {
                         Log.w("TAG", "signInWithEmail:failed", task.getException());
+                        Toast.makeText(EmailLoginActivity.this, "帳密不存在！",
+                                Toast.LENGTH_SHORT).show();
+
                     }else{
                         goMainScreen();
                     }

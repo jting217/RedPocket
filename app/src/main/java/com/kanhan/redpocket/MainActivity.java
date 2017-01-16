@@ -8,6 +8,7 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -293,6 +294,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void logout(View view) {
+//        FragmentManager fm = getSupportFragmentManager();
+////if you added fragment via layout xml
+//        PlayFragment fragment = (PlayFragment)fm.findFragmentById(R.id.);
+//        fragment.yourPublicMethod();
+        PlayFragment fragment = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
+        fragment.setIsFirstCreatTimer();
+
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         goLoginScreen();
