@@ -63,7 +63,7 @@ public class PlayFragment extends Fragment {
     private String mParam2;
     private String mPlaySound;
     private static int tsec=0;
-    private int csec=0,cmin=0,setTsec=50;
+    private int csec=0,cmin=0,setTsec=300;
     private static Timer timer01;
     private TimerTask timerTask;
     private boolean startflag=false;
@@ -1306,7 +1306,7 @@ public class PlayFragment extends Fragment {
             timer01 = null;
         }
         timer01 =new Timer();
-        CreateTimerTask();;
+        CreateTimerTask();
         //設定Timer(task為執行內容，0代表立刻開始,間格1秒執行一次)
         if(isFirstCreatTimer) {
             if(lifeCounter == 0){
