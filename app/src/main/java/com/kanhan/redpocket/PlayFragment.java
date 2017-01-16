@@ -867,6 +867,7 @@ public class PlayFragment extends Fragment {
                         mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(), iniUser);
                         mListViewTools.setAdapter(mToolsAdapter);
                         mImgViewTools.setOnClickListener(imgViewToolsOnClick);
+
                     }
 //                    updateBoard(user);
 //                    chkReaded = true;
