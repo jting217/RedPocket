@@ -119,9 +119,12 @@ public class ToolsAdapter extends BaseAdapter {
                 TextView tv = (TextView) view.findViewById(R.id.txtViewName);
                 String s = tv.getText().toString();
 
+                Button bn = (Button) view.findViewById(R.id.btnAmount);
+                String a = bn.getText().toString();
 
-                Log.w("mBtnAmount",position+","+s);
-                mFragment.useTool(s);
+
+                Log.w("mBtnAmount",position+","+s+","+a);
+                mFragment.useTool(s,a);
 //                switch (v.getId()) {
 //                    case R.id.button1:
 //                        Toast.makeText(getApplicationContext(),

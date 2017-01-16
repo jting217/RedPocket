@@ -73,6 +73,7 @@ public class PlayFragment extends Fragment {
     private Intent countDownSound;
     private ListView mListViewTools;
     private ListAdapter mToolsAdapter;
+    private static int mUseTool = 0, mMultiple = 1 ;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private User iniUser;
@@ -300,7 +301,7 @@ public class PlayFragment extends Fragment {
         if(mLives>0) {
 
             Log.d("FragPlay", "PlayGame");
-            ptlogMultiple = 1;
+//            ptlogMultiple = 1;
 
             ((MainActivity) getActivity()).removeBottomNavListener();
             mImgViewScissors.setOnClickListener(null);
@@ -468,12 +469,17 @@ public class PlayFragment extends Fragment {
                     }
                     int mr = ptlogMatchResult;
                     int getScore = 0, getLives = 0;
+                    if(mUseTool == ProductType.Dice.value){
+                        mMultiple = (int) (Math.random() * 6 + 1);
+                        Log.w("useTool","Dice->"+mMultiple);
+                    }
                     switch (ptlogMatchResult) {
 
-                        case 1:
-                            mScore += 10;
+                        case 1: //輸
+                            Log.w("useTool","lose->"+mScore+","+(10*mMultiple));
+                            mScore += (10 * mMultiple);
                             mLives -= 1;
-                            getScore = 10;
+                            getScore = (10 * mMultiple);
                             getLives = -1;
                             if (mPlaySound.equals("1")) {
                                 MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.lose);
@@ -481,10 +487,11 @@ public class PlayFragment extends Fragment {
                                 mpLose.seekTo(0);
                             }
                             break;
-                        case 2:
-                            mScore += 100;
+                        case 2: //贏
+                            Log.w("useTool","win->"+mScore+","+(100*mMultiple));
+                            mScore += (100 * mMultiple);
                             mLives -= 1;
-                            getScore = 100;
+                            getScore = (100 * mMultiple);
                             getLives = -1;
                             if (mPlaySound.equals("1")) {
                                 MediaPlayer mpWin = MediaPlayer.create(getActivity(), R.raw.win);
@@ -492,7 +499,7 @@ public class PlayFragment extends Fragment {
                                 mpWin.seekTo(0);
                             }
                             break;
-                        default:
+                        default: //平手
                             if (mPlaySound.equals("1")) {
                                 MediaPlayer mpTie = MediaPlayer.create(getActivity(), R.raw.excitement);
                                 mpTie.start();
@@ -501,6 +508,7 @@ public class PlayFragment extends Fragment {
                             break;
 
                     }
+
 
                     ptlogScore = getScore;
                     ltlogTransaction = getLives;
@@ -525,6 +533,13 @@ public class PlayFragment extends Fragment {
                         }
                     }
                     mDailyPlayTimes += 1;
+
+                    ptlogMultiple = mMultiple;
+                    if(mUseTool == ProductType.Dice.value) {
+                        mMultiple = 1;
+                        mUseTool = 0;
+                        mDice -= 1;
+                    }
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
 //                    mTxtViewResult.setText(result);
 
@@ -1450,14 +1465,19 @@ public class PlayFragment extends Fragment {
         };
     }
 
-    public void useTool(String toolName){
+    public void useTool(final String toolName, final String toolAmount){
         Log.w("useTool","test");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 // Add the buttons
         builder.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-                mCoorContentRegion.setVisibility(View.INVISIBLE);
+                if(Integer.valueOf(toolAmount) > 0) {
+                    mCoorContentRegion.setVisibility(View.INVISIBLE);
+                    if (toolName.equals("Dice")) {
+                        mUseTool = ProductType.Dice.value;
+                    }
+                }
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -1468,7 +1488,11 @@ public class PlayFragment extends Fragment {
 // Set other dialog properties
 
 //        builder.setTitle("Title");
-        builder.setMessage("使用道具 "+ toolName +" ?" );
+        if(Integer.valueOf(toolAmount) > 0) {
+            builder.setMessage("使用道具 " + toolName + " ?");
+        }else{
+            builder.setMessage( toolName + "  不足!");
+        }
 // Create the AlertDialog
         AlertDialog dialog = builder.create();
 
