@@ -1,6 +1,7 @@
 package com.kanhan.redpocket;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1448,8 +1450,30 @@ public class PlayFragment extends Fragment {
         };
     }
 
-    public void useTool(){
+    public void useTool(String toolName){
         Log.w("useTool","test");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+// Add the buttons
+        builder.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+                mCoorContentRegion.setVisibility(View.INVISIBLE);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+// Set other dialog properties
+
+//        builder.setTitle("Title");
+        builder.setMessage("使用道具 "+ toolName +" ?" );
+// Create the AlertDialog
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
     }
 
 

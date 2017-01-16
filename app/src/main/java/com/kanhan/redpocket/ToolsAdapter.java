@@ -113,8 +113,15 @@ public class ToolsAdapter extends BaseAdapter {
                 View parentRow = (View) v.getParent();
                 ListView listView = (ListView) parentRow.getParent();
                 final int position = listView.getPositionForView(parentRow);
-                Log.w("mBtnAmount",position+",");
-                mFragment.useTool();
+
+
+                View view = (View) v.getParent();
+                TextView tv = (TextView) view.findViewById(R.id.txtViewName);
+                String s = tv.getText().toString();
+
+
+                Log.w("mBtnAmount",position+","+s);
+                mFragment.useTool(s);
 //                switch (v.getId()) {
 //                    case R.id.button1:
 //                        Toast.makeText(getApplicationContext(),
