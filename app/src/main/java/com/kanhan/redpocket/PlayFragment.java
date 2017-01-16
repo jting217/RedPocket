@@ -796,7 +796,7 @@ public class PlayFragment extends Fragment {
                 Log.w("☆firebase(playFrag)",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getCounterSec()));
                 CreateTimer(lifeCounter);
 
-                if(!isTheSameDate(userDailyResetDate)){
+                if(!isTheDateBeforeToday(userDailyResetDate)){
                     Log.w("mCoins",String.valueOf(mCoins));
                     mCoins = mCoins + mSystemPreferences.getDailyReward().intValue();
                     mDailyPlayTimes = 0;
@@ -805,6 +805,17 @@ public class PlayFragment extends Fragment {
                     updateUser(user,UpdateUserTimer.DailyReset.value);
 
                 }
+
+                if(!isTheDateBeforeToday(iniUser.getSpecialTimeRewardGetDate())){
+                    if(isSpecialTime()) {
+                        Log.w("mCoins", String.valueOf(mCoins));
+                        mCoins = mCoins + mSystemPreferences.getSpecialTimeReward().intValue();
+                        Log.w("mCoins", String.valueOf(mCoins));
+                        updateUser(user, UpdateUserTimer.SpecialTimeReward.value);
+                    }
+                }
+
+
             }
 
             @Override
@@ -899,47 +910,49 @@ public class PlayFragment extends Fragment {
 //                mWriteDatabase.updateChildren(userValues);
 //                mWriteDatabase.setValue(user);
                 long[] mTotalDice= {0L,0L,0L,0L,0L,0L};
-                if(mDailyPlayTimes/mSystemPreferences.getPlayTimesPerDice() == 1 &&
-                        mDailyPlayTimes%mSystemPreferences.getPlayTimesPerDice() == 0){
-                    mDice+=1;
-                    mTotalDice[0] = mDice;
-                    Log.w("totalDice0",String.valueOf(mDice));
-                }
-                if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceFirst() == 1 &&
-                        mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceFirst() == 0 && mDailyWinTimesFlag){
-                    mDice+=1;
-                    mTotalDice[1] = mDice;
-                    Log.w("totalDice1",String.valueOf(mDice));
-                }
-                if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceSecond() == 1 &&
-                        mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceSecond() == 0 && mDailyWinTimesFlag){
-                    mDice+=1;
-                    mTotalDice[2] = mDice;
-                    Log.w("totalDice2",String.valueOf(mDice));
-                }
-                if(mWinWithScissor/mSystemPreferences.getWinWithMatchResult() == 1 &&
-                        mWinWithScissor%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithScissorFlag){
-                    mDice+=1;
-                    mTotalDice[3] = mDice;
-                    Log.w("totalDice3",String.valueOf(mDice));
-                }
-                if(mWinWithRock/mSystemPreferences.getWinWithMatchResult() == 1 &&
-                        mWinWithRock%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithRockFlag){
-                    mDice+=1;
-                    mTotalDice[4] = mDice;
-                    Log.w("totalDice4",String.valueOf(mDice));
-                }
-                if(mWinWithPaper/mSystemPreferences.getWinWithMatchResult() == 1 &&
-                        mWinWithPaper%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithPaperFlag){
-                    mDice+=1;
-                    mTotalDice[5] = mDice;
-                    Log.w("totalDice5",String.valueOf(mDice));
-                }
-                Log.w("totalDice",mTotalDice[0]+","+mTotalDice[1]+","+mTotalDice[2]+","+mTotalDice[3]+","+mTotalDice[4]+","+mTotalDice[5]);
+
 
                 Map newUserData = new HashMap();
                 if(when == UpdateUserTimer.PlayGame.value)
                 {
+                    if(mDailyPlayTimes/mSystemPreferences.getPlayTimesPerDice() == 1 &&
+                            mDailyPlayTimes%mSystemPreferences.getPlayTimesPerDice() == 0){
+                        mDice+=1;
+                        mTotalDice[0] = mDice;
+                        Log.w("totalDice0",String.valueOf(mDice));
+                    }
+                    if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceFirst() == 1 &&
+                            mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceFirst() == 0 && mDailyWinTimesFlag){
+                        mDice+=1;
+                        mTotalDice[1] = mDice;
+                        Log.w("totalDice1",String.valueOf(mDice));
+                    }
+                    if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceSecond() == 1 &&
+                            mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceSecond() == 0 && mDailyWinTimesFlag){
+                        mDice+=1;
+                        mTotalDice[2] = mDice;
+                        Log.w("totalDice2",String.valueOf(mDice));
+                    }
+                    if(mWinWithScissor/mSystemPreferences.getWinWithMatchResult() == 1 &&
+                            mWinWithScissor%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithScissorFlag){
+                        mDice+=1;
+                        mTotalDice[3] = mDice;
+                        Log.w("totalDice3",String.valueOf(mDice));
+                    }
+                    if(mWinWithRock/mSystemPreferences.getWinWithMatchResult() == 1 &&
+                            mWinWithRock%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithRockFlag){
+                        mDice+=1;
+                        mTotalDice[4] = mDice;
+                        Log.w("totalDice4",String.valueOf(mDice));
+                    }
+                    if(mWinWithPaper/mSystemPreferences.getWinWithMatchResult() == 1 &&
+                            mWinWithPaper%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithPaperFlag){
+                        mDice+=1;
+                        mTotalDice[5] = mDice;
+                        Log.w("totalDice5",String.valueOf(mDice));
+                    }
+                    Log.w("totalDice",mTotalDice[0]+","+mTotalDice[1]+","+mTotalDice[2]+","+mTotalDice[3]+","+mTotalDice[4]+","+mTotalDice[5]);
+
                     newUserData.put("lives", Long.valueOf(mLives));
                     newUserData.put("dailyPlayTimes",Long.valueOf(mDailyPlayTimes));
                     newUserData.put("dailyWinTimes",Long.valueOf(mDailyWinTimes));
@@ -964,6 +977,10 @@ public class PlayFragment extends Fragment {
                     newUserData.put("dailyResetDate", ServerValue.TIMESTAMP);
                     newUserData.put("coins", Long.valueOf(mCoins));
                     mTxtViewCoins.setText(String.valueOf(mCoins));
+                }else if(when == UpdateUserTimer.SpecialTimeReward.value) {
+                    newUserData.put("coins", Long.valueOf(mCoins));
+                    newUserData.put("specialTimeRewardGetDate",ServerValue.TIMESTAMP);
+                    mTxtViewCoins.setText(String.valueOf(mCoins));
                 }
 
                 mWriteDatabase.updateChildren(newUserData);
@@ -971,7 +988,7 @@ public class PlayFragment extends Fragment {
                 if(when != UpdateUserTimer.GetNewIntervalDate.value) {//需要寫log
                     Long rightNow = GetRightNow();
                     if (when == UpdateUserTimer.PlayGame.value) {
-                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogPlay/" + rightNow);
+                        DatabaseReference mWriteTranLogDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogPlay/" + rightNow);
                         Map transactionLogPlay = new HashMap();
                         transactionLogPlay.put("multiple", ptlogMultiple);
                         transactionLogPlay.put("matchResult", ptlogMatchResult);
@@ -979,91 +996,101 @@ public class PlayFragment extends Fragment {
                         transactionLogPlay.put("userInput", ptlogUserInput);
                         transactionLogPlay.put("computerInput", ptlogComputerInput);
                         transactionLogPlay.put("totalScore", ptlogTotalScore);
-                        mWriteDatabase.setValue(transactionLogPlay);
+                        mWriteTranLogDatabase.setValue(transactionLogPlay);
 
                         if(mDailyPlayTimes/mSystemPreferences.getPlayTimesPerDice() == 1 &&
                                 mDailyPlayTimes%mSystemPreferences.getPlayTimesPerDice() == 0){
-                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
                             Map transactionLogTool = new HashMap();
                             transactionLogTool.put("type", ToolTransactionType.PlayTimesPerDice.value);
                             transactionLogTool.put("product", ProductType.Dice.value);
                             transactionLogTool.put("transaction", 1);
                             transactionLogTool.put("total", mTotalDice[0]);
-                            mWriteDatabase.setValue(transactionLogTool);
+                            drLog0.setValue(transactionLogTool);
                         }
                         if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceFirst() == 1 &&
                                 mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceFirst() == 0 && mDailyWinTimesFlag){
-                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
                             Map transactionLogTool = new HashMap();
                             transactionLogTool.put("type", ToolTransactionType.WinTimesGetOneDiceFirst.value);
                             transactionLogTool.put("product", ProductType.Dice.value);
                             transactionLogTool.put("transaction", 1);
                             transactionLogTool.put("total", mTotalDice[1]);
-                            mWriteDatabase.setValue(transactionLogTool);
+                            drLog0.setValue(transactionLogTool);
                             mDailyWinTimesFlag = false;
                         }
                         if(mDailyWinTimes/mSystemPreferences.getWinTimesGetOneDiceSecond() == 1 &&
                                 mDailyWinTimes%mSystemPreferences.getWinTimesGetOneDiceSecond() == 0 && mDailyWinTimesFlag){
-                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
                             Map transactionLogTool = new HashMap();
                             transactionLogTool.put("type", ToolTransactionType.WinTimesGetOneDiceSecond.value);
                             transactionLogTool.put("product", ProductType.Dice.value);
                             transactionLogTool.put("transaction", 1);
                             transactionLogTool.put("total", mTotalDice[2]);
-                            mWriteDatabase.setValue(transactionLogTool);
+                            drLog0.setValue(transactionLogTool);
                             mDailyWinTimesFlag = false;
                         }
                         if(mWinWithScissor/mSystemPreferences.getWinWithMatchResult() > 0 &&
                                 mWinWithScissor%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithScissorFlag){
-                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
                             Map transactionLogTool = new HashMap();
                             transactionLogTool.put("type", ToolTransactionType.WinWithMatchResult.value);
                             transactionLogTool.put("product", ProductType.Dice.value);
                             transactionLogTool.put("transaction", 1);
                             transactionLogTool.put("total", mTotalDice[3]);
-                            mWriteDatabase.setValue(transactionLogTool);
+                            drLog0.setValue(transactionLogTool);
                             mWinWithScissorFlag = false;
                         }
                         if(mWinWithRock/mSystemPreferences.getWinWithMatchResult() > 0 &&
                                 mWinWithRock%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithRockFlag){
-                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
                             Map transactionLogTool = new HashMap();
                             transactionLogTool.put("type", ToolTransactionType.WinWithMatchResult.value);
                             transactionLogTool.put("product", ProductType.Dice.value);
                             transactionLogTool.put("transaction", 1);
                             transactionLogTool.put("total", mTotalDice[4]);
-                            mWriteDatabase.setValue(transactionLogTool);
+                            drLog0.setValue(transactionLogTool);
                             mWinWithRockFlag = false;
                         }
                         if(mWinWithPaper/mSystemPreferences.getWinWithMatchResult() > 0 &&
                                 mWinWithPaper%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithPaperFlag) {
-                            mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
                             Map transactionLogTool = new HashMap();
                             transactionLogTool.put("type", ToolTransactionType.WinWithMatchResult.value);
                             transactionLogTool.put("product", ProductType.Dice.value);
                             transactionLogTool.put("transaction", 1);
                             transactionLogTool.put("total", mTotalDice[5]);
-                            mWriteDatabase.setValue(transactionLogTool);
+                            drLog0.setValue(transactionLogTool);
                             mWinWithPaperFlag = false;
                         }
                     }
 
                     if (when == UpdateUserTimer.PlayGame.value || when == UpdateUserTimer.FiveMinutesTimer.value) {
-                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogLife/" + rightNow);
+                        DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogLife/" + rightNow);
                         Map transactionLogLife = new HashMap();
                         transactionLogLife.put("type", ltlogType);
                         transactionLogLife.put("transaction", ltlogTransaction);
                         transactionLogLife.put("totalLives", mLives);
-                        mWriteDatabase.setValue(transactionLogLife);
+                        drLog0.setValue(transactionLogLife);
                     }
                     if (when == UpdateUserTimer.DailyReset.value){
-                        mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogCoin/" + rightNow);
+                        DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogCoin/" + rightNow);
                         Map transactionLogCoin = new HashMap();
                         transactionLogCoin.put( "type", CoinTransactionType.DailyReward.value);
                         transactionLogCoin.put( "transaction", mSystemPreferences.getDailyReward());
                         transactionLogCoin.put( "totalCoins", mCoins);
-                        mWriteDatabase.setValue(transactionLogCoin);
+                        drLog0.setValue(transactionLogCoin);
                     }
+
+                    if (when == UpdateUserTimer.SpecialTimeReward.value){
+                        DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogCoin/" + rightNow);
+                        Map transactionLogCoin = new HashMap();
+                        transactionLogCoin.put( "type", CoinTransactionType.SpecialTimeReward.value);
+                        transactionLogCoin.put( "transaction", mSystemPreferences.getSpecialTimeReward());
+                        transactionLogCoin.put( "totalCoins", mCoins);
+                        drLog0.setValue(transactionLogCoin);
+                    }
+
                     if (when == UpdateUserTimer.PlayGame.value) {
                         mTxtViewScore.setText(String.valueOf(mScore));
                     }
@@ -1170,7 +1197,8 @@ public class PlayFragment extends Fragment {
         FiveMinutesTimer(4),
         GetNewIntervalDate(5),
         OnIni(6),
-        DailyReset(7);
+        DailyReset(7),
+        SpecialTimeReward(8);
 
         private int value;
 
@@ -1200,7 +1228,8 @@ public class PlayFragment extends Fragment {
 
     public enum CoinTransactionType {
         DailyReward(1),
-        BuyLife(2);
+        BuyLife(2),
+        SpecialTimeReward(3);
 
         private int value;
 
@@ -1234,8 +1263,8 @@ public class PlayFragment extends Fragment {
         String ts = tsLong.toString();
         return tsLong;
     }
-    private boolean isTheSameDate(Long userDate){
-        boolean isTheSameDate = true;
+    private boolean isTheDateBeforeToday(Long userDate){
+        boolean isTheDateBeforeToday = true;
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis( userDate );
@@ -1244,7 +1273,7 @@ public class PlayFragment extends Fragment {
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
         String strUserDate = String.valueOf(year)+String.valueOf(String.format("%02d", month))+String.valueOf(String.format("%02d", day));
-        Log.w("isTheSameDate",year+","+month+","+day);
+        Log.w("isTheDateBeforeToday",year+","+month+","+day);
 
         Calendar calR = Calendar.getInstance();
         calR.setTimeInMillis(System.currentTimeMillis());
@@ -1252,12 +1281,77 @@ public class PlayFragment extends Fragment {
         int monthR = calR.get(Calendar.MONTH)+1;
         int dayR = calR.get(Calendar.DAY_OF_MONTH);
         String strRightDate = String.valueOf(yearR)+String.valueOf(String.format("%02d", monthR))+String.valueOf(String.format("%02d", dayR));
-        Log.w("isTheSameDate",yearR+","+monthR+","+dayR);
+        Log.w("isTheDateBeforeToday",yearR+","+monthR+","+dayR);
         if(Integer.valueOf(strRightDate) > Integer.valueOf(strUserDate)){
-            isTheSameDate = false;
+            isTheDateBeforeToday = false;
         }
-        Log.w("isTheSameDate",userDate+","+isTheSameDate+",rightNow:"+strRightDate+","+strUserDate);
-        return isTheSameDate;
+        Log.w("isTheDateBeforeToday",userDate+","+isTheDateBeforeToday+",rightNow:"+strRightDate+","+strUserDate);
+        return isTheDateBeforeToday;
+    }
+
+    private boolean isSpecialTime(){
+        boolean isSpecialTime = false;
+        Long mSpecialTimeStartDateInterval = mSystemPreferences.getSpecialTimeStartDateInterval();
+        Long mSpecialTimeEndDateInterval = mSystemPreferences.getSpecialTimeEndDateInterval();
+
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTimeInMillis( mSpecialTimeStartDateInterval );
+        int startYear = startCal.get(Calendar.YEAR);
+        int startMonth = startCal.get(Calendar.MONTH)+1;
+        int startDay = startCal.get(Calendar.DAY_OF_MONTH);
+        int startHh = startCal.get(Calendar.HOUR_OF_DAY);
+        int startSs = startCal.get(Calendar.MINUTE);
+
+        String strStartDate = String.valueOf(startYear)+String.valueOf(String.format("%02d", startMonth))+String.valueOf(String.format("%02d", startDay))
+                +String.valueOf(String.format("%02d", startHh))+String.valueOf(String.format("%02d", startSs));
+        String startHHSS = String.valueOf(String.format("%02d", startHh))+String.valueOf(String.format("%02d", startSs));
+        Log.w("isSpecialTime",mSpecialTimeStartDateInterval+","+strStartDate+","+startHHSS);
+
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTimeInMillis( mSpecialTimeEndDateInterval );
+        int endYear = endCal.get(Calendar.YEAR);
+        int endMonth = endCal.get(Calendar.MONTH)+1;
+        int endDay = endCal.get(Calendar.DAY_OF_MONTH);
+        int endHh = endCal.get(Calendar.HOUR_OF_DAY);
+        int endSs = endCal.get(Calendar.MINUTE);
+
+        String strEndDate = String.valueOf(endYear)+String.valueOf(String.format("%02d", endMonth))+String.valueOf(String.format("%02d", endDay))
+                +String.valueOf(String.format("%02d", endHh))+String.valueOf(String.format("%02d", endSs));
+        String endHHSS = String.valueOf(String.format("%02d", endHh))+String.valueOf(String.format("%02d", endSs));
+        Log.w("isSpecialTime",mSpecialTimeEndDateInterval+","+strEndDate+","+endHHSS);
+
+        Long rightNow = System.currentTimeMillis();
+        Calendar curCal = Calendar.getInstance();
+        curCal.setTimeInMillis( rightNow );
+        int curYear = curCal.get(Calendar.YEAR);
+        int curMonth = curCal.get(Calendar.MONTH)+1;
+        int curDay = curCal.get(Calendar.DAY_OF_MONTH);
+        int curHh = curCal.get(Calendar.HOUR_OF_DAY);
+        int curSs = curCal.get(Calendar.MINUTE);
+
+        String strCurDate = String.valueOf(curYear)+String.valueOf(String.format("%02d", curMonth))+String.valueOf(String.format("%02d", curDay))
+                +String.valueOf(String.format("%02d", curHh))+String.valueOf(String.format("%02d", curSs));
+        String curHHSS = String.valueOf(String.format("%02d", curHh))+String.valueOf(String.format("%02d", curSs));
+        Log.w("isSpecialTime",rightNow+","+strCurDate+","+curHHSS);
+
+        if(Integer.valueOf(curHHSS) >= Integer.valueOf(startHHSS) && Integer.valueOf(curHHSS) <= Integer.valueOf(endHHSS))
+        {
+            isSpecialTime = true;
+        }
+        Log.w("isSpecialTime",isSpecialTime+",");
+
+//        Calendar calR = Calendar.getInstance();
+//        calR.setTimeInMillis(System.currentTimeMillis());
+//        int yearR = calR.get(Calendar.YEAR);
+//        int monthR = calR.get(Calendar.MONTH)+1;
+//        int dayR = calR.get(Calendar.DAY_OF_MONTH);
+//        String strRightDate = String.valueOf(yearR)+String.valueOf(String.format("%02d", monthR))+String.valueOf(String.format("%02d", dayR));
+//        Log.w("isTheSameDate",yearR+","+monthR+","+dayR);
+//        if(Integer.valueOf(strRightDate) > Integer.valueOf(strUserDate)){
+//            isTheSameDate = false;
+//        }
+//        Log.w("isTheSameDate",userDate+","+isTheSameDate+",rightNow:"+strRightDate+","+strUserDate);
+        return isSpecialTime;
     }
 
     //TimerTask無法直接改變元件因此要透過Handler來當橋樑
