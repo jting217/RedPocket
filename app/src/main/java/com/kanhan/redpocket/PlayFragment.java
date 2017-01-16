@@ -143,6 +143,8 @@ public class PlayFragment extends Fragment {
         }
 
 
+
+
     }
 
 
@@ -864,9 +866,10 @@ public class PlayFragment extends Fragment {
                     mDice = u.getDice().intValue();
 
                     if(getActivity() != null) {
-                        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(), iniUser);
+                        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(), iniUser, PlayFragment.this);
                         mListViewTools.setAdapter(mToolsAdapter);
                         mImgViewTools.setOnClickListener(imgViewToolsOnClick);
+
 
                     }
 //                    updateBoard(user);
@@ -1444,5 +1447,11 @@ public class PlayFragment extends Fragment {
             }
         };
     }
+
+    public void useTool(){
+        Log.w("useTool","test");
+    }
+
+
 
 }//程式結尾

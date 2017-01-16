@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.kanhan.redpocket.Data.User;
@@ -23,12 +24,14 @@ public class ToolsAdapter extends BaseAdapter {
     private LayoutInflater mLayInf;
     private User mUser;
     private Context mContext;
-    public ToolsAdapter(Context context, User user)
+    private PlayFragment mFragment;
+    public ToolsAdapter(Context context, User user, PlayFragment fragment)
     {
         Log.w("LeagueAdapter",user.toString());
         mLayInf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mUser = user;
         mContext = context;
+        mFragment = fragment;
     }
 
     @Override
@@ -102,6 +105,24 @@ public class ToolsAdapter extends BaseAdapter {
 //                holder.text.setText("panda");
 //                break;
         }
+
+
+        holder.mBtnAmount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View parentRow = (View) v.getParent();
+                ListView listView = (ListView) parentRow.getParent();
+                final int position = listView.getPositionForView(parentRow);
+                Log.w("mBtnAmount",position+",");
+                mFragment.useTool();
+//                switch (v.getId()) {
+//                    case R.id.button1:
+//                        Toast.makeText(getApplicationContext(),
+//                                "按鈕點擊了:" + name[index], Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
+            }
+        });
         return convertView;
     }
     class Holder{
