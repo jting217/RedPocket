@@ -56,6 +56,18 @@ public class LeagueAdapter extends BaseAdapter {
         return position;
     }
 
+    @Override
+    public int getViewTypeCount() {
+
+        return getCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+
+        return position;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -103,6 +115,7 @@ public class LeagueAdapter extends BaseAdapter {
 //                holder.text.setText("panda");
 //                break;
         }
+
         if(position<3){
             holder.mTxtViewDisplayName.setTextColor(ContextCompat.getColor(mContext,R.color.colorAccent));
             holder.mTxtViewScore.setTextColor(ContextCompat.getColor(mContext,R.color.colorAccent));
