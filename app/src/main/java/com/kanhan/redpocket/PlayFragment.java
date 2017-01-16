@@ -537,7 +537,7 @@ public class PlayFragment extends Fragment {
                     ptlogMultiple = mMultiple;
                     if(mUseTool == ProductType.Dice.value) {
                         mMultiple = 1;
-                        mUseTool = 0;
+                        //mUseTool = 0;
                         mDice -= 1;
                     }
 //                    mTxtViewResult.setVisibility(View.VISIBLE);
@@ -1086,6 +1086,16 @@ public class PlayFragment extends Fragment {
                             drLog0.setValue(transactionLogTool);
                             mWinWithPaperFlag = false;
                         }
+                        if(mUseTool>0){
+                            DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                            Map transactionLogTool = new HashMap();
+                            transactionLogTool.put("type", ToolTransactionType.PlayGame.value);
+                            transactionLogTool.put("product", mUseTool);
+                            transactionLogTool.put("transaction", -1);
+                            transactionLogTool.put("total", mDice);
+                            drLog0.setValue(transactionLogTool);
+                            mUseTool = 0;
+                        }
                     }
 
                     if (when == UpdateUserTimer.PlayGame.value || when == UpdateUserTimer.FiveMinutesTimer.value) {
@@ -1269,7 +1279,8 @@ public class PlayFragment extends Fragment {
         PlayTimesPerDice(2),
         WinTimesGetOneDiceFirst(3),
         WinTimesGetOneDiceSecond(4),
-        WinWithMatchResult(5);
+        WinWithMatchResult(5),
+        PlayGame(6);
 
         private int value;
 
