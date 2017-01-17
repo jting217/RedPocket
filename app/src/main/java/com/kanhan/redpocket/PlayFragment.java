@@ -103,7 +103,6 @@ public class PlayFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -124,10 +123,8 @@ public class PlayFragment extends Fragment {
             instance.setArguments(args);
 //        }
 //        PlayFragment fragment = new PlayFragment();
-
         return instance;
     }
-
 
 
     @Override
@@ -145,9 +142,6 @@ public class PlayFragment extends Fragment {
             mColor = savedInstanceState.getInt(ARG_COLOR);
         }
 
-
-
-
     }
 
 
@@ -156,7 +150,6 @@ public class PlayFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d("FragPlay","onCreateView");
         // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_play, container, false);
     }
 
@@ -195,7 +188,6 @@ public class PlayFragment extends Fragment {
 //        mListViewTools.setAdapter(mToolsAdapter);
         //mLeagueAdapter = new LeagueAdapter(getActivity().getApplicationContext(), mUserScoreOrderList);
 
-
         iniUser = new User();
         readUser(UpdateUserTimer.OnIni.value);
     }
@@ -204,8 +196,6 @@ public class PlayFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         Log.d("FragPlay","onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     private View.OnClickListener imgViewToolsOnClick = new View.OnClickListener() {
@@ -299,9 +289,25 @@ public class PlayFragment extends Fragment {
 
     public void PlayGame(final View v){
         if(mLives>0) {
-
             Log.d("FragPlay", "PlayGame");
 //            ptlogMultiple = 1;
+            if(isTheDateBeforeToday(iniUser.getDailyResetDate())){
+                Log.w("check00-0",String.valueOf(mCoins));
+                mCoins = mCoins + mSystemPreferences.getDailyReward().intValue();
+                mDailyPlayTimes = 0;
+                mDailyWinTimes = 0;
+                Log.w("check00",String.valueOf(mCoins));
+                updateUser(user,UpdateUserTimer.DailyReset.value);
+            }
+
+            if(isTheDateBeforeToday(iniUser.getSpecialTimeRewardGetDate())){
+                if(isSpecialTime()) {
+                    Log.w("check01-0", String.valueOf(mCoins));
+                    mCoins = mCoins + mSystemPreferences.getSpecialTimeReward().intValue();
+                    Log.w("check01", String.valueOf(mCoins));
+                    updateUser(user, UpdateUserTimer.SpecialTimeReward.value);
+                }
+            }
 
             ((MainActivity) getActivity()).removeBottomNavListener();
             mImgViewScissors.setOnClickListener(null);
@@ -324,7 +330,7 @@ public class PlayFragment extends Fragment {
                 }
             }
 
-            mCoins = Integer.valueOf(mTxtViewCoins.getText().toString());
+//            mCoins = Integer.valueOf(mTxtViewCoins.getText().toString());
             mScore = Integer.valueOf(mTxtViewScore.getText().toString());
             mLives = Integer.valueOf(mTxtViewLives.getText().toString());
 
@@ -506,7 +512,6 @@ public class PlayFragment extends Fragment {
                                 mpTie.seekTo(0);
                             }
                             break;
-
                     }
 
 
@@ -677,9 +682,10 @@ public class PlayFragment extends Fragment {
 
     private void updateUserScore(final String boardId, final int when) {
         Log.d("☆Firebase", "readScores->"+boardId);
-        mReadDatabase = FirebaseDatabase.getInstance().getReference("scores/" + boardId+ "/" + user.getUid());
 
-        mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        final DatabaseReference updateUserScoreDBref = FirebaseDatabase.getInstance().getReference("scores/" + boardId+ "/" + user.getUid());
+
+        updateUserScoreDBref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 // do some stuff once
@@ -689,7 +695,7 @@ public class PlayFragment extends Fragment {
                     Score s = new Score();
                     s.setDisplayName(user.getDisplayName());
                     s.setScore(0L);
-                    mReadDatabase.setValue(s);
+                    updateUserScoreDBref.setValue(s);
                     mTxtViewScore.setText("0");
                 }else{
                     Score s = snapshot.getValue(Score.class);
@@ -699,7 +705,7 @@ public class PlayFragment extends Fragment {
                         mScore = s.getScore().intValue();
                     }
                     newScore.put("score", Long.valueOf(mScore));
-                    mReadDatabase.updateChildren(newScore);
+                    updateUserScoreDBref.updateChildren(newScore);
                     mTxtViewScore.setText(String.valueOf(mScore));
                 }
                 chkReaded = true;
@@ -756,11 +762,8 @@ public class PlayFragment extends Fragment {
                     Board b = boardSnapshot.getValue(Board.class);
                     if(rightNow >= b.getStartDateInterval()) {
                         Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
-
-
                         break;//新加的，怕有錯註記一下
                     }
-
                 }
             }
 
@@ -815,21 +818,20 @@ public class PlayFragment extends Fragment {
                 Log.w("☆firebase(playFrag)",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getCounterSec()));
                 CreateTimer(lifeCounter);
 
-                if(!isTheDateBeforeToday(userDailyResetDate)){
-                    Log.w("mCoins",String.valueOf(mCoins));
+                if(isTheDateBeforeToday(userDailyResetDate)){
+                    Log.w("check00-0",String.valueOf(mCoins));
                     mCoins = mCoins + mSystemPreferences.getDailyReward().intValue();
                     mDailyPlayTimes = 0;
                     mDailyWinTimes = 0;
-                    Log.w("mCoins",String.valueOf(mCoins));
+                    Log.w("check00",String.valueOf(mCoins));
                     updateUser(user,UpdateUserTimer.DailyReset.value);
-
                 }
 
-                if(!isTheDateBeforeToday(iniUser.getSpecialTimeRewardGetDate())){
+                if(isTheDateBeforeToday(iniUser.getSpecialTimeRewardGetDate())){
                     if(isSpecialTime()) {
-                        Log.w("mCoins", String.valueOf(mCoins));
+                        Log.w("check01-0", String.valueOf(mCoins));
                         mCoins = mCoins + mSystemPreferences.getSpecialTimeReward().intValue();
-                        Log.w("mCoins", String.valueOf(mCoins));
+                        Log.w("check01", String.valueOf(mCoins));
                         updateUser(user, UpdateUserTimer.SpecialTimeReward.value);
                     }
                 }
@@ -860,13 +862,14 @@ public class PlayFragment extends Fragment {
                 User u = snapshot.getValue(User.class);
                 if(u != null){
                     //以下這段也可以用！
-/*
+                    //==============================================================================
                     Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
 
                     for (Object key : map.keySet()) {
                         Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
                     }
-*/
+                    //==============================================================================
+
                     iniUser = u;
                     Log.d("firebase",String.valueOf(u.getLives()));
 
@@ -886,8 +889,6 @@ public class PlayFragment extends Fragment {
                         mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(), iniUser, PlayFragment.this);
                         mListViewTools.setAdapter(mToolsAdapter);
                         mImgViewTools.setOnClickListener(imgViewToolsOnClick);
-
-
                     }
 //                    updateBoard(user);
 //                    chkReaded = true;
@@ -932,7 +933,6 @@ public class PlayFragment extends Fragment {
 //                mWriteDatabase.updateChildren(userValues);
 //                mWriteDatabase.setValue(user);
                 long[] mTotalDice= {0L,0L,0L,0L,0L,0L};
-
 
                 Map newUserData = new HashMap();
                 if(when == UpdateUserTimer.PlayGame.value)
@@ -987,11 +987,13 @@ public class PlayFragment extends Fragment {
                     newUserData.put("lives", Long.valueOf(mLives));
                     updateTimer(fUser.getUid());
                     Log.w("LifeCounter",Long.valueOf(mLives)+",");
-                }else if(when == UpdateUserTimer.GetNewIntervalDate.value){
-                    newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
-                    newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
-//                    iniUser.setStartDateInterval(mStartDateInterval);
-                }else if(when == UpdateUserTimer.DailyReset.value){
+                }
+//                else if(when == UpdateUserTimer.GetNewIntervalDate.value){
+//                    newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
+//                    newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
+////                    iniUser.setStartDateInterval(mStartDateInterval);
+//                }
+                else if(when == UpdateUserTimer.DailyReset.value){
 //                    mCoins = u.getCoins().intValue() + mSystemPreferences.getDailyReward().intValue();
 //                    mDailyPlayTimes = 0;
 //                    mDailyWinTimes = 0;
@@ -999,7 +1001,9 @@ public class PlayFragment extends Fragment {
                     newUserData.put("dailyWinTimes", Long.valueOf(mDailyWinTimes));
                     newUserData.put("dailyResetDate", ServerValue.TIMESTAMP);
                     newUserData.put("coins", Long.valueOf(mCoins));
+                    Log.w("DailyReset",mCoins+",");
                     mTxtViewCoins.setText(String.valueOf(mCoins));
+//                    readUser(UpdateUserTimer.Normal.value);
                 }else if(when == UpdateUserTimer.SpecialTimeReward.value) {
                     newUserData.put("coins", Long.valueOf(mCoins));
                     newUserData.put("specialTimeRewardGetDate",ServerValue.TIMESTAMP);
@@ -1134,6 +1138,8 @@ public class PlayFragment extends Fragment {
                     updateBoard(UpdateUserTimer.PlayGame.value);
                     updateTimer(fUser.getUid());
                 }
+
+                readUser(UpdateUserTimer.Normal.value);
             }
 
             @Override
@@ -1154,15 +1160,6 @@ public class PlayFragment extends Fragment {
             public void onDataChange(DataSnapshot snapshot) {
                 User u = snapshot.getValue(User.class);
                 Log.d("updateTimer",u.getLifeCounter().toString());
-
-                /*timestamp to date*/
-//                Calendar cal = Calendar.getInstance();
-//                cal.setTimeInMillis( u.getLifeCounter() );
-//                int year = cal.get(Calendar.YEAR);
-//                int month = cal.get(Calendar.MONTH)+1;
-//                int day = cal.get(Calendar.DAY_OF_MONTH);
-//                Log.d("updateTimer",year+"-"+month+"-"+day);
-
             }
 
             @Override
@@ -1231,7 +1228,8 @@ public class PlayFragment extends Fragment {
         GetNewIntervalDate(5),
         OnIni(6),
         DailyReset(7),
-        SpecialTimeReward(8);
+        SpecialTimeReward(8),
+        Normal(9);
 
         private int value;
 
@@ -1298,7 +1296,7 @@ public class PlayFragment extends Fragment {
         return tsLong;
     }
     private boolean isTheDateBeforeToday(Long userDate){
-        boolean isTheDateBeforeToday = true;
+        boolean isTheDateBeforeToday = false;
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis( userDate );
@@ -1307,7 +1305,7 @@ public class PlayFragment extends Fragment {
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
         String strUserDate = String.valueOf(year)+String.valueOf(String.format("%02d", month))+String.valueOf(String.format("%02d", day));
-        Log.w("isTheDateBeforeToday",year+","+month+","+day);
+//        Log.w("isTheDateBeforeToday",year+","+month+","+day);
 
         Calendar calR = Calendar.getInstance();
         calR.setTimeInMillis(System.currentTimeMillis());
@@ -1315,9 +1313,9 @@ public class PlayFragment extends Fragment {
         int monthR = calR.get(Calendar.MONTH)+1;
         int dayR = calR.get(Calendar.DAY_OF_MONTH);
         String strRightDate = String.valueOf(yearR)+String.valueOf(String.format("%02d", monthR))+String.valueOf(String.format("%02d", dayR));
-        Log.w("isTheDateBeforeToday",yearR+","+monthR+","+dayR);
-        if(Integer.valueOf(strRightDate) > Integer.valueOf(strUserDate)){
-            isTheDateBeforeToday = false;
+//        Log.w("isTheDateBeforeToday",yearR+","+monthR+","+dayR);
+        if( Integer.valueOf(strUserDate) < Integer.valueOf(strRightDate) ){
+            isTheDateBeforeToday = true;
         }
         Log.w("isTheDateBeforeToday",userDate+","+isTheDateBeforeToday+",rightNow:"+strRightDate+","+strUserDate);
         return isTheDateBeforeToday;
@@ -1330,43 +1328,43 @@ public class PlayFragment extends Fragment {
 
         Calendar startCal = Calendar.getInstance();
         startCal.setTimeInMillis( mSpecialTimeStartDateInterval );
-        int startYear = startCal.get(Calendar.YEAR);
-        int startMonth = startCal.get(Calendar.MONTH)+1;
-        int startDay = startCal.get(Calendar.DAY_OF_MONTH);
+//        int startYear = startCal.get(Calendar.YEAR);
+//        int startMonth = startCal.get(Calendar.MONTH)+1;
+//        int startDay = startCal.get(Calendar.DAY_OF_MONTH);
         int startHh = startCal.get(Calendar.HOUR_OF_DAY);
         int startSs = startCal.get(Calendar.MINUTE);
-
-        String strStartDate = String.valueOf(startYear)+String.valueOf(String.format("%02d", startMonth))+String.valueOf(String.format("%02d", startDay))
-                +String.valueOf(String.format("%02d", startHh))+String.valueOf(String.format("%02d", startSs));
+//
+//        String strStartDate = String.valueOf(startYear)+String.valueOf(String.format("%02d", startMonth))+String.valueOf(String.format("%02d", startDay))
+//                +String.valueOf(String.format("%02d", startHh))+String.valueOf(String.format("%02d", startSs));
         String startHHSS = String.valueOf(String.format("%02d", startHh))+String.valueOf(String.format("%02d", startSs));
-        Log.w("isSpecialTime",mSpecialTimeStartDateInterval+","+strStartDate+","+startHHSS);
+//        Log.w("isSpecialTime",mSpecialTimeStartDateInterval+","+strStartDate+","+startHHSS);
 
         Calendar endCal = Calendar.getInstance();
         endCal.setTimeInMillis( mSpecialTimeEndDateInterval );
-        int endYear = endCal.get(Calendar.YEAR);
-        int endMonth = endCal.get(Calendar.MONTH)+1;
-        int endDay = endCal.get(Calendar.DAY_OF_MONTH);
+//        int endYear = endCal.get(Calendar.YEAR);
+//        int endMonth = endCal.get(Calendar.MONTH)+1;
+//        int endDay = endCal.get(Calendar.DAY_OF_MONTH);
         int endHh = endCal.get(Calendar.HOUR_OF_DAY);
         int endSs = endCal.get(Calendar.MINUTE);
 
-        String strEndDate = String.valueOf(endYear)+String.valueOf(String.format("%02d", endMonth))+String.valueOf(String.format("%02d", endDay))
-                +String.valueOf(String.format("%02d", endHh))+String.valueOf(String.format("%02d", endSs));
+//        String strEndDate = String.valueOf(endYear)+String.valueOf(String.format("%02d", endMonth))+String.valueOf(String.format("%02d", endDay))
+//                +String.valueOf(String.format("%02d", endHh))+String.valueOf(String.format("%02d", endSs));
         String endHHSS = String.valueOf(String.format("%02d", endHh))+String.valueOf(String.format("%02d", endSs));
-        Log.w("isSpecialTime",mSpecialTimeEndDateInterval+","+strEndDate+","+endHHSS);
+//        Log.w("isSpecialTime",mSpecialTimeEndDateInterval+","+strEndDate+","+endHHSS);
 
         Long rightNow = System.currentTimeMillis();
         Calendar curCal = Calendar.getInstance();
         curCal.setTimeInMillis( rightNow );
-        int curYear = curCal.get(Calendar.YEAR);
-        int curMonth = curCal.get(Calendar.MONTH)+1;
-        int curDay = curCal.get(Calendar.DAY_OF_MONTH);
+//        int curYear = curCal.get(Calendar.YEAR);
+//        int curMonth = curCal.get(Calendar.MONTH)+1;
+//        int curDay = curCal.get(Calendar.DAY_OF_MONTH);
         int curHh = curCal.get(Calendar.HOUR_OF_DAY);
         int curSs = curCal.get(Calendar.MINUTE);
 
-        String strCurDate = String.valueOf(curYear)+String.valueOf(String.format("%02d", curMonth))+String.valueOf(String.format("%02d", curDay))
-                +String.valueOf(String.format("%02d", curHh))+String.valueOf(String.format("%02d", curSs));
+//        String strCurDate = String.valueOf(curYear)+String.valueOf(String.format("%02d", curMonth))+String.valueOf(String.format("%02d", curDay))
+//                +String.valueOf(String.format("%02d", curHh))+String.valueOf(String.format("%02d", curSs));
         String curHHSS = String.valueOf(String.format("%02d", curHh))+String.valueOf(String.format("%02d", curSs));
-        Log.w("isSpecialTime",rightNow+","+strCurDate+","+curHHSS);
+//        Log.w("isSpecialTime",rightNow+","+strCurDate+","+curHHSS);
 
         if(Integer.valueOf(curHHSS) >= Integer.valueOf(startHHSS) && Integer.valueOf(curHHSS) <= Integer.valueOf(endHHSS))
         {
@@ -1374,17 +1372,6 @@ public class PlayFragment extends Fragment {
         }
         Log.w("isSpecialTime",isSpecialTime+",");
 
-//        Calendar calR = Calendar.getInstance();
-//        calR.setTimeInMillis(System.currentTimeMillis());
-//        int yearR = calR.get(Calendar.YEAR);
-//        int monthR = calR.get(Calendar.MONTH)+1;
-//        int dayR = calR.get(Calendar.DAY_OF_MONTH);
-//        String strRightDate = String.valueOf(yearR)+String.valueOf(String.format("%02d", monthR))+String.valueOf(String.format("%02d", dayR));
-//        Log.w("isTheSameDate",yearR+","+monthR+","+dayR);
-//        if(Integer.valueOf(strRightDate) > Integer.valueOf(strUserDate)){
-//            isTheSameDate = false;
-//        }
-//        Log.w("isTheSameDate",userDate+","+isTheSameDate+",rightNow:"+strRightDate+","+strUserDate);
         return isSpecialTime;
     }
 
