@@ -1,5 +1,6 @@
 package com.kanhan.redpocket;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kanhan.redpocket.Data.User;
+
 import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
@@ -17,6 +20,20 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 
 public class ShopsAdapter extends BaseAdapter {
+
+    private LayoutInflater mLayInf;
+    private User mUser;
+    private Context mContext;
+    private ShopsFragment mFragment;
+
+    public ShopsAdapter(Context context, ShopsFragment fragment)
+    {
+        Log.w("ShopsAdapter","ShopsAdapter");
+        mLayInf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mContext = context;
+        mFragment = fragment;
+    }
+
     @Override
     public int getCount() {
         return 6;
@@ -102,11 +119,11 @@ public class ShopsAdapter extends BaseAdapter {
                 String s = tv.getText().toString();
 
                 Button bn = (Button) view.findViewById(R.id.btnBuy);
-                String a = bn.getText().toString();
+                String a = bn.getText().toString().substring(0,3);
 
 
                 Log.w("ShopsAdapter",position+","+s+","+a);
-//                mFragment.useTool(s,a);
+                mFragment.buySomething(s,a);
 //                switch (v.getId()) {
 //                    case R.id.button1:
 //                        Toast.makeText(getApplicationContext(),
