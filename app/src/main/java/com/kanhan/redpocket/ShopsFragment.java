@@ -161,7 +161,7 @@ public class ShopsFragment extends Fragment {
                     mCoins = u.getCoins().intValue();
                     mDice = u.getDice().intValue();
 
-                    if(mCoins <= Integer.valueOf(toolPrice)){
+                    if(mCoins < Integer.valueOf(toolPrice)){
                         Toast.makeText(getActivity(), "Coins 不足！",
                                 Toast.LENGTH_SHORT).show();
                     }else{
