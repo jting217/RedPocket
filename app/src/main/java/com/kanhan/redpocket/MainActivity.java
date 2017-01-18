@@ -8,7 +8,6 @@ import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -26,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.kanhan.redpocket.Data.SystemPreferences;
 import com.kanhan.redpocket.Data.User;
@@ -352,7 +352,9 @@ public class MainActivity extends AppCompatActivity {
 //                    user.setStartDateInterval(iniVal);
 //                    user.setEndDateInterval(iniVal);
                     user.setLives(mSystemPreferences.getSignupReward());
-                    mWriteDatabase.child(userId).setValue(user);
+                    Map<String, Object> nUser = user.toMap();
+                    nUser.put("lifeCounter", ServerValue.TIMESTAMP);
+                    mWriteDatabase.child(userId).setValue(nUser);
                 }
             }
 
