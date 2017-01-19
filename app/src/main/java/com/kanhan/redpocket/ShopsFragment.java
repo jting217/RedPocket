@@ -25,7 +25,6 @@ import com.kanhan.redpocket.Data.User;
 import java.util.HashMap;
 import java.util.Map;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -47,7 +46,7 @@ public class ShopsFragment extends Fragment {
 
     private ListView mListViewCoins;
     private ListView mListViewTools;
-    private int mCoins, mDice;
+    private int mCoins, mIronFirst, mMindControl, mGoldenHand, mLife, mDice, mVictory;
     private User mUser;
 
     private OnFragmentInteractionListener mListener;
@@ -159,7 +158,13 @@ public class ShopsFragment extends Fragment {
 
                     mUser = u;
                     mCoins = u.getCoins().intValue();
+
+                    mIronFirst = u.getIronFirst().intValue();
+                    mMindControl = u.getMindControl().intValue();
+                    mGoldenHand = u.getGoldenHand().intValue();
+                    mLife = u.getLives().intValue();
                     mDice = u.getDice().intValue();
+                    mVictory = u.getVictory().intValue();
 
                     if(mCoins < Integer.valueOf(toolPrice)){
                         Toast.makeText(getActivity(), "Coins 不足！",
@@ -190,7 +195,7 @@ public class ShopsFragment extends Fragment {
         builder.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
-
+                updateUser(toolName,toolPrice);
                 //updateUser after buy something
             }
         });
@@ -211,4 +216,90 @@ public class ShopsFragment extends Fragment {
         dialog.show();
 
     }
+
+    private void updateUser(final String toolName, final String toolPrice) {
+        final DatabaseReference mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+        mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                Map newUserData = new HashMap();
+
+                newUserData.put("coins", Long.valueOf(mCoins) - Long.valueOf(toolPrice));
+                int type= 0 ,product=0 ,transaction=0, total=0;
+                switch (toolName){
+                    case "Iron First":
+                        mIronFirst +=1;
+                        newUserData.put("ironFirst", Long.valueOf(mIronFirst));
+                        product = PlayFragment.ProductType.IronFirst.ProductType();
+                        total = mIronFirst;
+                        break;
+                    case "Mind Control":
+                        mMindControl +=1;
+                        newUserData.put("mindControl", Long.valueOf(mMindControl));
+                        product = PlayFragment.ProductType.MindControl.ProductType();
+                        total = mMindControl;
+                        break;
+                    case "Golden Hand":
+                        mGoldenHand +=1;
+                        newUserData.put("goldenHand", Long.valueOf(mGoldenHand));
+                        product = PlayFragment.ProductType.GoldenHand.ProductType();
+                        total = mGoldenHand;
+                        break;
+                    case "Life":
+                        mLife +=1;
+                        newUserData.put("lives", Long.valueOf(mLife));
+                        product = PlayFragment.ProductType.Life.ProductType();
+                        total = mLife;
+                        break;
+                    case "Dice":
+                        mDice +=1;
+                        newUserData.put("dice", Long.valueOf(mDice));
+                        product = PlayFragment.ProductType.Dice.ProductType();
+                        total = mDice;
+                        break;
+                    case "Victory":
+                        mVictory +=1;
+                        newUserData.put("victory", Long.valueOf(mVictory));
+                        product = PlayFragment.ProductType.Victory.ProductType();
+                        total = mVictory;
+                        break;
+                }
+                mWriteDatabase.updateChildren(newUserData);
+
+                type = PlayFragment.ToolTransactionType.Purchase.ToolTransactionType();
+                transaction = 1;
+
+                Long rightNow = GetRightNow();
+                DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/transactionLogTool/" + rightNow);
+                Map transactionLogTool = new HashMap();
+                transactionLogTool.put("type", type);
+                transactionLogTool.put("product", product);
+                transactionLogTool.put("transaction", transaction);
+                transactionLogTool.put("total", total);
+                drLog0.setValue(transactionLogTool);
+
+                mCoins = mCoins-Integer.valueOf(toolPrice);
+                DatabaseReference drLog1 = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/transactionLogCoin/" + rightNow);
+                Map transactionLogCoin = new HashMap();
+                transactionLogCoin.put( "type", PlayFragment.CoinTransactionType.BuyTool.CoinTransactionType());
+                transactionLogCoin.put( "transaction", Long.valueOf(toolPrice)*-1);
+                transactionLogCoin.put( "totalCoins",mCoins );
+                drLog1.setValue(transactionLogCoin);
+                Toast.makeText(getActivity(), "花費 " + toolPrice +" 得到 " + toolName + " " + transaction +" 個",
+                        Toast.LENGTH_SHORT).show();
+        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+        });
+    }
+
+    private Long GetRightNow(){
+        Long tsLong = System.currentTimeMillis()/1000;
+//        String ts = tsLong.toString();
+        return tsLong;
+    }
+
 }

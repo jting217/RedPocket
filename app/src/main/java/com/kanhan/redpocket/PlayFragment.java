@@ -1260,7 +1260,8 @@ public class PlayFragment extends Fragment {
     public enum CoinTransactionType {
         DailyReward(1),
         BuyLife(2),
-        SpecialTimeReward(3);
+        SpecialTimeReward(3),
+        BuyTool(4);
 
         private int value;
 
