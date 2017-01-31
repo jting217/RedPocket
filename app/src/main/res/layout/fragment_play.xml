@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/outerRegiion"
-    tools:context="com.kanhan.redpocket.PlayFragment">
+    tools:context="com.juicesoft.redpocket.PlayFragment">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
