@@ -904,7 +904,9 @@ public class PlayFragment extends Fragment {
                         //Log.w("DailyResetDate",String.valueOf(u.getDailyResetDate()));
                         readSystemPreferences(u.getLifeCounter()/1000,u.getDailyResetDate());
                         //Log.w("getLifeCounter",u.getLifeCounter()/1000+",");
+
                         updateBoard(UpdateUserTimer.OnIni.value);
+
 //                        mTxtViewScore.setText(String.valueOf(0));
                     }
 

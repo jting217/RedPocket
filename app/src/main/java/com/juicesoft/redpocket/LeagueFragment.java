@@ -56,6 +56,8 @@ public class LeagueFragment extends Fragment {
     private ListAdapter mLeagueAdapter;
 
     private OnFragmentInteractionListener mListener;
+    private static String mScoreBoardId;
+    private static long mStartDateInterval, mEndDateInterval;
 
     public LeagueFragment() {
         // Required empty public constructor
@@ -111,7 +113,7 @@ public class LeagueFragment extends Fragment {
         int month = cal.get(Calendar.MONTH)+1;
         int day = cal.get(Calendar.DAY_OF_MONTH);
         mTxtViewUpdateTime.setText("Update time:"+year+"/"+month+"/"+day);
-        Log.d("updateTimer",year+"-"+month+"-"+day);
+        //Log.d("updateTimer",year+"-"+month+"-"+day);
         //宣告 ListView 元件
         mListViewLeague = (ListView)getView().findViewById(R.id.listViewLeague);
 
@@ -121,40 +123,48 @@ public class LeagueFragment extends Fragment {
     /*先找到目前的board，再Update*/
     private void queryBoard() {
         final Long rightNow = GetRightNow();
-        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
-        Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                //Log.d("board",rightNow.toString());
-                boolean getBoard = false;
-                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
-                    Board b = boardSnapshot.getValue(Board.class);
-                    if(rightNow >= b.getStartDateInterval()) {
-                        //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
-                        boardOrderby(b.getId());
-                        getBoard = true;
-                        break;//新加的，怕有錯註記一下
+        if(rightNow>mStartDateInterval && rightNow < mEndDateInterval){
+            boardOrderby(mScoreBoardId);
+        }else{
+            mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
+            Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
+            queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    //Log.d("board",rightNow.toString());
+                    boolean getBoard = false;
+                    for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
+                        Board b = boardSnapshot.getValue(Board.class);
+                        if(rightNow >= b.getStartDateInterval()) {
+                            //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
+                            mScoreBoardId = b.getId();
+                            mStartDateInterval = b.getStartDateInterval();
+                            mEndDateInterval = b.getEndDateInterval();
+                            boardOrderby(b.getId());
+                            getBoard = true;
+                            break;//新加的，怕有錯註記一下
+                        }
+
                     }
-
-                }
-                if(!getBoard){
-                    if(getActivity()!= null)
-                    {
-                        mImgViewNoLeague.setVisibility(View.VISIBLE);
-                        mTxtViewNoRanking.setVisibility(View.VISIBLE);
-                        mTxtViewSorry.setVisibility(View.VISIBLE);
-                        mTxtViewUpdateTime.setVisibility(View.VISIBLE);
+                    if(!getBoard){
+                        if(getActivity()!= null)
+                        {
+                            mImgViewNoLeague.setVisibility(View.VISIBLE);
+                            mTxtViewNoRanking.setVisibility(View.VISIBLE);
+                            mTxtViewSorry.setVisibility(View.VISIBLE);
+                            mTxtViewUpdateTime.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("☆firebase failed: ", databaseError.getMessage());
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("☆firebase failed: ", databaseError.getMessage());
+                }
 
-        });
+            });
+        }
+
 
     }
 
