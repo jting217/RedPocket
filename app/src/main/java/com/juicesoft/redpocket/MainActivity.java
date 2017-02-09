@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("MainActivity","onCreate");
+        //Log.d("MainActivity","onCreate");
 
         //        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
-        Log.d("+++++savedInstanceState", String.valueOf(savedInstanceState));
+        //Log.d("+++++savedInstanceState", String.valueOf(savedInstanceState));
         MenuItem selectedItem;
         if (savedInstanceState != null) {
             mSelectedItem = savedInstanceState.getInt(SELECTED_ITEM, 0);
@@ -130,28 +130,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        Log.d("MainActivity","onSaveInstanceState");
+        //Log.d("MainActivity","onSaveInstanceState");
         outState.putInt(SELECTED_ITEM, mSelectedItem);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onStop() {
-        Log.d("MainActivity","");
+        //Log.d("MainActivity","");
         super.onStop();
         stopService(svc);
     }
 
     @Override
     protected void onStart() {
-        Log.d("MainActivity","onStart");
+        //Log.d("MainActivity","onStart");
         super.onStart();
         playMusicByFlag();
     }
 
     @Override
     protected void onDestroy() {
-        Log.d("MainActivity","onDestroy");
+        //Log.d("MainActivity","onDestroy");
         super.onDestroy();
 //        stopMusic();
 //        PlayFragment fragment = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.d("MainActivity","onPause");
+        //Log.d("MainActivity","onPause");
         super.onPause();
         stopService(svc);
 //        stopMusic();
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Log.d("MainActivity","onBackPressed");
+        //Log.d("MainActivity","onBackPressed");
         MenuItem homeItem = mBottomNav.getMenu().getItem(0);
         if (mSelectedItem != homeItem.getItemId()) {
             // select home item
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void selectFragment(MenuItem item) {
-        Log.d("MainActivity","selectFragment");
+        //Log.d("MainActivity","selectFragment");
         Fragment frag = null;
         // init corresponding fragment
         switch (item.getItemId()) {
@@ -196,21 +196,21 @@ public class MainActivity extends AppCompatActivity {
                 frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
                 break;
             case R.id.shops:
-                Log.d("selectFragment","shops");
+                //Log.d("selectFragment","shops");
                 frag = ShopsFragment.newInstance("Shops","");
                 break;
             case R.id.league:
-                Log.d("selectFragment","league");
+                //Log.d("selectFragment","league");
                 frag = LeagueFragment.newInstance("League","");
                 break;
             case R.id.options:
-                Log.d("selectFragment","options");
+                //Log.d("selectFragment","options");
                 frag = OptionsFragment.newInstance("Options",String.valueOf(textPlayMusic.getText()));
 //                frag = MenuFragment.newInstance(getString(R.string.text_options)+" coming soon..",
 //                        getColorFromRes(R.color.color_search));
                 break;
             case R.id.info:
-                Log.d("selectFragment","info");
+                //Log.d("selectFragment","info");
                 frag = InfoFragment.newInstance("Info","");
                 break;
         }
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void recallPlayFragment(){
-        Log.d("MainActivity","");
+        //Log.d("MainActivity","");
         Fragment frag = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateToolbarText(CharSequence text) {
-        Log.d("MainActivity","");
+        //Log.d("MainActivity","");
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(text);
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readSystemPreferences() {
-        Log.d("☆Firebase","readSystemPreferences");
+        //Log.d("☆Firebase","readSystemPreferences");
         mReadDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
 
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -378,11 +378,11 @@ public class MainActivity extends AppCompatActivity {
                  //以下這段也可以用！
                  Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
                     //Adding it to a string
-                    for (Object key : map.keySet()) {
-                        Log.w("firebase",key + " : " + map.get(key) +  map.get(key).getClass());
-                    }
+                    //for (Object key : map.keySet()) {
+                    //    Log.w("firebase",key + " : " + map.get(key) +  map.get(key).getClass());
+                    //}
                  mSystemPreferences = sp;
-                 Log.w("☆firebase",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getSignupReward()));
+                 //Log.w("☆firebase",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getSignupReward()));
                  writeNewUser(user.getUid());
              }
 
