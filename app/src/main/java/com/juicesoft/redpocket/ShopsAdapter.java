@@ -28,7 +28,7 @@ public class ShopsAdapter extends BaseAdapter {
 
     public ShopsAdapter(Context context, ShopsFragment fragment)
     {
-        Log.w("ShopsAdapter","ShopsAdapter");
+        //Log.w("ShopsAdapter","ShopsAdapter");
         mLayInf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContext = context;
         mFragment = fragment;

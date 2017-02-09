@@ -2,7 +2,6 @@ package com.juicesoft.redpocket;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,8 +68,8 @@ public class PlayFragment extends Fragment {
     private static Timer timer01;
     private TimerTask timerTask;
     private boolean startflag=false;
-    private static long tmpTimer;
-    private Intent countDownSound;
+//    private static long tmpTimer;
+//    private Intent countDownSound;
     private ListView mListViewTools;
     private ListAdapter mToolsAdapter;
     private static int mUseTool = 0, mMultiple = 1 ;
@@ -87,11 +86,12 @@ public class PlayFragment extends Fragment {
     private static int mScore;
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
-    private boolean updatePlayResult = false, updateGetLife = false;
+//    private boolean updatePlayResult = false, updateGetLife = false;
     private static SystemPreferences mSystemPreferences;
-    private long mLifeCounter;
+//    private long mLifeCounter;
     private long mStartDateInterval, mEndDateInterval;
-    private static String mBoardNode = "";
+    private static String mScoreBoardId ;
+
 
     private static PlayFragment instance;
 
@@ -192,6 +192,8 @@ public class PlayFragment extends Fragment {
 
         iniUser = new User();
         readUser(UpdateUserTimer.OnIni.value);
+
+        updateBoard(UpdateUserTimer.OnIni.value);
     }
 
     @Override
@@ -653,17 +655,26 @@ public class PlayFragment extends Fragment {
     /*先找到目前的board，再Update*/
     private void updateBoard(final int when) {
         final Long rightNow = GetRightNow();
-        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
-        Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                //Log.d("board",rightNow.toString());
-                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
-                    Board b = boardSnapshot.getValue(Board.class);
-                    if(rightNow >= b.getStartDateInterval()) {
-                        //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
-                        updateUserScore(b.getId(),when);
+        if(rightNow> mStartDateInterval && rightNow < mEndDateInterval && mScoreBoardId.length() != 0 ){
+            updateUserScore(mScoreBoardId,when);
+//            mTxtViewScore.setText(String.valueOf(mScore));
+//            chkReaded = true;
+        }else{
+
+            mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
+            Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
+            queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    //Log.d("board",rightNow.toString());
+                    for (DataSnapshot boardSnapshot : snapshot.getChildren()) {
+                        Board b = boardSnapshot.getValue(Board.class);
+                        if (rightNow >= b.getStartDateInterval()) {
+                            //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
+                            mStartDateInterval = b.getStartDateInterval();
+                            mEndDateInterval = b.getEndDateInterval();
+                            mScoreBoardId = b.getId();
+                            updateUserScore(b.getId(), when);
 //                        DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + boardSnapshot.getKey() + "/scores/" + fUser.getUid());
 //                        Map board = new HashMap();
 //                        board.put("displayName", fUser.getDisplayName());
@@ -672,18 +683,19 @@ public class PlayFragment extends Fragment {
 //                        wRef.setValue(board);
 //                        mTxtViewScore.setText(String.valueOf(u.getScore()));
 //                        chkReaded = true;
-                        break;//新加的，怕有錯註記一下
+                            break;//新加的，怕有錯註記一下
+                        }
+
                     }
-
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("☆firebase failed: ", databaseError.getMessage());
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e("☆firebase failed: ", databaseError.getMessage());
+                }
 
-        });
+            });
+        }
 
     }
 
@@ -794,7 +806,7 @@ public class PlayFragment extends Fragment {
                 for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
                     Board b = boardSnapshot.getValue(Board.class);
                     //Log.e("Get Data2", boardSnapshot.getKey()+","+b.getStartDateInterval()+","+b.getEndDateInterval());
-                    mBoardNode = boardSnapshot.getKey();
+                    mScoreBoardId = boardSnapshot.getKey();
                 }
             }
 
@@ -865,7 +877,6 @@ public class PlayFragment extends Fragment {
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                // do some stuff once
                 User u = snapshot.getValue(User.class);
                 if(u != null){
                     //以下這段也可以用！
@@ -897,17 +908,10 @@ public class PlayFragment extends Fragment {
                         mListViewTools.setAdapter(mToolsAdapter);
                         mImgViewTools.setOnClickListener(imgViewToolsOnClick);
                     }
-//                    updateBoard(user);
-//                    chkReaded = true;
-
+              //***
                     if(when == UpdateUserTimer.OnIni.value) {
-                        //Log.w("DailyResetDate",String.valueOf(u.getDailyResetDate()));
                         readSystemPreferences(u.getLifeCounter()/1000,u.getDailyResetDate());
-                        //Log.w("getLifeCounter",u.getLifeCounter()/1000+",");
-
-                        updateBoard(UpdateUserTimer.OnIni.value);
-
-//                        mTxtViewScore.setText(String.valueOf(0));
+//                        updateBoard(UpdateUserTimer.OnIni.value);
                     }
 
                 }else{
