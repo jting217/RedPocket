@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,7 @@ public class LeagueAdapter extends BaseAdapter {
     private Context mContext;
     public LeagueAdapter(Context context, List<ScoreFormat> itemList)
     {
-        Log.w("LeagueAdapter",String.valueOf(itemList.size()));
+        //Log.w("LeagueAdapter",String.valueOf(itemList.size()));
         mLayInf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mItemList = itemList;
         mContext = context;

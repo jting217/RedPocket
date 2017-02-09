@@ -45,7 +45,6 @@
                     android:layout_marginStart="20dp" />
 
                 <TextView
-                    android:text="0"
                     android:layout_width="92dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -57,7 +56,6 @@
                     android:layout_below="@+id/imageLives"/>
 
                 <TextView
-                    android:text="0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"
@@ -82,7 +80,6 @@
                     android:layout_alignEnd="@+id/imageCoin" />
 
                 <TextView
-                    android:text="0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorAccent"

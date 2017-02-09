@@ -98,7 +98,7 @@ public class LeagueFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        aueryBoard();
+        queryBoard();
 
         mImgViewNoLeague = (ImageView) getView().findViewById(R.id.imgViewNoLeague) ;
         mTxtViewSorry = (TextView) getView().findViewById(R.id.txtViewSorry) ;
@@ -119,23 +119,33 @@ public class LeagueFragment extends Fragment {
     }
 
     /*先找到目前的board，再Update*/
-    private void aueryBoard() {
+    private void queryBoard() {
         final Long rightNow = GetRightNow();
         mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
         Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
         queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                Log.d("board",rightNow.toString());
+                //Log.d("board",rightNow.toString());
+                boolean getBoard = false;
                 for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
                     Board b = boardSnapshot.getValue(Board.class);
                     if(rightNow >= b.getStartDateInterval()) {
-                        Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
+                        //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
                         boardOrderby(b.getId());
-
+                        getBoard = true;
                         break;//新加的，怕有錯註記一下
                     }
 
+                }
+                if(!getBoard){
+                    if(getActivity()!= null)
+                    {
+                        mImgViewNoLeague.setVisibility(View.VISIBLE);
+                        mTxtViewNoRanking.setVisibility(View.VISIBLE);
+                        mTxtViewSorry.setVisibility(View.VISIBLE);
+                        mTxtViewUpdateTime.setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
@@ -174,9 +184,18 @@ public class LeagueFragment extends Fragment {
                 }
                 Collections.reverse(scoreOrderList);
                 mUserScoreOrderList = scoreOrderList;
-                for(ScoreFormat s:mUserScoreOrderList){
-                    Log.w("userScore",s.getDisplayName()+","+s.getScore());
+                if(mUserScoreOrderList.size() == 0 && getActivity()!= null)
+                {
+                    mImgViewNoLeague.setVisibility(View.VISIBLE);
+                    mTxtViewNoRanking.setVisibility(View.VISIBLE);
+                    mTxtViewSorry.setVisibility(View.VISIBLE);
+                    mTxtViewUpdateTime.setVisibility(View.VISIBLE);
                 }
+
+
+                //for(ScoreFormat s:mUserScoreOrderList){
+                //    Log.w("userScore",s.getDisplayName()+","+s.getScore());
+                //}
                 if(getActivity()!= null) {
                     mLeagueAdapter = new LeagueAdapter(getActivity().getApplicationContext(), mUserScoreOrderList);
                     mListViewLeague.setAdapter(mLeagueAdapter);

@@ -81,7 +81,7 @@ public class PlayFragment extends Fragment {
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter;
-    private RelativeLayout mCoorContentRegion;
+    private RelativeLayout mCoorContentRegion, mCenterRegion;
     private int mCoins, mDice, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
     private boolean mWinWithPaperFlag = false, mWinWithRockFlag = false, mWinWithScissorFlag = false, mDailyWinTimesFlag = false;
     private static int mScore;
@@ -176,6 +176,8 @@ public class PlayFragment extends Fragment {
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScores);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
+
+        mCenterRegion= (RelativeLayout) getView().findViewById(R.id.centerRegion);
 
         mCoorContentRegion = (RelativeLayout) getView().findViewById(R.id.coorContentRegion);
         mCoorContentRegion.setOnClickListener(layoutViewToolsOnClick);
@@ -545,8 +547,11 @@ public class PlayFragment extends Fragment {
                         //mUseTool = 0;
                         mDice -= 1;
                     }
-//                    mTxtViewResult.setVisibility(View.VISIBLE);
-//                    mTxtViewResult.setText(result);
+                    mTxtViewResult.setVisibility(View.VISIBLE);
+                    mTxtViewResult.setText(result);
+                    /*
+                    double width = mCenterRegion.getWidth() * 0.9;
+                    double height = mCenterRegion.getHeight() * 0.5;
 
                     final CustomDialog dialog = new CustomDialog(v.getContext(), getString(result), String.valueOf(getLives), String.valueOf(getScore), new CustomDialog.ICustomDialogEventListener() {
                         @Override
@@ -554,7 +559,8 @@ public class PlayFragment extends Fragment {
                         }
                     }, R.style.dialog);
                     dialog.show();
-                    dialog.getWindow().setLayout(1200, 650);
+                    dialog.getWindow().setLayout((int)width, (int)height);
+                                    */
 
 //                mTxtViewCoins.setText(String.valueOf(Integer.valueOf(mTxtViewCoins.getText().toString())+10));
 
@@ -564,9 +570,9 @@ public class PlayFragment extends Fragment {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             //倒數秒數中要做的事
-                            if (new SimpleDateFormat("s").format(millisUntilFinished).equals("1") && (autoPlay == true || isPlaying == true)) {
-                                dialog.cancel();
-                            }
+                            //if (new SimpleDateFormat("s").format(millisUntilFinished).equals("1") && (autoPlay == true || isPlaying == true)) {
+                            //    dialog.cancel();
+                            //}
                         }
 
                         @Override
@@ -575,6 +581,7 @@ public class PlayFragment extends Fragment {
 
                             mImgViewNpc.setImageResource(R.drawable.img_cardback);
                             mImgViewPlayer.setImageResource(R.drawable.img_cardback);
+                            mTxtViewResult.setVisibility(View.INVISIBLE);
                             if(autoPlay == false) {
                                 if(!(autoPlay == true || isPlaying == true)) {
                                     switch (v.getId()) {
