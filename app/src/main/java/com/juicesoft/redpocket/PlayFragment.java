@@ -89,7 +89,7 @@ public class PlayFragment extends Fragment {
 //    private boolean updatePlayResult = false, updateGetLife = false;
     private static SystemPreferences mSystemPreferences;
 //    private long mLifeCounter;
-    private static long mStartDateInterval, mEndDateInterval;
+    private static long mStartDateInterval, mEndDateInterval, mLivesUpperLimit;
     private static String mScoreBoardId ;
 
 
@@ -1421,6 +1421,9 @@ public class PlayFragment extends Fragment {
                         mLives = Integer.valueOf(mTxtViewLives.getText().toString());
                         tsec = mSystemPreferences.getCounterSec().intValue();
                         mLives+=1;
+                        if(mLives > mSystemPreferences.getLivesUpperLimit()){
+                            mLives = mSystemPreferences.getLivesUpperLimit().intValue();
+                        }
                         ltlogTransaction = 1;
                         ltlogType = LifeTransactionType.FiveMinutesTimer.value;
                         updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);
@@ -1453,6 +1456,9 @@ public class PlayFragment extends Fragment {
                     mLives = Integer.valueOf(mTxtViewLives.getText().toString());
 //                    tsec = mSystemPreferences.getCounterSec().intValue();
                     mLives+=getLife;
+                    if(mLives > mSystemPreferences.getLivesUpperLimit()){
+                        mLives = mSystemPreferences.getLivesUpperLimit().intValue();
+                    }
                     ltlogTransaction = (int) getLife;
                     ltlogType = LifeTransactionType.FiveMinutesTimer.value;
                     updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);

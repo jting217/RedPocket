@@ -15,6 +15,7 @@ public class SystemPreferences {
     private Long dailyReward;
     private Long playTimesPerDice;
     private Long signupReward;
+    private Long livesUpperLimit;
     private Long specialTimeEndDateInterval;
     private Long specialTimeReward;
     private Long specialTimeStartDateInterval;
@@ -56,6 +57,14 @@ public class SystemPreferences {
 
     public void setSignupReward(Long signupReward) {
         this.signupReward = signupReward;
+    }
+
+    public Long getLivesUpperLimit() {
+        return livesUpperLimit;
+    }
+
+    public void setLivesUpperLimit(Long livesUpperLimit) {
+        this.livesUpperLimit = livesUpperLimit;
     }
 
     public Long getSpecialTimeEndDateInterval() {
@@ -106,13 +115,14 @@ public class SystemPreferences {
         this.winWithMatchResult = winWithMatchResult;
     }
 
-    public SystemPreferences(Long counterSec, Long dailyReward, Long playTimesPerDice, Long signupReward, Long specialTimeEndDateInterval,
+    public SystemPreferences(Long counterSec, Long dailyReward, Long playTimesPerDice, Long signupReward, Long livesUpperLimit, Long specialTimeEndDateInterval,
                              Long specialTimeReward, Long specialTimeStartDateInterval, Long winTimesGetOneDiceFirst, Long winTimesGetOneDiceSecond,
                              Long winWithMatchResult){
         this.counterSec = counterSec;
         this.dailyReward = dailyReward;
         this.playTimesPerDice = playTimesPerDice;
         this.signupReward = signupReward;
+        this.livesUpperLimit = livesUpperLimit;
         this.specialTimeEndDateInterval = specialTimeEndDateInterval;
         this.specialTimeReward = specialTimeReward;
         this.specialTimeStartDateInterval = specialTimeStartDateInterval;
@@ -128,6 +138,7 @@ public class SystemPreferences {
         result.put("dailyReward", dailyReward);
         result.put("playTimesPerDice", playTimesPerDice);
         result.put("signupReward", signupReward);
+        result.put("livesUpperLimit", livesUpperLimit);
         result.put("specialTimeEndDateInterval", specialTimeEndDateInterval);
         result.put("specialTimeReward", specialTimeReward);
         result.put("specialTimeStartDateInterval", specialTimeStartDateInterval);
