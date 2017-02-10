@@ -89,7 +89,7 @@ public class PlayFragment extends Fragment {
 //    private boolean updatePlayResult = false, updateGetLife = false;
     private static SystemPreferences mSystemPreferences;
 //    private long mLifeCounter;
-    private long mStartDateInterval, mEndDateInterval;
+    private static long mStartDateInterval, mEndDateInterval;
     private static String mScoreBoardId ;
 
 
@@ -655,8 +655,10 @@ public class PlayFragment extends Fragment {
     /*先找到目前的board，再Update*/
     private void updateBoard(final int when) {
         final Long rightNow = GetRightNow();
+        //Log.w("old data:",mStartDateInterval+",mEndDateInterval:"+mEndDateInterval+",mScoreBoardId:"+mScoreBoardId);
         if(rightNow> mStartDateInterval && rightNow < mEndDateInterval && mScoreBoardId.length() != 0 ){
             updateUserScore(mScoreBoardId,when);
+            //Log.w("updateBoard:","user old data.");
 //            mTxtViewScore.setText(String.valueOf(mScore));
 //            chkReaded = true;
         }else{

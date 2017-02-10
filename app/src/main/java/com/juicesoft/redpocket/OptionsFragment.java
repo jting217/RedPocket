@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +60,7 @@ public class OptionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("OptionsFrag","onCreate");
+        //Log.d("OptionsFrag","onCreate");
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -95,10 +94,10 @@ public class OptionsFragment extends Fragment {
                                          boolean isChecked) {
 
                 if(isChecked){
-                    Log.d("switchStatus","Switch is currently ON");
+                    //Log.d("switchStatus","Switch is currently ON");
                     ((MainActivity)getActivity()).playMusic();
                 }else{
-                    Log.d("switchStatus","Switch is currently OFF");
+                    //Log.d("switchStatus","Switch is currently OFF");
                     ((MainActivity)getActivity()).stopMusic();
                 }
 

@@ -27,7 +27,7 @@ public class ToolsAdapter extends BaseAdapter {
     private PlayFragment mFragment;
     public ToolsAdapter(Context context, User user, PlayFragment fragment)
     {
-        Log.w("LeagueAdapter",user.toString());
+//        Log.w("LeagueAdapter",user.toString());
         mLayInf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mUser = user;
         mContext = context;
