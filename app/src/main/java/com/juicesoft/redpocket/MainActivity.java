@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         }
         selectFragment(selectedItem);
 
-        Log.d("++++++++++selectedItem", String.valueOf(selectedItem));
+        //Log.d("++++++++++selectedItem", String.valueOf(selectedItem));
     }
 
     @Override

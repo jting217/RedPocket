@@ -358,7 +358,9 @@ public class PlayFragment extends Fragment {
                         mpLose.start();
                         mpLose.seekTo(0);
                     }
-                    mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
+                    if (Integer.valueOf(new SimpleDateFormat("s").format(millisUntilFinished)) <= 5) {
+                        mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
+                    }
                 }
 
                 @Override
