@@ -1,6 +1,7 @@
 package com.juicesoft.redpocket;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,6 +43,7 @@ public class SinginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
         mfirebaseAuth = FirebaseAuth.getInstance();
@@ -105,14 +107,12 @@ public class SinginActivity extends AppCompatActivity {
                         } catch(FirebaseAuthWeakPasswordException e) {
                             //Toast.makeText(SinginActivity.this, "密碼至少需6位", Toast.LENGTH_SHORT).show();
 //                            mEditTxtPassword.setError(getString(R.string.error_weak_password));
-                            mEditTxtPassword.setError("密碼至少需6位");
+                            mEditTxtPassword.setError(getString(R.string.PasswordAuthenticationRowPlaceholderNewPassword));
                             mEditTxtPassword.requestFocus();
                         } catch(FirebaseAuthInvalidCredentialsException e) {
                             Log.e("TAG", e.getMessage());
                         } catch(FirebaseAuthUserCollisionException e) {
-                            //Toast.makeText(SinginActivity.this, "帳號已存在", Toast.LENGTH_SHORT).show();
-//                            mEditTxtPassword.setError(getString(R.string.error_weak_password));
-                            mEditTxtEmail.setError("帳號已存在");
+                            mEditTxtEmail.setError(getString(R.string.AlertMessageEmailAlreadyInUse));
                             mEditTxtEmail.requestFocus();
                         } catch(Exception e) {
                             Log.e("TAG", e.getMessage());

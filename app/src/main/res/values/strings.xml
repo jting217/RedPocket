@@ -31,6 +31,34 @@
     <string name="text_no_ranking">No ranking yet</string>
     <string name="text_ok">OK</string>
 
+    <string name="AlertButtonConfirm">OK</string>
+    <string name="AlertMessageEmailAlreadyInUse">Email Already In Use</string>
+    <string name="AlertMessageSystemError">We’re sorry...Something is wrong here.</string>
+    <string name="AlertMessageWrongPassword">Wrong Password</string>
+    <string name="BarButtonItemSend">Send</string>
+    <string name="PasswordAuthenticationRowPlaceholderConfirmPassword">retype your password</string>
+    <string name="PasswordAuthenticationRowPlaceholderDisplayName">Your nickname</string>
+    <string name="PasswordAuthenticationRowPlaceholderEmail">Your email</string>
+    <string name="PasswordAuthenticationRowPlaceholderNewPassword">at least 6 characters</string>
+    <string name="PasswordAuthenticationRowPlaceholderPassword">Your password</string>
+    <string name="PasswordAuthenticationRowTitleConfirmPassword">Confirm password</string>
+    <string name="PasswordAuthenticationRowTitleDisplayName">Display Name</string>
+    <string name="PasswordAuthenticationRowTitleEmail">Email</string>
+    <string name="PasswordAuthenticationRowTitleForgotPassword">Forgot password</string>
+    <string name="PasswordAuthenticationRowTitlePassword">Password</string>
+    <string name="PlayButtonAuto">AUTO</string>
+    <string name="PlayTitleBuyMore">BUY MORE</string>
+    <string name="PlayTitleCoins">COINS</string>
+    <string name="PlayTitleLives">LIVES</string>
+    <string name="PlayTitleScore">SCORE</string>
+    <string name="TabBarItemInfo">Info</string>
+    <string name="TabBarItemLeague">League</string>
+    <string name="TabBarItemOptions">Options</string>
+    <string name="TabBarItemPlay">Play</string>
+    <string name="TabBarItemShops">Shops</string>
+    <string name="WelcomeButtonSignIn">Login</string>
+    <string name="WelcomeButtonSignUp">Signup</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

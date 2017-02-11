@@ -32,6 +32,11 @@
             -->
         </activity>
 
+
+
+
+
+
         <service
         android:enabled="true"
         android:name="com.juicesoft.redpocket.BackgroundSoundService"

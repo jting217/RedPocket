@@ -79,7 +79,7 @@ public class PlayFragment extends Fragment {
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;
-    private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter;
+    private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter, mTxtViewUpperLives;
     private RelativeLayout mCoorContentRegion, mCenterRegion;
     private int mCoins, mDice, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
     private boolean mWinWithPaperFlag = false, mWinWithRockFlag = false, mWinWithScissorFlag = false, mDailyWinTimesFlag = false;
@@ -176,6 +176,7 @@ public class PlayFragment extends Fragment {
         mTxtViewCoins  = (TextView) getView().findViewById(R.id.txtViewCoins);
         mTxtViewScore = (TextView) getView().findViewById(R.id.txtViewScores);
         mTxtViewLives = (TextView) getView().findViewById(R.id.txtViewLives);
+        mTxtViewUpperLives = (TextView) getView().findViewById(R.id.txtViewUpperLives);
 
         mCenterRegion= (RelativeLayout) getView().findViewById(R.id.centerRegion);
 
@@ -840,6 +841,7 @@ public class PlayFragment extends Fragment {
                 setTsec = mSystemPreferences.getCounterSec().intValue();
                 //Log.w("☆firebase(playFrag)",String.valueOf(sp.getCounterSec())+","+String.valueOf(mSystemPreferences.getCounterSec()));
                 CreateTimer(lifeCounter);
+                mTxtViewUpperLives.setText("/"+mSystemPreferences.getLivesUpperLimit());
 
                 if(isTheDateBeforeToday(userDailyResetDate)){
                     //Log.w("check00-0",String.valueOf(mCoins));

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Red Rocket</string>
+
+    <string name="text_favorites">Favorites</string>
+    <string name="text_schedules">Schedules</string>
+    <string name="text_music">Music</string>
+    <string name="text_play">Play</string>
+    <string name="text_shops">Shops</string>
+    <string name="text_league">League</string>
+    <string name="text_options">Options</string>
+    <string name="text_info">Info</string>
+    <string name="text_win">YOU WIN !!</string>
+    <string name="text_lose">YOU LOSE !!</string>
+    <string name="text_tie">TIE !!</string>
+    <string name="facebook_app_id">1055321587910260</string>
+    <string name="logout">Logout</string>
+    <string name="your_password">Your Password</string>
+    <string name="your_e_mail">Your E-mail</string>
+    <string name="your_nickname">Your nickname</string>
+    <string name="retype_your_password">Retype Your Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="leaest_6_characters">Leaest 6 Characters</string>
+    <string name="signup">Signup</string>
+    <string name="login">Login</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="nickname">Nickname</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="text_sorry">Sorry !!</string>
+    <string name="text_no_ranking">No ranking yet</string>
+    <string name="text_ok">OK</string>
+
+    <string name="AlertButtonConfirm">OK</string>
+    <string name="AlertMessageEmailAlreadyInUse">電子郵件已被使用</string>
+    <string name="AlertMessageSystemError">對不起...有點問題</string>
+    <string name="AlertMessageWrongPassword">密碼錯誤</string>
+    <string name="BarButtonItemSend">發出</string>
+    <string name="PasswordAuthenticationRowPlaceholderConfirmPassword">重新輸入密碼</string>
+    <string name="PasswordAuthenticationRowPlaceholderDisplayName">您的暱稱</string>
+    <string name="PasswordAuthenticationRowPlaceholderEmail">您的電郵</string>
+    <string name="PasswordAuthenticationRowPlaceholderNewPassword">最少需要6個字符</string>
+    <string name="PasswordAuthenticationRowPlaceholderPassword">您的密碼</string>
+    <string name="PasswordAuthenticationRowTitleConfirmPassword">確認密碼</string>
+    <string name="PasswordAuthenticationRowTitleDisplayName">顯示名稱</string>
+    <string name="PasswordAuthenticationRowTitleEmail">電子郵箱</string>
+    <string name="PasswordAuthenticationRowTitleForgotPassword">忘記密碼</string>
+    <string name="PasswordAuthenticationRowTitlePassword">密碼</string>
+    <string name="PlayButtonAuto">自動</string>
+    <string name="PlayTitleBuyMore">購買</string>
+    <string name="PlayTitleCoins">金幣</string>
+    <string name="PlayTitleLives">生命</string>
+    <string name="PlayTitleScore">分數</string>
+    <string name="TabBarItemInfo">資訊</string>
+    <string name="TabBarItemLeague">排行榜</string>
+    <string name="TabBarItemOptions">選項</string>
+    <string name="TabBarItemPlay">遊戲</string>
+    <string name="TabBarItemShops">商店</string>
+    <string name="WelcomeButtonSignIn">登入</string>
+    <string name="WelcomeButtonSignUp">註冊</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

@@ -5,32 +5,32 @@
         android:id="@+id/paly"
         android:enabled="true"
         android:icon="@drawable/icon_toolbar_play"
-        android:title="@string/text_play"
+        android:title="@string/TabBarItemPlay"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/shops"
         android:enabled="true"
         android:icon="@drawable/icon_toolbar_shops"
-        android:title="@string/text_shops"
+        android:title="@string/TabBarItemShops"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/league"
         android:enabled="true"
         android:icon="@drawable/icon_toolbar_league"
-        android:title="@string/text_league"
+        android:title="@string/TabBarItemLeague"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/options"
         android:enabled="true"
         android:icon="@drawable/icon_toolbar_options"
-        android:title="@string/text_options"
+        android:title="@string/TabBarItemOptions"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/info"
         android:enabled="true"
         android:icon="@drawable/icon_toolbar_info"
-        android:title="@string/text_info"
+        android:title="@string/TabBarItemInfo"
         app:showAsAction="ifRoom" />
 
 </menu>
