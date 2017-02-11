@@ -19,6 +19,9 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
@@ -76,15 +79,45 @@ public class SinginActivity extends AppCompatActivity {
         String password = mEditTxtPassword.getText().toString();
         String passwordConfrim = mEditTxtConfirm.getText().toString();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(nickname) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passwordConfrim)) {
-            Toast.makeText(this, "帳密或暱稱不能為空", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(email) ) {
+            mEditTxtEmail.setError("請輸入Email");
+            mEditTxtEmail.requestFocus();
+        }else if( TextUtils.isEmpty(nickname)){
+            mEditTxtNickname.setError("請輸入暱稱");
+            mEditTxtNickname.requestFocus();
+        }else if(TextUtils.isEmpty(password) ){
+            mEditTxtPassword.setError("請輸入密碼");
+            mEditTxtPassword.requestFocus();
+        }else if(TextUtils.isEmpty(passwordConfrim)) {
+            mEditTxtConfirm.setError("請確認密碼");
+            mEditTxtConfirm.requestFocus();
+        }else if(!password.equals(passwordConfrim) ){
+            mEditTxtPassword.setError("確認密碼不一致");
+            mEditTxtPassword.requestFocus();
         } else {
             mfirebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                     if (!task.isSuccessful()) {
-                        Log.w("TAG", "signInWithEmail:failed", task.getException());
+                        try {
+                            throw task.getException();
+                        } catch(FirebaseAuthWeakPasswordException e) {
+                            //Toast.makeText(SinginActivity.this, "密碼至少需6位", Toast.LENGTH_SHORT).show();
+//                            mEditTxtPassword.setError(getString(R.string.error_weak_password));
+                            mEditTxtPassword.setError("密碼至少需6位");
+                            mEditTxtPassword.requestFocus();
+                        } catch(FirebaseAuthInvalidCredentialsException e) {
+                            Log.e("TAG", e.getMessage());
+                        } catch(FirebaseAuthUserCollisionException e) {
+                            //Toast.makeText(SinginActivity.this, "帳號已存在", Toast.LENGTH_SHORT).show();
+//                            mEditTxtPassword.setError(getString(R.string.error_weak_password));
+                            mEditTxtEmail.setError("帳號已存在");
+                            mEditTxtEmail.requestFocus();
+                        } catch(Exception e) {
+                            Log.e("TAG", e.getMessage());
+                        }
+
                     }else{
                         Log.d("TAG", "signInWithEmail:onComplete:" + task.isSuccessful());
                         setUserDisplayName();
