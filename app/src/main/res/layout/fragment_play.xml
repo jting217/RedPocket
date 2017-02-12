@@ -133,7 +133,7 @@
                 android:layout_toEndOf="@+id/bottomRegion"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.98"
-                android:background="@color/colorWhite">
+                android:background="@drawable/bg_barbg2">
 
 
 
