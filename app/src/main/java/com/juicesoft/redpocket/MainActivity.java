@@ -61,8 +61,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //取消螢幕休眠
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        setContentView(R.layout.activity_main);
 
+//更改狀態列顏色，在 activity_main.xml要加 android:fitsSystemWindows="true" 屬性
+//        WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+//        localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+
+        setContentView(R.layout.activity_main);
         //------------------------login start---------------
         nameTextView = (TextView) findViewById(R.id.nameTextView);
         emailTextView = (TextView) findViewById(R.id.emailTextView);
