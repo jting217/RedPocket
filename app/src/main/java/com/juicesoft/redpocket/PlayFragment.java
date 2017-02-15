@@ -1515,7 +1515,9 @@ public class PlayFragment extends Fragment {
 // Set other dialog properties
 
 //        builder.setTitle("Title");
-        if(Integer.valueOf(toolAmount) > 0) {
+        if(!toolName.equals("Dice")){
+            builder.setMessage( " Coming soon...");
+        }else if(Integer.valueOf(toolAmount) > 0) {
             builder.setMessage("使用道具 " + toolName + " ?");
         }else{
             builder.setMessage( toolName + "  不足!");

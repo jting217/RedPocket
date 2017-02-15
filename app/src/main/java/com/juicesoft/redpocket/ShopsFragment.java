@@ -138,7 +138,7 @@ public class ShopsFragment extends Fragment {
     }
 
     public void buySomething(final String toolName, final String toolPrice) {
-        Log.d("☆Firebase", "readUser->");
+        Log.d("buySomething", toolName+","+toolPrice);
         DatabaseReference mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -149,11 +149,11 @@ public class ShopsFragment extends Fragment {
                 if(u != null){
                     //以下這段也可以用！
                     //==============================================================================
-                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
-
-                    for (Object key : map.keySet()) {
-                        Log.w("ShopFragFirebase", key + " : " + map.get(key) + map.get(key).getClass());
-                    }
+//                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
+//
+//                    for (Object key : map.keySet()) {
+//                        Log.w("ShopFragFirebase", key + " : " + map.get(key) + map.get(key).getClass());
+//                    }
                     //==============================================================================
 
                     mUser = u;
@@ -166,14 +166,16 @@ public class ShopsFragment extends Fragment {
                     mDice = u.getDice().intValue();
                     mVictory = u.getVictory().intValue();
 
-                    if(mCoins < Integer.valueOf(toolPrice)){
+                    Log.d("buySomething2", toolName+","+toolPrice);
+                    if(!toolName.equals("Dice") && !toolName.equals("Life")){
+                        Toast.makeText(getActivity(), "Coming soon...",
+                                Toast.LENGTH_SHORT).show();
+                    }else if(mCoins < Integer.valueOf(toolPrice)){
                         Toast.makeText(getActivity(), "Coins 不足！",
                                 Toast.LENGTH_SHORT).show();
                     }else{
                         buyTool(toolName,toolPrice);
                     }
-
-
 
                 }else{
                     buyTool(toolName,toolPrice);
@@ -191,12 +193,10 @@ public class ShopsFragment extends Fragment {
     public void buyTool(final String toolName, final String toolPrice){
         Log.w("buyTool","test");
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-// Add the buttons
+
         builder.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked OK button
-                updateUser(toolName,toolPrice);
-                //updateUser after buy something
+                updateUser(toolName, toolPrice);
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -204,13 +204,9 @@ public class ShopsFragment extends Fragment {
                 // User cancelled the dialog
             }
         });
-// Set other dialog properties
-
-//        builder.setTitle("Title");
 
         builder.setMessage("購買道具 " + toolName + " ?");
 
-// Create the AlertDialog
         AlertDialog dialog = builder.create();
 
         dialog.show();
