@@ -87,6 +87,9 @@ public class EmailLoginActivity  extends AppCompatActivity {
     private void goMainScreen() {
         Intent intent = new Intent(EmailLoginActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle bundle = new Bundle();
+        bundle.putString("srcClass", "EmailLoginActivity");
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mWriteDatabase, mReadDatabase;
     private SystemPreferences mSystemPreferences;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+    private boolean isLoginOrSign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +73,18 @@ public class MainActivity extends AppCompatActivity {
         uidTextView = (TextView) findViewById(R.id.uidTextView);
         textPlayMusic = (TextView) findViewById(R.id.txtPlayMusic);
         mSystemPreferences = new SystemPreferences();
-
+        isLoginOrSign = false;
 
         //接收Bundle
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         //  String tid = bundle.getString("Id");
-
+        if(bundle != null){
+            if(bundle.getString("srcClass") != null){
+                isLoginOrSign = true;
+            }
+        }
+        Log.w("isLoginOrSign", String.valueOf(isLoginOrSign));
         //nameTextView.setText(tid);
 
 //        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

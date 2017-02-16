@@ -72,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intentSignup = new Intent();
                 intentSignup.setClass(LoginActivity.this,SinginActivity.class);
+
                 startActivity(intentSignup);
 
             }
@@ -148,7 +149,11 @@ public class LoginActivity extends AppCompatActivity {
                 intent.setClass(LoginActivity.this, MainActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putString("Id", testUid);
+
+                bundle.putString("srcClass", "LoginActivity");
+
                 intent.putExtras(bundle);
+
                 startActivity(intent);
 
 
@@ -167,7 +172,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goMainScreen() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
         startActivity(intent);
     }
 
