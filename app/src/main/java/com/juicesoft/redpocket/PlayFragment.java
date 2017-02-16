@@ -825,6 +825,7 @@ public class PlayFragment extends Fragment {
 
     private void readSystemPreferences(final Long lifeCounter, final Long userDailyResetDate) {
         //Log.d("☆Firebase(playFrag)","readSystemPreferences");
+
         mReadDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
 
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -897,17 +898,34 @@ public class PlayFragment extends Fragment {
                     iniUser = u;
                     //Log.d("firebase",String.valueOf(u.getLives()));
 
+
                     mTxtViewCoins.setText(String.valueOf(u.getCoins()));
 //                    mTxtViewScore.setText(String.valueOf(u.getScore()));
                     mTxtViewLives.setText(String.valueOf(u.getLives()));
-                    mLives = u.getLives().intValue();
-                    mWinWithScissor = u.getWinWithScissor().intValue();
-                    mWinWithRock = u.getWinWithRock().intValue();
-                    mWinWithPaper = u.getWinWithPaper().intValue();
-                    mDailyPlayTimes = u.getDailyPlayTimes().intValue();
-                    mDailyWinTimes = u.getDailyWinTimes().intValue();
-                    mCoins = u.getCoins().intValue();
-                    mDice = u.getDice().intValue();
+                    if(u.getLives()!=null) {
+                        mLives = u.getLives().intValue();
+                    }else{mLives = 0 ;}
+                    if(u.getWinWithScissor()!=null) {
+                        mWinWithScissor = u.getWinWithScissor().intValue();
+                    }else{mWinWithScissor = 0 ;}
+                    if(u.getWinWithRock()!=null) {
+                        mWinWithRock = u.getWinWithRock().intValue();
+                    }else{mWinWithRock = 0 ;}
+                    if(u.getWinWithPaper()!=null) {
+                        mWinWithPaper = u.getWinWithPaper().intValue();
+                    }else{mWinWithPaper = 0 ;}
+                    if(u.getDailyPlayTimes()!=null) {
+                        mDailyPlayTimes = u.getDailyPlayTimes().intValue();
+                    }else{mDailyPlayTimes = 0 ;}
+                    if(u.getDailyWinTimes()!=null) {
+                        mDailyWinTimes = u.getDailyWinTimes().intValue();
+                    }else{mDailyWinTimes = 0 ;}
+                    if(u.getCoins()!=null) {
+                        mCoins = u.getCoins().intValue();
+                    }else{mCoins = 0 ;}
+                    if(u.getDice()!=null) {
+                        mDice = u.getDice().intValue();
+                    }else{mDice = 0 ;}
 
                     if(getActivity() != null) {
                         mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(), iniUser, PlayFragment.this);
@@ -916,7 +934,11 @@ public class PlayFragment extends Fragment {
                     }
               //***
                     if(when == UpdateUserTimer.OnIni.value) {
-                        readSystemPreferences(u.getLifeCounter()/1000,u.getDailyResetDate());
+                        Long d = u.getDailyResetDate();
+                        if(d==null){
+                            d = 0L;
+                        }
+                        readSystemPreferences(u.getLifeCounter()/1000,d);
 //                        updateBoard(UpdateUserTimer.OnIni.value);
                     }
 
@@ -1317,25 +1339,26 @@ public class PlayFragment extends Fragment {
     }
     private boolean isTheDateBeforeToday(Long userDate){
         boolean isTheDateBeforeToday = false;
+        if(userDate != null) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(userDate);
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH) + 1;
+            int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis( userDate );
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH)+1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-
-        String strUserDate = String.valueOf(year)+String.valueOf(String.format("%02d", month))+String.valueOf(String.format("%02d", day));
+            String strUserDate = String.valueOf(year) + String.valueOf(String.format("%02d", month)) + String.valueOf(String.format("%02d", day));
 //        Log.w("isTheDateBeforeToday",year+","+month+","+day);
 
-        Calendar calR = Calendar.getInstance();
-        calR.setTimeInMillis(System.currentTimeMillis());
-        int yearR = calR.get(Calendar.YEAR);
-        int monthR = calR.get(Calendar.MONTH)+1;
-        int dayR = calR.get(Calendar.DAY_OF_MONTH);
-        String strRightDate = String.valueOf(yearR)+String.valueOf(String.format("%02d", monthR))+String.valueOf(String.format("%02d", dayR));
+            Calendar calR = Calendar.getInstance();
+            calR.setTimeInMillis(System.currentTimeMillis());
+            int yearR = calR.get(Calendar.YEAR);
+            int monthR = calR.get(Calendar.MONTH) + 1;
+            int dayR = calR.get(Calendar.DAY_OF_MONTH);
+            String strRightDate = String.valueOf(yearR) + String.valueOf(String.format("%02d", monthR)) + String.valueOf(String.format("%02d", dayR));
 //        Log.w("isTheDateBeforeToday",yearR+","+monthR+","+dayR);
-        if( Integer.valueOf(strUserDate) < Integer.valueOf(strRightDate) ){
-            isTheDateBeforeToday = true;
+            if (Integer.valueOf(strUserDate) < Integer.valueOf(strRightDate)) {
+                isTheDateBeforeToday = true;
+            }
         }
         //Log.w("isTheDateBeforeToday",userDate+","+isTheDateBeforeToday+",rightNow:"+strRightDate+","+strUserDate);
         return isTheDateBeforeToday;
@@ -1532,6 +1555,7 @@ public class PlayFragment extends Fragment {
     public void setIsFirstCreatTimer(){
         isFirstCreatTimer = true;
     }
+
 
 
 }//程式結尾

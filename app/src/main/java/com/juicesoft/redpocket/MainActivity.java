@@ -302,18 +302,33 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void logout(View view) {
+//    public void logout(View view) {
+    public void logout() {
 //        FragmentManager fm = getSupportFragmentManager();
 ////if you added fragment via layout xml
 //        PlayFragment fragment = (PlayFragment)fm.findFragmentById(R.id.);
 //        fragment.yourPublicMethod();
-        PlayFragment fragment = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
-        fragment.setIsFirstCreatTimer();
+
+//        PlayFragment fragment = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
+//        fragment.setIsFirstCreatTimer();
 
         FirebaseAuth.getInstance().signOut();
         LoginManager.getInstance().logOut();
         goLoginScreen();
     }
+    public void logout(View view) {
+//        FragmentManager fm = getSupportFragmentManager();
+////if you added fragment via layout xml
+//        PlayFragment fragment = (PlayFragment)fm.findFragmentById(R.id.);
+//        fragment.yourPublicMethod();
+
+//        PlayFragment fragment = PlayFragment.newInstance("Play",getColorFromRes(R.color.colorWhite),String.valueOf(textPlayMusic.getText()));
+//        fragment.setIsFirstCreatTimer();
+
+            FirebaseAuth.getInstance().signOut();
+            LoginManager.getInstance().logOut();
+            goLoginScreen();
+  }
 
     private void writeNewUser(final String userId) {
 //        User user = new User(userId, nickName, email);
@@ -341,29 +356,33 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Firebase",userId + " is existed!");
 
                 }else{
-                    user.setCoins(iniVal);
-                    user.setDailyPlayTimes(iniVal);
-                    user.setDailyResetDate(iniVal);
-                    user.setDailyWinTimes(iniVal);
-                    user.setDice(iniVal);
-                    user.setGoldenHand(iniVal);
-                    user.setIronFirst(iniVal);
-                    user.setLifeCounter(iniVal);
-                    user.setMindControl(iniVal);
-                    user.setSignupRewardRedeemed(true);
+                    if(isLoginOrSign) {
+                        user.setCoins(iniVal);
+                        user.setDailyPlayTimes(iniVal);
+                        user.setDailyResetDate(iniVal);
+                        user.setDailyWinTimes(iniVal);
+                        user.setDice(iniVal);
+                        user.setGoldenHand(iniVal);
+                        user.setIronFirst(iniVal);
+                        user.setLifeCounter(iniVal);
+                        user.setMindControl(iniVal);
+                        user.setSignupRewardRedeemed(true);
 //                    user.setScore(iniVal);
-                    user.setSpecialTimeRewardGetDate(iniVal);
-                    user.setTimer(iniVal);
-                    user.setVictory(iniVal);
-                    user.setWinWithPaper(iniVal);
-                    user.setWinWithRock(iniVal);
-                    user.setWinWithScissor(iniVal);
+                        user.setSpecialTimeRewardGetDate(iniVal);
+                        user.setTimer(iniVal);
+                        user.setVictory(iniVal);
+                        user.setWinWithPaper(iniVal);
+                        user.setWinWithRock(iniVal);
+                        user.setWinWithScissor(iniVal);
 //                    user.setStartDateInterval(iniVal);
 //                    user.setEndDateInterval(iniVal);
-                    user.setLives(mSystemPreferences.getSignupReward());
-                    Map<String, Object> nUser = user.toMap();
-                    nUser.put("lifeCounter", ServerValue.TIMESTAMP);
-                    mWriteDatabase.child(userId).setValue(nUser);
+                        user.setLives(mSystemPreferences.getSignupReward());
+                        Map<String, Object> nUser = user.toMap();
+                        nUser.put("lifeCounter", ServerValue.TIMESTAMP);
+                        mWriteDatabase.child(userId).setValue(nUser);
+                    }else{
+                        logout();
+                    }
                 }
             }
 
