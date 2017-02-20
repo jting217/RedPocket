@@ -314,7 +314,9 @@ public class PlayFragment extends Fragment {
                 }
             }
 
-            ((MainActivity) getActivity()).removeBottomNavListener();
+            if(((MainActivity) getActivity()) != null) {
+                ((MainActivity) getActivity()).removeBottomNavListener();
+            }
             mImgViewScissors.setOnClickListener(null);
             mImgViewRock.setOnClickListener(null);
             mImgViewPaper.setOnClickListener(null);

@@ -168,10 +168,10 @@ public class ShopsFragment extends Fragment {
 
                     Log.d("buySomething2", toolName+","+toolPrice);
                     if(!toolName.equals("Dice") && !toolName.equals("Life")){
-                        Toast.makeText(getActivity(), "Coming soon...",
+                        Toast.makeText(getContext(), "Coming soon...",
                                 Toast.LENGTH_SHORT).show();
                     }else if(mCoins < Integer.valueOf(toolPrice)){
-                        Toast.makeText(getActivity(), "Coins 不足！",
+                        Toast.makeText(getContext(), "Coins 不足！",
                                 Toast.LENGTH_SHORT).show();
                     }else{
                         buyTool(toolName,toolPrice);
@@ -282,7 +282,7 @@ public class ShopsFragment extends Fragment {
                 transactionLogCoin.put( "transaction", Long.valueOf(toolPrice)*-1);
                 transactionLogCoin.put( "totalCoins",mCoins );
                 drLog1.setValue(transactionLogCoin);
-                Toast.makeText(getActivity(), "花費 " + toolPrice +" 得到 " + toolName + " " + transaction +" 個",
+                Toast.makeText(getContext(), "花費 " + toolPrice +" 得到 " + toolName + " " + transaction +" 個",
                         Toast.LENGTH_SHORT).show();
         }
             @Override
