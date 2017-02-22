@@ -135,7 +135,16 @@
                 android:layout_weight="0.98"
                 android:background="@drawable/bg_barbg2">
 
-
+                <ImageView
+                    app:srcCompat="@drawable/img_cardback"
+                    android:id="@+id/imgViewAminNpc"
+                    android:layout_marginTop="23dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignStart="@+id/imgViewPlayer"
+                    android:src="@drawable/animation_npc"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:visibility="invisible" />
 
                 <ImageView
                     app:srcCompat="@drawable/img_cardback"
@@ -144,7 +153,18 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignStart="@+id/imgViewPlayer"
                     android:layout_width="130dp"
-                    android:layout_height="130dp" />
+                    android:layout_height="130dp"/>
+
+                <ImageView
+                    app:srcCompat="@drawable/img_cardback"
+                    android:id="@+id/imgViewAminPlayer"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="18dp"
+                    android:src="@drawable/animation_player"
+                    android:visibility="invisible" />
 
                 <ImageView
                     app:srcCompat="@drawable/img_cardback"
@@ -153,7 +173,7 @@
                     android:layout_height="130dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="18dp" />
+                    android:layout_marginBottom="18dp"/>
 
                 <TextView
                     android:text="YOU WIN !!"

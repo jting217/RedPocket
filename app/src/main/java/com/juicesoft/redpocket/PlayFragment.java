@@ -2,6 +2,7 @@ package com.juicesoft.redpocket;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -78,7 +79,7 @@ public class PlayFragment extends Fragment {
     private User iniUser;
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
-    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;
+    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools, mAnimationNpc, mAnimationPlayer;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter, mTxtViewUpperLives;
     private RelativeLayout mCoorContentRegion, mCenterRegion;
     private int mCoins, mDice, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
@@ -91,6 +92,7 @@ public class PlayFragment extends Fragment {
 //    private long mLifeCounter;
     private static long mStartDateInterval, mEndDateInterval, mLivesUpperLimit;
     private static String mScoreBoardId ;
+    private AnimationDrawable animationDrawable;
 
 
     private static PlayFragment instance;
@@ -165,6 +167,8 @@ public class PlayFragment extends Fragment {
 
         mImgViewPlayer = (ImageView) getView().findViewById(R.id.imgViewPlayer);
         mImgViewNpc  = (ImageView) getView().findViewById(R.id.imgViewNpc);
+
+
         mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
         mImgViewRock.setOnClickListener(imgViewPlayOnClick);
         mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
@@ -187,6 +191,18 @@ public class PlayFragment extends Fragment {
 //        mImgViewTools.setOnClickListener(imgViewToolsOnClick);
 
         mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
+
+
+        mAnimationNpc = (ImageView) getView().findViewById(R.id.imgViewAminNpc);
+        mAnimationNpc.setImageResource(R.drawable.animation_npc);
+        animationDrawable = (AnimationDrawable) mAnimationNpc.getDrawable();
+        animationDrawable.start();
+
+        mAnimationPlayer = (ImageView) getView().findViewById(R.id.imgViewAminPlayer);
+        mAnimationPlayer.setImageResource(R.drawable.animation_player);
+        animationDrawable = (AnimationDrawable) mAnimationPlayer.getDrawable();
+        animationDrawable.start();
+
 //        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(),iniUser);
 //        mListViewTools.setAdapter(mToolsAdapter);
         //mLeagueAdapter = new LeagueAdapter(getActivity().getApplicationContext(), mUserScoreOrderList);
@@ -293,6 +309,7 @@ public class PlayFragment extends Fragment {
 
 
     public void PlayGame(final View v){
+
         if(mLives>0) {
             //Log.d("FragPlay", "PlayGame");
 //            ptlogMultiple = 1;
@@ -343,7 +360,12 @@ public class PlayFragment extends Fragment {
 
             //Log.d("mCoins,S,L", mCoins + "," + mScore + "," + mLives);
             ptlogMatchResult = 0;
-            mTxtViewPlayCounter.setVisibility(View.VISIBLE);
+            //倒數5秒拿掉
+            //mTxtViewPlayCounter.setVisibility(View.VISIBLE);
+            mImgViewNpc.setVisibility(View.INVISIBLE);
+            mAnimationNpc.setVisibility(View.VISIBLE);
+            mImgViewPlayer.setVisibility(View.INVISIBLE);
+            mAnimationPlayer.setVisibility(View.VISIBLE);
 
 //        countDownSound = new Intent(getActivity(),CountDownSoundService.class);
 //        if(mPlaySound.equals("1")) {
@@ -352,7 +374,6 @@ public class PlayFragment extends Fragment {
 
             new CountDownTimer(6000, 1000) {
                 //mTxtViewCounter.setVisibility(v.VISIBLE );
-
                 @Override
                 public void onTick(long millisUntilFinished) {
                     //倒數秒數中要做的事
@@ -361,6 +382,7 @@ public class PlayFragment extends Fragment {
                         mpLose.start();
                         mpLose.seekTo(0);
                     }
+
                     if (Integer.valueOf(new SimpleDateFormat("s").format(millisUntilFinished)) <= 5) {
                         mTxtViewPlayCounter.setText(new SimpleDateFormat("s").format(millisUntilFinished));
                     }
@@ -372,7 +394,12 @@ public class PlayFragment extends Fragment {
 //                if(mPlaySound.equals("1")) {
 //                    getActivity().stopService(countDownSound);
 //                }
-                    mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
+                    //倒數5秒拿掉
+                    //mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
+                    mImgViewNpc.setVisibility(View.VISIBLE);
+                    mAnimationNpc.setVisibility(View.INVISIBLE);
+                    mImgViewPlayer.setVisibility(View.VISIBLE);
+                    mAnimationPlayer.setVisibility(View.INVISIBLE);
                     int result = 0;
                     //Player
                     int iComPlay = (int) (Math.random() * 3 + 1);
@@ -591,6 +618,7 @@ public class PlayFragment extends Fragment {
                             mTxtViewResult.setVisibility(View.INVISIBLE);
                             if(autoPlay == false) {
                                 if(!(autoPlay == true || isPlaying == true)) {
+
                                     switch (v.getId()) {
                                         case R.id.imgViewScissors:
                                             mImgViewScissors.setImageResource(R.drawable.button_scissor);

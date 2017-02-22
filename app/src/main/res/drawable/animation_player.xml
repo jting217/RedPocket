@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--   
+    根標籤為animation-list，其中oneshot代表著是否隻展示一遍，設置為false會不停的循環播放動畫  
+    根標籤下，通過item標籤對動畫中的每一個圖片進行聲明  
+    android:duration 表示展示所用的該圖片的時間長度  
+ -->
+<animation-list
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false"
+    >
+    <item android:drawable="@drawable/player01" android:duration="40"></item>
+    <item android:drawable="@drawable/player02" android:duration="40"></item>
+    <item android:drawable="@drawable/player03" android:duration="40"></item>
+    <item android:drawable="@drawable/player04" android:duration="40"></item>
+    <item android:drawable="@drawable/player05" android:duration="40"></item>
+    <item android:drawable="@drawable/player06" android:duration="40"></item>
+    <item android:drawable="@drawable/player07" android:duration="40"></item>
+    <item android:drawable="@drawable/player08" android:duration="40"></item>
+    <item android:drawable="@drawable/player09" android:duration="40"></item>
+    <item android:drawable="@drawable/player10" android:duration="40"></item>
+    <item android:drawable="@drawable/player11" android:duration="40"></item>
+    <item android:drawable="@drawable/player12" android:duration="40"></item>
+    <item android:drawable="@drawable/player13" android:duration="40"></item>
+    <item android:drawable="@drawable/player14" android:duration="40"></item>
+    <item android:drawable="@drawable/player15" android:duration="40"></item>
+    <item android:drawable="@drawable/player16" android:duration="40"></item>
+    <item android:drawable="@drawable/player17" android:duration="40"></item>
+    <item android:drawable="@drawable/player18" android:duration="40"></item>
+    <item android:drawable="@drawable/player19" android:duration="40"></item>
+    <item android:drawable="@drawable/player20" android:duration="40"></item>
+    <item android:drawable="@drawable/player21" android:duration="40"></item>
+    <item android:drawable="@drawable/player22" android:duration="40"></item>
+    <item android:drawable="@drawable/player23" android:duration="40"></item>
+    <item android:drawable="@drawable/player24" android:duration="40"></item>
+    <item android:drawable="@drawable/player25" android:duration="40"></item>
+    <item android:drawable="@drawable/player26" android:duration="40"></item>
+    <item android:drawable="@drawable/player27" android:duration="40"></item>
+    <item android:drawable="@drawable/player28" android:duration="40"></item>
+
+
+
+</animation-list> 
