@@ -79,9 +79,9 @@ public class PlayFragment extends Fragment {
     private User iniUser;
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
-    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools, mAnimationNpc, mAnimationPlayer;
+    private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;//, mAnimationNpc, mAnimationPlayer;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter, mTxtViewUpperLives;
-    private RelativeLayout mCoorContentRegion, mCenterRegion;
+    private RelativeLayout mCoorContentRegion, mCenterRegion, mCoorContentRegionAmin;
     private int mCoins, mDice, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
     private boolean mWinWithPaperFlag = false, mWinWithRockFlag = false, mWinWithScissorFlag = false, mDailyWinTimesFlag = false;
     private static int mScore;
@@ -93,6 +93,7 @@ public class PlayFragment extends Fragment {
     private static long mStartDateInterval, mEndDateInterval, mLivesUpperLimit;
     private static String mScoreBoardId ;
     private AnimationDrawable animationDrawable;
+    private GifView mGifView, mGifViewPlayer, mGifViewNpc;
 
 
     private static PlayFragment instance;
@@ -187,21 +188,40 @@ public class PlayFragment extends Fragment {
         mCoorContentRegion = (RelativeLayout) getView().findViewById(R.id.coorContentRegion);
         mCoorContentRegion.setOnClickListener(layoutViewToolsOnClick);
 
+        mCoorContentRegionAmin = (RelativeLayout) getView().findViewById(R.id.coorContentRegionAnim);
+
         mImgViewTools = (ImageView) getView().findViewById(R.id.imgViewTools);
 //        mImgViewTools.setOnClickListener(imgViewToolsOnClick);
 
         mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
 
 
-        mAnimationNpc = (ImageView) getView().findViewById(R.id.imgViewAminNpc);
-        mAnimationNpc.setImageResource(R.drawable.animation_npc);
-        animationDrawable = (AnimationDrawable) mAnimationNpc.getDrawable();
-        animationDrawable.start();
+//        mAnimationNpc = (ImageView) getView().findViewById(R.id.imgViewAminNpc);
+//        mAnimationNpc.setImageResource(R.drawable.animation_npc);
+//        animationDrawable = (AnimationDrawable) mAnimationNpc.getDrawable();
+//        animationDrawable.start();
+//
+//        mAnimationPlayer = (ImageView) getView().findViewById(R.id.imgViewAminPlayer);
+//        mAnimationPlayer.setImageResource(R.drawable.animation_player);
+//        animationDrawable = (AnimationDrawable) mAnimationPlayer.getDrawable();
+//        animationDrawable.start();
 
-        mAnimationPlayer = (ImageView) getView().findViewById(R.id.imgViewAminPlayer);
-        mAnimationPlayer.setImageResource(R.drawable.animation_player);
-        animationDrawable = (AnimationDrawable) mAnimationPlayer.getDrawable();
-        animationDrawable.start();
+
+
+
+
+         mGifView = (GifView) getView().findViewById(R.id.gifView);
+
+        mGifView.setImageResource(R.raw.firework3);
+
+         mGifViewPlayer = (GifView) getView().findViewById(R.id.gifViewPlayer);
+
+        mGifViewPlayer.setImageResource(R.raw.player);
+
+
+        mGifViewNpc = (GifView) getView().findViewById(R.id.gifViewNpc);
+
+        mGifViewNpc.setImageResource(R.raw.npc);
 
 //        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(),iniUser);
 //        mListViewTools.setAdapter(mToolsAdapter);
@@ -363,9 +383,12 @@ public class PlayFragment extends Fragment {
             //倒數5秒拿掉
             //mTxtViewPlayCounter.setVisibility(View.VISIBLE);
             mImgViewNpc.setVisibility(View.INVISIBLE);
-            mAnimationNpc.setVisibility(View.VISIBLE);
+            //mAnimationNpc.setVisibility(View.VISIBLE);
+            mGifViewNpc.setVisibility(View.VISIBLE);
+
             mImgViewPlayer.setVisibility(View.INVISIBLE);
-            mAnimationPlayer.setVisibility(View.VISIBLE);
+            mGifViewPlayer.setVisibility(View.VISIBLE);
+            //mAnimationPlayer.setVisibility(View.VISIBLE);
 
 //        countDownSound = new Intent(getActivity(),CountDownSoundService.class);
 //        if(mPlaySound.equals("1")) {
@@ -397,9 +420,11 @@ public class PlayFragment extends Fragment {
                     //倒數5秒拿掉
                     //mTxtViewPlayCounter.setVisibility(View.INVISIBLE);
                     mImgViewNpc.setVisibility(View.VISIBLE);
-                    mAnimationNpc.setVisibility(View.INVISIBLE);
+                    //mAnimationNpc.setVisibility(View.INVISIBLE);
+                    mGifViewNpc.setVisibility(View.INVISIBLE);
                     mImgViewPlayer.setVisibility(View.VISIBLE);
-                    mAnimationPlayer.setVisibility(View.INVISIBLE);
+                    mGifViewPlayer.setVisibility(View.VISIBLE);
+                    //mAnimationPlayer.setVisibility(View.INVISIBLE);
                     int result = 0;
                     //Player
                     int iComPlay = (int) (Math.random() * 3 + 1);
@@ -540,6 +565,7 @@ public class PlayFragment extends Fragment {
                                 mpWin.start();
                                 mpWin.seekTo(0);
                             }
+                            mGifView.setVisibility(View.VISIBLE);
                             break;
                         default: //平手
                             if (mPlaySound.equals("1")) {
@@ -616,6 +642,7 @@ public class PlayFragment extends Fragment {
                             mImgViewNpc.setImageResource(R.drawable.img_cardback);
                             mImgViewPlayer.setImageResource(R.drawable.img_cardback);
                             mTxtViewResult.setVisibility(View.INVISIBLE);
+                            mGifView.setVisibility(View.INVISIBLE);
                             if(autoPlay == false) {
                                 if(!(autoPlay == true || isPlaying == true)) {
 

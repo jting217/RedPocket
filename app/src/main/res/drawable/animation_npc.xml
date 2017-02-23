@@ -8,6 +8,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:oneshot="false"
     >
+    <!--
     <item android:drawable="@drawable/npc01" android:duration="40"></item>
     <item android:drawable="@drawable/npc02" android:duration="40"></item>
     <item android:drawable="@drawable/npc03" android:duration="40"></item>
@@ -37,6 +38,6 @@
     <item android:drawable="@drawable/npc27" android:duration="40"></item>
     <item android:drawable="@drawable/npc28" android:duration="40"></item>
 
-
+-->
 
 </animation-list> 
