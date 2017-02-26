@@ -44,7 +44,6 @@ public class GifView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        Log.e("140117", "onMeasure()"+widthMeasureSpec+"||"+heightMeasureSpec);
 //        if(mMovie != null){
 //            setMeasuredDimension(mMovie.width(), mMovie.height());
 //        }else{
