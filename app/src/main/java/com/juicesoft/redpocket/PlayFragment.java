@@ -153,6 +153,7 @@ public class PlayFragment extends Fragment {
                              Bundle savedInstanceState) {
         //Log.d("FragPlay","onCreateView");
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_play, container, false);
     }
 
@@ -214,7 +215,7 @@ public class PlayFragment extends Fragment {
 
         mGifView.setImageResource(R.raw.firework3);
 
-         mGifViewPlayer = (GifView) getView().findViewById(R.id.gifViewPlayer);
+        mGifViewPlayer = (GifView) getView().findViewById(R.id.gifViewPlayer);
 
         mGifViewPlayer.setImageResource(R.raw.player);
 
@@ -222,6 +223,8 @@ public class PlayFragment extends Fragment {
         mGifViewNpc = (GifView) getView().findViewById(R.id.gifViewNpc);
 
         mGifViewNpc.setImageResource(R.raw.npc);
+
+
 
 //        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(),iniUser);
 //        mListViewTools.setAdapter(mToolsAdapter);
@@ -236,6 +239,7 @@ public class PlayFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         //Log.d("FragPlay","onViewCreated");
+
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -331,6 +335,7 @@ public class PlayFragment extends Fragment {
     public void PlayGame(final View v){
 
         if(mLives>0) {
+
             //Log.d("FragPlay", "PlayGame");
 //            ptlogMultiple = 1;
             if(isTheDateBeforeToday(iniUser.getDailyResetDate())){
