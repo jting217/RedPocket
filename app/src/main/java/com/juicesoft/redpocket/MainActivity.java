@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         //  String tid = bundle.getString("Id");
         if(bundle != null){
             if(bundle.getString("srcClass") != null ){
-                if(bundle.getString("srcClass") != "LoginActivity")
+                if(!bundle.getString("srcClass").equals("LoginActivity"))
                     isLoginOrSign = true;
             }
         }
