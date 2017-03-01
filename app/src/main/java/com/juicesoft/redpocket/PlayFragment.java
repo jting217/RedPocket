@@ -2,7 +2,6 @@ package com.juicesoft.redpocket;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,14 +43,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link PlayFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link PlayFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class PlayFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,8 +60,7 @@ public class PlayFragment extends Fragment {
     private static Timer timer01;
     private TimerTask timerTask;
     private boolean startflag=false;
-//    private static long tmpTimer;
-//    private Intent countDownSound;
+
     private ListView mListViewTools;
     private ListAdapter mToolsAdapter;
     private static int mUseTool = 0, mMultiple = 1 ;
@@ -87,17 +77,13 @@ public class PlayFragment extends Fragment {
     private static int mScore;
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
-//    private boolean updatePlayResult = false, updateGetLife = false;
     private static SystemPreferences mSystemPreferences;
-//    private long mLifeCounter;
     private static long mStartDateInterval, mEndDateInterval, mLivesUpperLimit;
     private static String mScoreBoardId ;
-    private AnimationDrawable animationDrawable;
+    //private AnimationDrawable animationDrawable;
     private GifView mGifView, mGifViewPlayer, mGifViewNpc;
 
-
     private static PlayFragment instance;
-
 
     private int mColor;
 
@@ -106,61 +92,43 @@ public class PlayFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment PlayFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static PlayFragment newInstance(String param1, int param2, String playSound) {
-        //Log.d("FragPlay","newInstance");
-//        if(instance == null){Log.
-            instance = new PlayFragment();
-            Bundle args = new Bundle();
-            args.putString(ARG_PARAM1, param1);
-            args.putInt(ARG_COLOR, param2);
-            args.putString(ARG_PALY_SOUND, playSound);
-            instance.setArguments(args);
-//        }
-//        PlayFragment fragment = new PlayFragment();
+
+        instance = new PlayFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putInt(ARG_COLOR, param2);
+        args.putString(ARG_PALY_SOUND, playSound);
+        instance.setArguments(args);
+
         return instance;
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        //Log.d("FragPlay","onCreate");
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
             mColor = getArguments().getInt(ARG_COLOR);
             mPlaySound = getArguments().getString(ARG_PALY_SOUND);
         }else {
-//            mText = savedInstanceState.getString(ARG_TEXT);
             mColor = savedInstanceState.getInt(ARG_COLOR);
         }
-
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Log.d("FragPlay","onCreateView");
-        // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_play, container, false);
     }
 
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        //Log.d("FragPlay","onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         mImgViewScissors = (ImageView) getView().findViewById(R.id.imgViewScissors);
         mImgViewRock = (ImageView) getView().findViewById(R.id.imgViewRock);
@@ -169,7 +137,6 @@ public class PlayFragment extends Fragment {
 
         mImgViewPlayer = (ImageView) getView().findViewById(R.id.imgViewPlayer);
         mImgViewNpc  = (ImageView) getView().findViewById(R.id.imgViewNpc);
-
 
         mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
         mImgViewRock.setOnClickListener(imgViewPlayOnClick);
@@ -192,43 +159,18 @@ public class PlayFragment extends Fragment {
         mCoorContentRegionAmin = (RelativeLayout) getView().findViewById(R.id.coorContentRegionAnim);
 
         mImgViewTools = (ImageView) getView().findViewById(R.id.imgViewTools);
-//        mImgViewTools.setOnClickListener(imgViewToolsOnClick);
-
         mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
 
 
-//        mAnimationNpc = (ImageView) getView().findViewById(R.id.imgViewAminNpc);
-//        mAnimationNpc.setImageResource(R.drawable.animation_npc);
-//        animationDrawable = (AnimationDrawable) mAnimationNpc.getDrawable();
-//        animationDrawable.start();
-//
-//        mAnimationPlayer = (ImageView) getView().findViewById(R.id.imgViewAminPlayer);
-//        mAnimationPlayer.setImageResource(R.drawable.animation_player);
-//        animationDrawable = (AnimationDrawable) mAnimationPlayer.getDrawable();
-//        animationDrawable.start();
-
-
-
-
-
-         mGifView = (GifView) getView().findViewById(R.id.gifView);
-
+        mGifView = (GifView) getView().findViewById(R.id.gifView);
         mGifView.setImageResource(R.raw.firework3);
 
         mGifViewPlayer = (GifView) getView().findViewById(R.id.gifViewPlayer);
-
         mGifViewPlayer.setImageResource(R.raw.player);
 
-
         mGifViewNpc = (GifView) getView().findViewById(R.id.gifViewNpc);
-
         mGifViewNpc.setImageResource(R.raw.npc);
 
-
-
-//        mToolsAdapter = new ToolsAdapter(getActivity().getApplicationContext(),iniUser);
-//        mListViewTools.setAdapter(mToolsAdapter);
-        //mLeagueAdapter = new LeagueAdapter(getActivity().getApplicationContext(), mUserScoreOrderList);
 
         iniUser = new User();
         readUser(UpdateUserTimer.OnIni.value);
@@ -238,28 +180,23 @@ public class PlayFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        //Log.d("FragPlay","onViewCreated");
-
         super.onViewCreated(view, savedInstanceState);
     }
 
     private View.OnClickListener imgViewToolsOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
-            //Log.d("FragPlay","OnClickListener");
             readUser(UpdateUserTimer.OnIni.value);
             mCoorContentRegion.setVisibility(View.VISIBLE);
         }
     };
     private View.OnClickListener layoutViewToolsOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
-            //Log.d("FragPlay","layoutViewToolsOnClick");
             mCoorContentRegion.setVisibility(View.INVISIBLE);
         }
     };
 
     private View.OnClickListener imgViewPlayOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
-            //Log.d("FragPlay","imgViewPlayOnClick");
             if(chkReaded) {
                 PlayGame(v);
             }
@@ -268,22 +205,16 @@ public class PlayFragment extends Fragment {
 
     private View.OnClickListener imgViewAutoPlayOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
-            //Log.d("FragPlay","OnAutoPlayClickListener");
             if(chkReaded) {
-                //Log.d("FragPlay","OnAutoPlayClickListener->chkReaded");
                 if(autoPlay == false){
-                    //Log.d("FragPlay","OnAutoPlayClickListener->auto=false--->true");
                     autoPlay = true;
                     mImgViewAuto.setImageResource(R.drawable.button_auto_active);
                 }else{
-                    //Log.d("FragPlay","OnAutoPlayClickListener->auto=true--->false");
                     autoPlay = false;
                     mImgViewAuto.setImageResource(R.drawable.button_auto);
                 }
 
-                //Log.d("FragPlay","autoPlay->"+autoPlay+",isPlaying->"+isPlaying);
                 if(autoPlay == true && isPlaying == false) {
-                    //Log.d("FragPlay","OnAutoPlayClickListener->playing"+",mLives="+mLives);
                     isPlaying = true;
                     PlayGame(v);
                 }
@@ -291,41 +222,19 @@ public class PlayFragment extends Fragment {
         }
     };
 
-// TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
-        //Log.d("FragPlay","onDetach");
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
@@ -335,23 +244,16 @@ public class PlayFragment extends Fragment {
     public void PlayGame(final View v){
 
         if(mLives>0) {
-
-            //Log.d("FragPlay", "PlayGame");
-//            ptlogMultiple = 1;
             if(isTheDateBeforeToday(iniUser.getDailyResetDate())){
-                //Log.w("check00-0",String.valueOf(mCoins));
                 mCoins = mCoins + mSystemPreferences.getDailyReward().intValue();
                 mDailyPlayTimes = 0;
                 mDailyWinTimes = 0;
-                //Log.w("check00",String.valueOf(mCoins));
                 updateUser(user,UpdateUserTimer.DailyReset.value);
             }
 
             if(isTheDateBeforeToday(iniUser.getSpecialTimeRewardGetDate())){
                 if(isSpecialTime()) {
-                    //Log.w("check01-0", String.valueOf(mCoins));
                     mCoins = mCoins + mSystemPreferences.getSpecialTimeReward().intValue();
-                    //Log.w("check01", String.valueOf(mCoins));
                     updateUser(user, UpdateUserTimer.SpecialTimeReward.value);
                 }
             }
@@ -379,11 +281,9 @@ public class PlayFragment extends Fragment {
                 }
             }
 
-//            mCoins = Integer.valueOf(mTxtViewCoins.getText().toString());
             mScore = Integer.valueOf(mTxtViewScore.getText().toString());
             mLives = Integer.valueOf(mTxtViewLives.getText().toString());
 
-            //Log.d("mCoins,S,L", mCoins + "," + mScore + "," + mLives);
             ptlogMatchResult = 0;
             //倒數5秒拿掉
             //mTxtViewPlayCounter.setVisibility(View.VISIBLE);
@@ -543,12 +443,10 @@ public class PlayFragment extends Fragment {
                     int getScore = 0, getLives = 0;
                     if(mUseTool == ProductType.Dice.value){
                         mMultiple = (int) (Math.random() * 6 + 1);
-                        //Log.w("useTool","Dice->"+mMultiple);
                     }
                     switch (ptlogMatchResult) {
 
-                        case 1: //輸
-                            //Log.w("useTool","lose->"+mScore+","+(10*mMultiple));
+                        case 1: //Lose
                             mScore += (10 * mMultiple);
                             mLives -= 1;
                             getScore = (10 * mMultiple);
@@ -559,8 +457,7 @@ public class PlayFragment extends Fragment {
                                 mpLose.seekTo(0);
                             }
                             break;
-                        case 2: //贏
-                            //Log.w("useTool","win->"+mScore+","+(100*mMultiple));
+                        case 2: //Win
                             mScore += (100 * mMultiple);
                             mLives -= 1;
                             getScore = (100 * mMultiple);
@@ -572,7 +469,7 @@ public class PlayFragment extends Fragment {
                             }
                             mGifView.setVisibility(View.VISIBLE);
                             break;
-                        default: //平手
+                        default: //Tie
                             if (mPlaySound.equals("1")) {
                                 MediaPlayer mpTie = MediaPlayer.create(getActivity(), R.raw.excitement);
                                 mpTie.start();
@@ -586,7 +483,6 @@ public class PlayFragment extends Fragment {
                     ltlogTransaction = getLives;
                     ltlogType = LifeTransactionType.PlayGame.value;
 
-                    //Log.d("Result:", String.valueOf(result) + "," + mScore + "," + mLives);
                     ptlogTotalScore = mScore;
 
                     if(ptlogMatchResult == MatchResult.Win.value)
@@ -609,7 +505,6 @@ public class PlayFragment extends Fragment {
                     ptlogMultiple = mMultiple;
                     if(mUseTool == ProductType.Dice.value) {
                         mMultiple = 1;
-                        //mUseTool = 0;
                         mDice -= 1;
                     }
                     mTxtViewResult.setVisibility(View.VISIBLE);
@@ -707,52 +602,36 @@ public class PlayFragment extends Fragment {
     public void onStop() {
         super.onStop();
         //Log.d("FragPlay","onStop->");
-        updateTimer(user.getUid());
+        if(iniUser != null && mSystemPreferences != null)
+            updateTimer(user.getUid());
 
     }
 
     @Override
     public void onStart() {
-        //Log.d("FragPlay","onStart->"+GetRightNow()+","+tmpTimer+","+tsec);
         super.onStart();
     }
 
     /*先找到目前的board，再Update*/
     private void updateBoard(final int when) {
         final Long rightNow = GetRightNow();
-        //Log.w("old data:",mStartDateInterval+",mEndDateInterval:"+mEndDateInterval+",mScoreBoardId:"+mScoreBoardId);
         if(rightNow> mStartDateInterval && rightNow < mEndDateInterval && mScoreBoardId.length() != 0 ){
             updateUserScore(mScoreBoardId,when);
-            //Log.w("updateBoard:","user old data.");
-//            mTxtViewScore.setText(String.valueOf(mScore));
-//            chkReaded = true;
         }else{
-
             mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
             Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
             queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    //Log.d("board",rightNow.toString());
                     for (DataSnapshot boardSnapshot : snapshot.getChildren()) {
                         Board b = boardSnapshot.getValue(Board.class);
                         if (rightNow >= b.getStartDateInterval()) {
-                            //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
                             mStartDateInterval = b.getStartDateInterval();
                             mEndDateInterval = b.getEndDateInterval();
                             mScoreBoardId = b.getId();
                             updateUserScore(b.getId(), when);
-//                        DatabaseReference wRef = FirebaseDatabase.getInstance().getReference("score-boards/" + boardSnapshot.getKey() + "/scores/" + fUser.getUid());
-//                        Map board = new HashMap();
-//                        board.put("displayName", fUser.getDisplayName());
-//                        Log.w("displayName",fUser.getDisplayName());
-//                        board.put("score", mScore);
-//                        wRef.setValue(board);
-//                        mTxtViewScore.setText(String.valueOf(u.getScore()));
-//                        chkReaded = true;
-                            break;//新加的，怕有錯註記一下
+                            break;
                         }
-
                     }
                 }
 
@@ -767,15 +646,11 @@ public class PlayFragment extends Fragment {
     }
 
     private void updateUserScore(final String boardId, final int when) {
-        //Log.d("☆Firebase", "readScores->"+boardId);
-
         final DatabaseReference updateUserScoreDBref = FirebaseDatabase.getInstance().getReference("scores/" + boardId+ "/" + user.getUid());
 
         updateUserScoreDBref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                // do some stuff once
-                //Log.w("updateUserScore",snapshot.toString()+","+snapshot.getChildrenCount());
                 Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
                 if(snapshot.getChildrenCount() == 0){
                     Score s = new Score();
@@ -805,88 +680,8 @@ public class PlayFragment extends Fragment {
         });
     }
 
-    private void readBoard(final FirebaseUser fUser) {
-        final Long rightNow = GetRightNow();
-        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
-        Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Long targetTime = 0L;
-                //Log.d("board",rightNow.toString());
-                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
-                    Board b = boardSnapshot.getValue(Board.class);
-                    if(rightNow >= b.getStartDateInterval()) {
-                        //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
-
-
-                        break;//新加的，怕有錯註記一下
-                    }
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("☆firebase failed: ", databaseError.getMessage());
-            }
-
-        });
-
-    }
-
-    private void readScores(final String boardID) {
-        final Long rightNow = GetRightNow();
-        mQueryDatabase = FirebaseDatabase.getInstance().getReference("scores/"+boardID+"/"+user.getUid());
-        Query queryRef = mQueryDatabase.orderByChild("endDateInterval").startAt(rightNow);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                Long targetTime = 0L;
-                //Log.d("board",rightNow.toString());
-                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
-                    Board b = boardSnapshot.getValue(Board.class);
-                    if(rightNow >= b.getStartDateInterval()) {
-                        //Log.e("Get Data", boardSnapshot.getKey() + "," + b.getStartDateInterval() + "," + b.getEndDateInterval());
-                        break;//新加的，怕有錯註記一下
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("☆firebase failed: ", databaseError.getMessage());
-            }
-
-        });
-
-    }
-
-    private void boardNode(Long sTime) {
-        Log.e("Get Data2","--------------"+sTime);
-
-        mQueryDatabase = FirebaseDatabase.getInstance().getReference("score-boards");
-        Query queryRef = mQueryDatabase.orderByChild("startDateInterval").equalTo(sTime);
-        queryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot boardSnapshot: snapshot.getChildren()) {
-                    Board b = boardSnapshot.getValue(Board.class);
-                    //Log.e("Get Data2", boardSnapshot.getKey()+","+b.getStartDateInterval()+","+b.getEndDateInterval());
-                    mScoreBoardId = boardSnapshot.getKey();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("☆firebase failed: ", databaseError.getMessage());
-            }
-        });
-
-    }
 
     private void readSystemPreferences(final Long lifeCounter, final Long userDailyResetDate) {
-        //Log.d("☆Firebase(playFrag)","readSystemPreferences");
 
         mReadDatabase = FirebaseDatabase.getInstance().getReference("systemPreferences");
 
@@ -917,13 +712,10 @@ public class PlayFragment extends Fragment {
 
                 if(isTheDateBeforeToday(iniUser.getSpecialTimeRewardGetDate())){
                     if(isSpecialTime()) {
-                        //Log.w("check01-0", String.valueOf(mCoins));
                         mCoins = mCoins + mSystemPreferences.getSpecialTimeReward().intValue();
-                        //Log.w("check01", String.valueOf(mCoins));
                         updateUser(user, UpdateUserTimer.SpecialTimeReward.value);
                     }
                 }
-
 
             }
 
@@ -933,14 +725,12 @@ public class PlayFragment extends Fragment {
             }
 
         });
-
     }
 
 
 
 
     private void readUser(final int when) {
-        //Log.d("☆Firebase", "readUser->"+String.valueOf(UpdateUserTimer.values()[when-1]));
         mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
         mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -948,21 +738,15 @@ public class PlayFragment extends Fragment {
             public void onDataChange(DataSnapshot snapshot) {
                 User u = snapshot.getValue(User.class);
                 if(u != null){
-                    //以下這段也可以用！
                     //==============================================================================
-                    Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
-
+                    //Map<String, Object> map = (HashMap<String, Object>) snapshot.getValue();
                     //for (Object key : map.keySet()) {
                     //    Log.w("firebase", key + " : " + map.get(key) + map.get(key).getClass());
                     //}
                     //==============================================================================
 
                     iniUser = u;
-                    //Log.d("firebase",String.valueOf(u.getLives()));
-
-
                     mTxtViewCoins.setText(String.valueOf(u.getCoins()));
-//                    mTxtViewScore.setText(String.valueOf(u.getScore()));
                     mTxtViewLives.setText(String.valueOf(u.getLives()));
                     if(u.getLives()!=null) {
                         mLives = u.getLives().intValue();
@@ -994,7 +778,7 @@ public class PlayFragment extends Fragment {
                         mListViewTools.setAdapter(mToolsAdapter);
                         mImgViewTools.setOnClickListener(imgViewToolsOnClick);
                     }
-              //***
+
                     if(when == UpdateUserTimer.OnIni.value) {
                         Long d = u.getDailyResetDate();
                         if(d==null){
@@ -1028,13 +812,7 @@ public class PlayFragment extends Fragment {
                 User user = new User();
 
                 user.setCoins(Long.valueOf(mCoins));
-//                user.setScore(Long.valueOf(mScore));
-//                Map<String, Object> userValues = user.toMap();
-//                Map<String, Object> childUpdates = new HashMap<>();
-//                childUpdates.put("/posts/" + key, postValues);
-//                childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
-//                mWriteDatabase.updateChildren(userValues);
-//                mWriteDatabase.setValue(user);
+
                 long[] mTotalDice= {0L,0L,0L,0L,0L,0L};
 
                 Map newUserData = new HashMap();
@@ -1068,13 +846,13 @@ public class PlayFragment extends Fragment {
                             mWinWithRock%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithRockFlag){
                         mDice+=1;
                         mTotalDice[4] = mDice;
-                        //Log.w("totalDice4",String.valueOf(mDice));
+
                     }
                     if(mWinWithPaper/mSystemPreferences.getWinWithMatchResult() == 1 &&
                             mWinWithPaper%mSystemPreferences.getWinWithMatchResult() == 0 && mWinWithPaperFlag){
                         mDice+=1;
                         mTotalDice[5] = mDice;
-                        //Log.w("totalDice5",String.valueOf(mDice));
+
                     }
                     //Log.w("totalDice",mTotalDice[0]+","+mTotalDice[1]+","+mTotalDice[2]+","+mTotalDice[3]+","+mTotalDice[4]+","+mTotalDice[5]);
 
@@ -1085,28 +863,18 @@ public class PlayFragment extends Fragment {
                     newUserData.put("winWithRock",Long.valueOf(mWinWithRock));
                     newUserData.put("winWithPaper",Long.valueOf(mWinWithPaper));
                     newUserData.put("dice", Long.valueOf(mDice));
-//                    newUserData.put("score", Long.valueOf(mScore));
+
                 }else if(when == UpdateUserTimer.FiveMinutesTimer.value) {
                     newUserData.put("lives", Long.valueOf(mLives));
                     updateTimer(fUser.getUid());
-                    //Log.w("LifeCounter",Long.valueOf(mLives)+",");
-                }
-//                else if(when == UpdateUserTimer.GetNewIntervalDate.value){
-//                    newUserData.put("startDateInterval", Long.valueOf(mStartDateInterval));
-//                    newUserData.put("endDateInterval", Long.valueOf(mEndDateInterval));
-////                    iniUser.setStartDateInterval(mStartDateInterval);
-//                }
-                else if(when == UpdateUserTimer.DailyReset.value){
-//                    mCoins = u.getCoins().intValue() + mSystemPreferences.getDailyReward().intValue();
-//                    mDailyPlayTimes = 0;
-//                    mDailyWinTimes = 0;
+
+                }else if(when == UpdateUserTimer.DailyReset.value){
                     newUserData.put("dailyPlayTimes", Long.valueOf(mDailyPlayTimes));
                     newUserData.put("dailyWinTimes", Long.valueOf(mDailyWinTimes));
                     newUserData.put("dailyResetDate", ServerValue.TIMESTAMP);
                     newUserData.put("coins", Long.valueOf(mCoins));
-                    //Log.w("DailyReset",mCoins+",");
                     mTxtViewCoins.setText(String.valueOf(mCoins));
-//                    readUser(UpdateUserTimer.Normal.value);
+
                 }else if(when == UpdateUserTimer.SpecialTimeReward.value) {
                     newUserData.put("coins", Long.valueOf(mCoins));
                     newUserData.put("specialTimeRewardGetDate",ServerValue.TIMESTAMP);
@@ -1253,7 +1021,6 @@ public class PlayFragment extends Fragment {
     }
 
     private void updateTimer(final String userId) {
-        //Log.d("updateTimer",userId);
         mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
         Map newUserData = new HashMap();
         newUserData.put("lifeCounter", ServerValue.TIMESTAMP);
@@ -1262,7 +1029,6 @@ public class PlayFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 User u = snapshot.getValue(User.class);
-                //Log.d("updateTimer",u.getLifeCounter().toString());
             }
 
             @Override
@@ -1399,6 +1165,7 @@ public class PlayFragment extends Fragment {
         String ts = tsLong.toString();
         return tsLong;
     }
+
     private boolean isTheDateBeforeToday(Long userDate){
         boolean isTheDateBeforeToday = false;
         if(userDate != null) {
@@ -1409,7 +1176,6 @@ public class PlayFragment extends Fragment {
             int day = cal.get(Calendar.DAY_OF_MONTH);
 
             String strUserDate = String.valueOf(year) + String.valueOf(String.format("%02d", month)) + String.valueOf(String.format("%02d", day));
-//        Log.w("isTheDateBeforeToday",year+","+month+","+day);
 
             Calendar calR = Calendar.getInstance();
             calR.setTimeInMillis(System.currentTimeMillis());
@@ -1417,12 +1183,11 @@ public class PlayFragment extends Fragment {
             int monthR = calR.get(Calendar.MONTH) + 1;
             int dayR = calR.get(Calendar.DAY_OF_MONTH);
             String strRightDate = String.valueOf(yearR) + String.valueOf(String.format("%02d", monthR)) + String.valueOf(String.format("%02d", dayR));
-//        Log.w("isTheDateBeforeToday",yearR+","+monthR+","+dayR);
+
             if (Integer.valueOf(strUserDate) < Integer.valueOf(strRightDate)) {
                 isTheDateBeforeToday = true;
             }
         }
-        //Log.w("isTheDateBeforeToday",userDate+","+isTheDateBeforeToday+",rightNow:"+strRightDate+","+strUserDate);
         return isTheDateBeforeToday;
     }
 
@@ -1433,49 +1198,31 @@ public class PlayFragment extends Fragment {
 
         Calendar startCal = Calendar.getInstance();
         startCal.setTimeInMillis( mSpecialTimeStartDateInterval );
-//        int startYear = startCal.get(Calendar.YEAR);
-//        int startMonth = startCal.get(Calendar.MONTH)+1;
-//        int startDay = startCal.get(Calendar.DAY_OF_MONTH);
         int startHh = startCal.get(Calendar.HOUR_OF_DAY);
         int startSs = startCal.get(Calendar.MINUTE);
-//
-//        String strStartDate = String.valueOf(startYear)+String.valueOf(String.format("%02d", startMonth))+String.valueOf(String.format("%02d", startDay))
-//                +String.valueOf(String.format("%02d", startHh))+String.valueOf(String.format("%02d", startSs));
+
         String startHHSS = String.valueOf(String.format("%02d", startHh))+String.valueOf(String.format("%02d", startSs));
-//        Log.w("isSpecialTime",mSpecialTimeStartDateInterval+","+strStartDate+","+startHHSS);
 
         Calendar endCal = Calendar.getInstance();
         endCal.setTimeInMillis( mSpecialTimeEndDateInterval );
-//        int endYear = endCal.get(Calendar.YEAR);
-//        int endMonth = endCal.get(Calendar.MONTH)+1;
-//        int endDay = endCal.get(Calendar.DAY_OF_MONTH);
         int endHh = endCal.get(Calendar.HOUR_OF_DAY);
         int endSs = endCal.get(Calendar.MINUTE);
 
-//        String strEndDate = String.valueOf(endYear)+String.valueOf(String.format("%02d", endMonth))+String.valueOf(String.format("%02d", endDay))
-//                +String.valueOf(String.format("%02d", endHh))+String.valueOf(String.format("%02d", endSs));
         String endHHSS = String.valueOf(String.format("%02d", endHh))+String.valueOf(String.format("%02d", endSs));
-//        Log.w("isSpecialTime",mSpecialTimeEndDateInterval+","+strEndDate+","+endHHSS);
 
         Long rightNow = System.currentTimeMillis();
         Calendar curCal = Calendar.getInstance();
         curCal.setTimeInMillis( rightNow );
-//        int curYear = curCal.get(Calendar.YEAR);
-//        int curMonth = curCal.get(Calendar.MONTH)+1;
-//        int curDay = curCal.get(Calendar.DAY_OF_MONTH);
+
         int curHh = curCal.get(Calendar.HOUR_OF_DAY);
         int curSs = curCal.get(Calendar.MINUTE);
 
-//        String strCurDate = String.valueOf(curYear)+String.valueOf(String.format("%02d", curMonth))+String.valueOf(String.format("%02d", curDay))
-//                +String.valueOf(String.format("%02d", curHh))+String.valueOf(String.format("%02d", curSs));
         String curHHSS = String.valueOf(String.format("%02d", curHh))+String.valueOf(String.format("%02d", curSs));
-//        Log.w("isSpecialTime",rightNow+","+strCurDate+","+curHHSS);
 
         if(Integer.valueOf(curHHSS) >= Integer.valueOf(startHHSS) && Integer.valueOf(curHHSS) <= Integer.valueOf(endHHSS))
         {
             isSpecialTime = true;
         }
-        //Log.w("isSpecialTime",isSpecialTime+",");
 
         return isSpecialTime;
     }
@@ -1520,9 +1267,6 @@ public class PlayFragment extends Fragment {
     };
 
     private void CreateTimer(Long lifeCounter){
-        //Log.d("CreateTimer",String.valueOf(lifeCounter));
-        //(GetRightNow()-lifeCounter)/300=
-        //宣告Timer
         if(timer01 != null){
             timer01.purge();
             timer01.cancel();
@@ -1551,7 +1295,6 @@ public class PlayFragment extends Fragment {
                     updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);
                 }
                 tsec = (int)countSec;
-                //Log.d("firstCreatTimer","rightNow:"+rightNow+",lifeCounter:"+lifeCounter+",countSec:"+countSec+",getLife:"+getLife+","+mSystemPreferences.getCounterSec());
             }
             isFirstCreatTimer = false;
         }
@@ -1578,7 +1321,6 @@ public class PlayFragment extends Fragment {
     }
 
     public void useTool(final String toolName, final String toolAmount){
-        //Log.w("useTool","test");
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 // Add the buttons
         builder.setPositiveButton(R.string.text_ok, new DialogInterface.OnClickListener() {
@@ -1609,9 +1351,7 @@ public class PlayFragment extends Fragment {
         }
 // Create the AlertDialog
         AlertDialog dialog = builder.create();
-
         dialog.show();
-
     }
 
     public void setIsFirstCreatTimer(){
