@@ -80,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = intent.getExtras();
         //  String tid = bundle.getString("Id");
         if(bundle != null){
-            if(bundle.getString("srcClass") != null){
-                isLoginOrSign = true;
+            if(bundle.getString("srcClass") != null ){
+                if(bundle.getString("srcClass") != "LoginActivity")
+                    isLoginOrSign = true;
             }
         }
         Log.w("isLoginOrSign", String.valueOf(isLoginOrSign));
