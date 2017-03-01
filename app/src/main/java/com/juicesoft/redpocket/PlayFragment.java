@@ -244,6 +244,10 @@ public class PlayFragment extends Fragment {
     public void PlayGame(final View v){
 
         if(mLives>0) {
+            if(((MainActivity) getActivity()) != null) {
+                ((MainActivity) getActivity()).disalbeBottomNavListener();
+            }
+
             if(isTheDateBeforeToday(iniUser.getDailyResetDate())){
                 mCoins = mCoins + mSystemPreferences.getDailyReward().intValue();
                 mDailyPlayTimes = 0;
@@ -258,9 +262,7 @@ public class PlayFragment extends Fragment {
                 }
             }
 
-            if(((MainActivity) getActivity()) != null) {
-                ((MainActivity) getActivity()).removeBottomNavListener();
-            }
+
             mImgViewScissors.setOnClickListener(null);
             mImgViewRock.setOnClickListener(null);
             mImgViewPaper.setOnClickListener(null);
@@ -564,7 +566,7 @@ public class PlayFragment extends Fragment {
                                 mImgViewAuto.setOnClickListener(imgViewAutoPlayOnClick);
 
                                 isPlaying = false;
-                                ((MainActivity) getActivity()).setBottomNavListener();
+                                ((MainActivity) getActivity()).enableBottomNavListener();
                             }else{
                                 PlayGame(v);
                             }
@@ -580,7 +582,7 @@ public class PlayFragment extends Fragment {
                 mImgViewScissors.setOnClickListener(imgViewPlayOnClick);
                 mImgViewRock.setOnClickListener(imgViewPlayOnClick);
                 mImgViewPaper.setOnClickListener(imgViewPlayOnClick);
-                ((MainActivity) getActivity()).setBottomNavListener();
+                ((MainActivity) getActivity()).enableBottomNavListener();
                 mImgViewAuto.setImageResource(R.drawable.button_auto);
             }
         }

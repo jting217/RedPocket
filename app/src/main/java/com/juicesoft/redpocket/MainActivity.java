@@ -338,6 +338,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setBottomNavListener(){
+
         mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -347,18 +348,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void removeBottomNavListener(){
-        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+    public void enableBottomNavListener() {
+        mBottomNav.getMenu().getItem(0).setEnabled(true);
+        mBottomNav.getMenu().getItem(1).setEnabled(true);
+        mBottomNav.getMenu().getItem(2).setEnabled(true);
+        mBottomNav.getMenu().getItem(3).setEnabled(true);
+        mBottomNav.getMenu().getItem(4).setEnabled(true);
+    }
 
-                mBottomNav.getMenu().getItem(1).setOnMenuItemClickListener(null);
-                mBottomNav.getMenu().getItem(2).setOnMenuItemClickListener(null);
-                mBottomNav.getMenu().getItem(3).setOnMenuItemClickListener(null);
-                mBottomNav.getMenu().getItem(4).setOnMenuItemClickListener(null);
-                return true;
-            }
-        });
+    public void disalbeBottomNavListener(){
+        mBottomNav.getMenu().getItem(0).setEnabled(false);
+        mBottomNav.getMenu().getItem(1).setEnabled(false);
+        mBottomNav.getMenu().getItem(2).setEnabled(false);
+        mBottomNav.getMenu().getItem(3).setEnabled(false);
+        mBottomNav.getMenu().getItem(4).setEnabled(false);
+//        mBottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//
+//
+////                mBottomNav.getMenu().getItem(1).setOnMenuItemClickListener(null);
+////                mBottomNav.getMenu().getItem(2).setOnMenuItemClickListener(null);
+////                mBottomNav.getMenu().getItem(3).setOnMenuItemClickListener(null);
+////                mBottomNav.getMenu().getItem(4).setOnMenuItemClickListener(null);
+//                return true;
+//            }
+//        });
     }
 
     public void playMusic()
