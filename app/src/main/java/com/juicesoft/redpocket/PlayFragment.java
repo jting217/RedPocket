@@ -78,9 +78,8 @@ public class PlayFragment extends Fragment {
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
     private int ltlogType, ltlogTransaction;
     private static SystemPreferences mSystemPreferences;
-    private static long mStartDateInterval, mEndDateInterval, mLivesUpperLimit;
+    private static long mStartDateInterval, mEndDateInterval;
     private static String mScoreBoardId ;
-    //private AnimationDrawable animationDrawable;
     private GifView mGifView, mGifViewPlayer, mGifViewNpc;
 
     private static PlayFragment instance;

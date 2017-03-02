@@ -232,6 +232,34 @@
                     android:layout_marginTop="22dp"
                     android:id="@+id/imgViewTools"
                     android:layout_width="50dp" />
+                <ImageView
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/tool_dice"
+                    android:id="@+id/imgViewToolUsed_00"
+                    android:layout_below="@+id/imgViewTools"
+                    android:layout_width="50dp"
+                    android:visibility="invisible" />
+                <ImageView
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/tool_dice"
+                    android:id="@+id/imgViewToolUsed_01"
+                    android:layout_below="@+id/imgViewToolUsed_00"
+                    android:layout_width="50dp"
+                    android:visibility="invisible" />
+                <ImageView
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/tool_dice"
+                    android:id="@+id/imgViewToolUsed_02"
+                    android:layout_below="@+id/imgViewToolUsed_01"
+                    android:layout_width="50dp"
+                    android:visibility="invisible" />
+                <ImageView
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/tool_dice"
+                    android:id="@+id/imgViewToolUsed_03"
+                    android:layout_below="@+id/imgViewToolUsed_02"
+                    android:layout_width="50dp"
+                    android:visibility="invisible" />
 
 
             </RelativeLayout>
