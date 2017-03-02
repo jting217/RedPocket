@@ -261,6 +261,14 @@
                     android:layout_width="50dp"
                     android:visibility="invisible" />
 
+                <ImageView
+                    android:layout_height="50dp"
+                    app:srcCompat="@drawable/tool_dice"
+                    android:id="@+id/imgViewToolUsed_04"
+                    android:layout_below="@+id/imgViewToolUsed_03"
+                    android:layout_width="50dp"
+                    android:visibility="invisible" />
+
 
             </RelativeLayout>
 

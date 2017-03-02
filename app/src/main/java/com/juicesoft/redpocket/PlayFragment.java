@@ -33,6 +33,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.juicesoft.redpocket.Data.Board;
 import com.juicesoft.redpocket.Data.Score;
 import com.juicesoft.redpocket.Data.SystemPreferences;
+import com.juicesoft.redpocket.Data.Tool;
 import com.juicesoft.redpocket.Data.User;
 
 import java.text.SimpleDateFormat;
@@ -70,6 +71,7 @@ public class PlayFragment extends Fragment {
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;//, mAnimationNpc, mAnimationPlayer;
+    private ImageView mImgViewToolUsed_00, mImgViewToolUsed_01, mImgViewToolUsed_02, mImgViewToolUsed_03, mImgViewToolUsed_04;
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter, mTxtViewUpperLives;
     private RelativeLayout mCoorContentRegion, mCenterRegion, mCoorContentRegionAmin;
     private int mCoins, mDice, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
@@ -82,6 +84,7 @@ public class PlayFragment extends Fragment {
     private static String mScoreBoardId ;
     private GifView mGifView, mGifViewPlayer, mGifViewNpc;
 
+    private static Tool[] tools ;
     private static PlayFragment instance;
 
     private int mColor;
@@ -170,11 +173,20 @@ public class PlayFragment extends Fragment {
         mGifViewNpc = (GifView) getView().findViewById(R.id.gifViewNpc);
         mGifViewNpc.setImageResource(R.raw.npc);
 
+        mImgViewToolUsed_00 = (ImageView) getView().findViewById(R.id.imgViewToolUsed_00);
+        mImgViewToolUsed_01 = (ImageView) getView().findViewById(R.id.imgViewToolUsed_01);
+        mImgViewToolUsed_02 = (ImageView) getView().findViewById(R.id.imgViewToolUsed_02);
+        mImgViewToolUsed_03 = (ImageView) getView().findViewById(R.id.imgViewToolUsed_03);
+        mImgViewToolUsed_04 = (ImageView) getView().findViewById(R.id.imgViewToolUsed_04);
+
 
         iniUser = new User();
         readUser(UpdateUserTimer.OnIni.value);
 
         updateBoard(UpdateUserTimer.OnIni.value);
+
+        tools = new Tool[4];
+
     }
 
     @Override
@@ -186,11 +198,13 @@ public class PlayFragment extends Fragment {
         public void onClick(final View v) {
             readUser(UpdateUserTimer.OnIni.value);
             mCoorContentRegion.setVisibility(View.VISIBLE);
+//            Log.e("test", String.valueOf(mCoorContentRegion.isShown()));
         }
     };
     private View.OnClickListener layoutViewToolsOnClick = new View.OnClickListener() {
         public void onClick(final View v) {
             mCoorContentRegion.setVisibility(View.INVISIBLE);
+//            Log.e("test", String.valueOf(mCoorContentRegion.isShown()));
         }
     };
 
@@ -445,6 +459,19 @@ public class PlayFragment extends Fragment {
                     if(mUseTool == ProductType.Dice.value){
                         mMultiple = (int) (Math.random() * 6 + 1);
                     }
+
+                    /*
+                    boolean empty = false;
+                    for (Tool ob : tools) {
+                        empty = false;
+                        if (ob == null) {
+                            empty = true;
+                            break;
+                        }
+                        i++;
+                    }
+*/
+
                     switch (ptlogMatchResult) {
 
                         case 1: //Lose
@@ -1329,8 +1356,14 @@ public class PlayFragment extends Fragment {
                 // User clicked OK button
                 if(Integer.valueOf(toolAmount) > 0) {
                     mCoorContentRegion.setVisibility(View.INVISIBLE);
+                    int i = findTheEmptyToolArray();
                     if (toolName.equals("Dice")) {
                         mUseTool = ProductType.Dice.value;
+                        setToolsShow(i,R.drawable.tool_dice);
+                        Tool t = new Tool();
+                        t.setName("Dice");
+                        t.setTimes(10);
+                        tools[i] = t;
                     }
                 }
             }
@@ -1360,5 +1393,49 @@ public class PlayFragment extends Fragment {
     }
 
 
+    public int findTheEmptyToolArray(){
+        int i = 0;
+        boolean empty = false;
+        for (Tool ob : tools) {
+            empty = false;
+            if (ob == null) {
+                empty = true;
+                break;
+            }
+            i++;
+        }
+        // return -1 時就是沒有空的可以用
+        if(!empty) {
+            i=-1;
+        }
+        return i;
+    }
+
+    private void setToolsShow(int i,int resId){
+        mImgViewToolUsed_00.setImageResource(R.drawable.tool_dice);
+
+        switch(i){
+            case 0:
+                mImgViewToolUsed_00.setImageResource(resId);
+                mImgViewToolUsed_00.setVisibility(View.VISIBLE);
+                break;
+            case 1:
+                mImgViewToolUsed_01.setImageResource(resId);
+                mImgViewToolUsed_01.setVisibility(View.VISIBLE);
+                break;
+            case 2:
+                mImgViewToolUsed_02.setImageResource(resId);
+                mImgViewToolUsed_02.setVisibility(View.VISIBLE);
+                break;
+            case 3:
+                mImgViewToolUsed_03.setImageResource(resId);
+                mImgViewToolUsed_03.setVisibility(View.VISIBLE);
+                break;
+            case 4:
+                mImgViewToolUsed_04.setImageResource(resId);
+                mImgViewToolUsed_04.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
 
 }//程式結尾
