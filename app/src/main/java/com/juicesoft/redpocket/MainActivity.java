@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.juicesoft.redpocket.Data.SystemPreferences;
+import com.juicesoft.redpocket.Data.Tool;
 import com.juicesoft.redpocket.Data.User;
 
 import java.lang.reflect.Field;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private SystemPreferences mSystemPreferences;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private boolean isLoginOrSign;
+
+    private static Tool[] tools ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -385,6 +388,14 @@ public class MainActivity extends AppCompatActivity {
     {
         stopService(svc);
         textPlayMusic.setText("0");
+    }
+
+    public void saveToolsArray(Tool[] toolArr){
+        tools = toolArr;
+    }
+
+    public Tool[] getToolsArray(){
+       return tools;
     }
 
     public void playMusicByFlag(){

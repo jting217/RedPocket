@@ -75,6 +75,7 @@ public class PlayFragment extends Fragment {
     private TextView mTxtViewResult, mTxtViewCounter, mTxtViewCoins, mTxtViewScore, mTxtViewLives, mTxtViewPlayCounter, mTxtViewUpperLives;
     private RelativeLayout mCoorContentRegion, mCenterRegion, mCoorContentRegionAmin;
     private int mCoins, mDice, mLives, mWinWithPaper, mWinWithRock, mWinWithScissor, mDailyPlayTimes, mDailyWinTimes;
+    private int mDiceTmp;
     private boolean mWinWithPaperFlag = false, mWinWithRockFlag = false, mWinWithScissorFlag = false, mDailyWinTimesFlag = false;
     private static int mScore;
     private int ptlogMultiple, ptlogMatchResult, ptlogScore, ptlogUserInput, ptlogComputerInput, ptlogTotalScore;
@@ -107,6 +108,15 @@ public class PlayFragment extends Fragment {
         return instance;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.e("tool", "In frag's on save instance state ");
+        //outState.putParcelableArray("tools", tools);
+        //Save the fragment's state here
+    }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +129,22 @@ public class PlayFragment extends Fragment {
         }else {
             mColor = savedInstanceState.getInt(ARG_COLOR);
         }
+
+//        if (savedInstanceState != null) {
+//            tools = (Tool[])savedInstanceState.getSerializable("tools");
+//            for (Tool ob : tools) {
+//                if(ob != null) {
+//                    Log.e("tool","--"+ob.getProduct()+","+ob.getTimes());
+//                }
+//            }
+//        }else{
+//            Log.e("tool2","--nothing...");
+//            for (Tool ob : tools) {
+//                if(ob != null) {
+//                    Log.e("tool","--"+ob.getProduct()+","+ob.getTimes());
+//                }
+//            }
+//        }
     }
 
 
@@ -185,8 +211,23 @@ public class PlayFragment extends Fragment {
 
         updateBoard(UpdateUserTimer.OnIni.value);
 
-        tools = new Tool[4];
+        tools =((MainActivity)getActivity()).getToolsArray();
 
+        if(tools!=null) {
+            int tooCount = 0;
+            for (Tool ob : tools) {
+                if (ob != null) {
+                    Log.e("tool", "--" + ob.getProduct() + "," + ob.getTimes());
+                    if(ob.getProduct() == ProductType.Dice.value) {
+                        setToolIconShow(tooCount, R.drawable.tool_dice);
+                    }
+                }
+                tooCount++;
+            }
+
+        }else{
+            tools = new Tool[5];
+        }
     }
 
     @Override
@@ -456,8 +497,17 @@ public class PlayFragment extends Fragment {
                     }
                     int mr = ptlogMatchResult;
                     int getScore = 0, getLives = 0;
-                    if(mUseTool == ProductType.Dice.value){
-                        mMultiple = (int) (Math.random() * 6 + 1);
+//                    if(mUseTool == ProductType.Dice.value){
+//                        mMultiple = (int) (Math.random() * 6 + 1);
+//                    }
+                    for (Tool ob : tools) {
+                        if(ob != null){
+                            int product = ob.getProduct();
+                            if(product == ProductType.Dice.value){
+                                mMultiple = (int) (Math.random() * 6 + 1);
+                                Log.e("TOOL","倍數 "+ mMultiple);
+                            }
+                        }
                     }
 
                     /*
@@ -531,9 +581,33 @@ public class PlayFragment extends Fragment {
                     mDailyPlayTimes += 1;
 
                     ptlogMultiple = mMultiple;
-                    if(mUseTool == ProductType.Dice.value) {
-                        mMultiple = 1;
-                        mDice -= 1;
+//                    if(mUseTool == ProductType.Dice.value) {
+//                        mMultiple = 1;
+//                        mDice -= 1;
+//                    }
+                    int toolCount = 0;
+                    for (Tool ob : tools) {
+                        if(ob != null){
+                            int product = ob.getProduct();
+                            int times = ob.getTimes();
+                            if(product == ProductType.Dice.value){
+                                mMultiple = 1;
+                                if(ptlogMatchResult != MatchResult.Tie.value) {//不是平手就要減次數
+                                    times--;
+                                    ob.setTimes(times);
+                                    if(times != 0){
+                                       tools[toolCount] = ob;
+                                        Log.e("TOOL","DICE 剩 "+ times);
+                                    }else{
+                                        tools[toolCount] = null;
+                                        Log.e("TOOL","DICE 用完 "+ times);
+                                        setToolIconHide(toolCount,ProductType.Dice.value);
+                                        ((MainActivity)getActivity()).saveToolsArray(tools);
+                                    }
+                                }
+                            }
+                        }
+                        toolCount++;
                     }
                     mTxtViewResult.setVisibility(View.VISIBLE);
                     mTxtViewResult.setText(result);
@@ -799,6 +873,7 @@ public class PlayFragment extends Fragment {
                     }else{mCoins = 0 ;}
                     if(u.getDice()!=null) {
                         mDice = u.getDice().intValue();
+                        mDiceTmp = u.getDice().intValue();
                     }else{mDice = 0 ;}
 
                     if(getActivity() != null) {
@@ -989,16 +1064,36 @@ public class PlayFragment extends Fragment {
                             drLog0.setValue(transactionLogTool);
                             mWinWithPaperFlag = false;
                         }
-                        if(mUseTool>0){
+                        /*
+                                                if(mUseTool>0){
+                                                    DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
+                                                    Map transactionLogTool = new HashMap();
+                                                    transactionLogTool.put("type", ToolTransactionType.PlayGame.value);
+                                                    transactionLogTool.put("product", mUseTool);
+                                                    transactionLogTool.put("transaction", -1);
+                                                    transactionLogTool.put("total", mDice);
+                                                    drLog0.setValue(transactionLogTool);
+                                                    mUseTool = 0;
+                                                }
+                                                */
+
+                        if(mDice != mDiceTmp){
                             DatabaseReference drLog0 = FirebaseDatabase.getInstance().getReference("users/" + fUser.getUid() + "/transactionLogTool/" + rightNow);
                             Map transactionLogTool = new HashMap();
                             transactionLogTool.put("type", ToolTransactionType.PlayGame.value);
-                            transactionLogTool.put("product", mUseTool);
+                            transactionLogTool.put("product", ProductType.Dice.value);
                             transactionLogTool.put("transaction", -1);
                             transactionLogTool.put("total", mDice);
                             drLog0.setValue(transactionLogTool);
-                            mUseTool = 0;
+                            Log.e("TOOL","write log to firebase : "+mDiceTmp+","+mDice);
+                            mDiceTmp = mDice;
+                            Log.e("TOOL","write log to firebase : "+mDiceTmp+","+mDice);
+
                         }
+
+
+
+
                     }
 
                     if (when == UpdateUserTimer.PlayGame.value || when == UpdateUserTimer.FiveMinutesTimer.value) {
@@ -1357,13 +1452,21 @@ public class PlayFragment extends Fragment {
                 if(Integer.valueOf(toolAmount) > 0) {
                     mCoorContentRegion.setVisibility(View.INVISIBLE);
                     int i = findTheEmptyToolArray();
-                    if (toolName.equals("Dice")) {
-                        mUseTool = ProductType.Dice.value;
-                        setToolsShow(i,R.drawable.tool_dice);
-                        Tool t = new Tool();
-                        t.setName("Dice");
-                        t.setTimes(10);
-                        tools[i] = t;
+                    if(i != -1) { //共5個道具格，若還有空格則可使用道具！
+                        if (toolName.equals("Dice")) {
+                            //mUseTool = ProductType.Dice.value;
+                            if(!isToolUsing(ProductType.Dice.value)) {//沒有同樣道具使用中
+                                mDice--;
+                                setToolIconShow(i, R.drawable.tool_dice);//左側顯示道具圖示
+                                Tool t = new Tool();
+                                t.setProduct(ProductType.Dice.value);
+                                t.setTimes(10);
+                                tools[i] = t;
+                                ((MainActivity)getActivity()).saveToolsArray(tools);
+                            }else{
+                                Log.e("toolCheck","dice using...");
+                            }
+                        }
                     }
                 }
             }
@@ -1396,13 +1499,15 @@ public class PlayFragment extends Fragment {
     public int findTheEmptyToolArray(){
         int i = 0;
         boolean empty = false;
-        for (Tool ob : tools) {
-            empty = false;
-            if (ob == null) {
-                empty = true;
-                break;
+        if(tools != null) {
+            for (Tool ob : tools) {
+                empty = false;
+                if (ob == null) {
+                    empty = true;
+                    break;
+                }
+                i++;
             }
-            i++;
         }
         // return -1 時就是沒有空的可以用
         if(!empty) {
@@ -1411,7 +1516,24 @@ public class PlayFragment extends Fragment {
         return i;
     }
 
-    private void setToolsShow(int i,int resId){
+
+    public boolean isToolUsing(int Product){
+        int i = 0;
+        boolean isUsing = false;
+        if(tools != null) {
+            for (Tool ob : tools) {
+                if(ob != null) {
+                    if (ob.getProduct() == Product) {
+                        isUsing = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return isUsing;
+    }
+
+    private void setToolIconShow(int i,int resId){
         mImgViewToolUsed_00.setImageResource(R.drawable.tool_dice);
 
         switch(i){
@@ -1434,6 +1556,28 @@ public class PlayFragment extends Fragment {
             case 4:
                 mImgViewToolUsed_04.setImageResource(resId);
                 mImgViewToolUsed_04.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    private void setToolIconHide(int i,int resId){
+        mImgViewToolUsed_00.setImageResource(R.drawable.tool_dice);
+
+        switch(i){
+            case 0:
+                mImgViewToolUsed_00.setVisibility(View.INVISIBLE);
+                break;
+            case 1:
+                mImgViewToolUsed_01.setVisibility(View.INVISIBLE);
+                break;
+            case 2:
+                mImgViewToolUsed_02.setVisibility(View.INVISIBLE);
+                break;
+            case 3:
+                mImgViewToolUsed_03.setVisibility(View.INVISIBLE);
+                break;
+            case 4:
+                mImgViewToolUsed_04.setVisibility(View.INVISIBLE);
                 break;
         }
     }
