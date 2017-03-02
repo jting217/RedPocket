@@ -11,6 +11,7 @@ import java.util.Map;
  */
 @IgnoreExtraProperties
 public class SystemPreferences {
+    private String barInfoURLString;
     private Long counterSec;
     private Long dailyReward;
     private Long playTimesPerDice;
@@ -25,6 +26,14 @@ public class SystemPreferences {
 
     public SystemPreferences() {
 
+    }
+
+    public String getBarInfoURLString() {
+        return barInfoURLString;
+    }
+
+    public void setBarInfoURLString(String barInfoURLString) {
+        this.barInfoURLString = barInfoURLString;
     }
 
     public Long getCounterSec() {
@@ -115,9 +124,10 @@ public class SystemPreferences {
         this.winWithMatchResult = winWithMatchResult;
     }
 
-    public SystemPreferences(Long counterSec, Long dailyReward, Long playTimesPerDice, Long signupReward, Long livesUpperLimit, Long specialTimeEndDateInterval,
+    public SystemPreferences(String barInfoURLString, Long counterSec, Long dailyReward, Long playTimesPerDice, Long signupReward, Long livesUpperLimit, Long specialTimeEndDateInterval,
                              Long specialTimeReward, Long specialTimeStartDateInterval, Long winTimesGetOneDiceFirst, Long winTimesGetOneDiceSecond,
                              Long winWithMatchResult){
+        this.barInfoURLString = barInfoURLString;
         this.counterSec = counterSec;
         this.dailyReward = dailyReward;
         this.playTimesPerDice = playTimesPerDice;
@@ -134,6 +144,7 @@ public class SystemPreferences {
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
+        result.put("barInfoURLString",barInfoURLString);
         result.put("counterSec", counterSec);
         result.put("dailyReward", dailyReward);
         result.put("playTimesPerDice", playTimesPerDice);

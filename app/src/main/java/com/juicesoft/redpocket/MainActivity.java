@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
                 frag = OptionsFragment.newInstance("Options",String.valueOf(textPlayMusic.getText()));
                 break;
             case R.id.info:
-                frag = InfoFragment.newInstance("Info","");
+                frag = InfoFragment.newInstance("Info",mSystemPreferences.getBarInfoURLString());
                 break;
         }
 

@@ -1,9 +1,12 @@
 package com.juicesoft.redpocket;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -64,6 +67,35 @@ public class InfoAdapter extends BaseAdapter {
 
                 break;
         }
+
+
+//        holder.btnBuy.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                View parentRow = (View) v.getParent();
+//                ListView listView = (ListView) parentRow.getParent();
+//                final int position = listView.getPositionForView(parentRow);
+//
+//
+//                View view = (View) v.getParent();
+//                TextView tv = (TextView) view.findViewById(R.id.txtViewName);
+//                String s = tv.getText().toString();
+//
+//                Button bn = (Button) view.findViewById(R.id.btnBuy);
+//                String a = bn.getText().toString().substring(0,3);
+//
+//
+//                Log.w("ShopsAdapter",position+","+s+","+a);
+//                mFragment.buySomething(s,a);
+////                switch (v.getId()) {
+////                    case R.id.button1:
+////                        Toast.makeText(getApplicationContext(),
+////                                "按鈕點擊了:" + name[index], Toast.LENGTH_SHORT).show();
+////                        break;
+////                }
+//            }
+//        });
+
         return convertView;
     }
     class Holder{
@@ -71,4 +103,8 @@ public class InfoAdapter extends BaseAdapter {
         TextView txtMore;
         TextView txtArrow;
     }
+
+
+
+
 }

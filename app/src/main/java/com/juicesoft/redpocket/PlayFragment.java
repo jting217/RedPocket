@@ -151,8 +151,16 @@ public class PlayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        if(mSystemPreferences != null && iniUser !=null){
+            if((GetRightNow()- iniUser.getLifeCounter()) >  mSystemPreferences.getCounterSec()) {
+                CreateTimer(iniUser.getLifeCounter());
+                Log.e("Timer1","CreateTimer->"+iniUser.getLifeCounter());
+            }
+        }
         return inflater.inflate(R.layout.fragment_play, container, false);
     }
+
 
 
     @Override
@@ -1401,11 +1409,13 @@ public class PlayFragment extends Fragment {
         //Log.w("CreateTimer",isFirstCreatTimer+",");
         if(isFirstCreatTimer) {
             if(lifeCounter == 0){
-                tsec = setTsec;
+                //tsec = setTsec;
+                tsec = mSystemPreferences.getCounterSec().intValue();
             }else {
                 long rightNow = GetRightNow();
                 long countSec = mSystemPreferences.getCounterSec() - ((rightNow - lifeCounter) % mSystemPreferences.getCounterSec());
                 long getLife = ((rightNow - lifeCounter) / mSystemPreferences.getCounterSec());
+                Log.e("Timer2","counterSec->"+mSystemPreferences.getCounterSec()+",rightNow->"+rightNow+",lifeCounter->"+lifeCounter+",diff->"+(rightNow - lifeCounter));
                 if(getLife>0){
                     mLives = Integer.valueOf(mTxtViewLives.getText().toString());
 //                    tsec = mSystemPreferences.getCounterSec().intValue();
