@@ -67,7 +67,7 @@ public class PlayFragment extends Fragment {
     private static int mUseTool = 0, mMultiple = 1 ;
 
     final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private User iniUser;
+    private static User iniUser;
     private DatabaseReference mWriteDatabase, mReadDatabase, mQueryDatabase;
 
     private ImageView mImgViewScissors, mImgViewRock, mImgViewPaper, mImgViewAuto, mImgViewPlayer, mImgViewNpc, mImgViewTools;//, mAnimationNpc, mAnimationPlayer;
@@ -152,12 +152,6 @@ public class PlayFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        if(mSystemPreferences != null && iniUser !=null){
-            if((GetRightNow()- iniUser.getLifeCounter()) >  mSystemPreferences.getCounterSec()) {
-                CreateTimer(iniUser.getLifeCounter());
-                Log.e("Timer1","CreateTimer->"+iniUser.getLifeCounter());
-            }
-        }
         return inflater.inflate(R.layout.fragment_play, container, false);
     }
 
@@ -720,6 +714,7 @@ public class PlayFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
     }
 
     /*先找到目前的board，再Update*/
@@ -1415,7 +1410,7 @@ public class PlayFragment extends Fragment {
                 long rightNow = GetRightNow();
                 long countSec = mSystemPreferences.getCounterSec() - ((rightNow - lifeCounter) % mSystemPreferences.getCounterSec());
                 long getLife = ((rightNow - lifeCounter) / mSystemPreferences.getCounterSec());
-                Log.e("Timer2","counterSec->"+mSystemPreferences.getCounterSec()+",rightNow->"+rightNow+",lifeCounter->"+lifeCounter+",diff->"+(rightNow - lifeCounter));
+                Log.e("Timer2","counterSec->"+mSystemPreferences.getCounterSec()+",rightNow->"+rightNow+",lifeCounter->"+lifeCounter+",diff->"+(rightNow - lifeCounter)+",getLife->"+getLife);
                 if(getLife>0){
                     mLives = Integer.valueOf(mTxtViewLives.getText().toString());
 //                    tsec = mSystemPreferences.getCounterSec().intValue();
@@ -1426,6 +1421,7 @@ public class PlayFragment extends Fragment {
                     ltlogTransaction = (int) getLife;
                     ltlogType = LifeTransactionType.FiveMinutesTimer.value;
                     updateUser(user,UpdateUserTimer.FiveMinutesTimer.value);
+                    Log.e("Timer4","counterSec->"+mSystemPreferences.getCounterSec()+",rightNow->"+rightNow+",lifeCounter->"+lifeCounter+",diff->"+(rightNow - lifeCounter));
                 }
                 tsec = (int)countSec;
             }
