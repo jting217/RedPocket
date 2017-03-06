@@ -52,13 +52,13 @@ public class CoinsAdapter extends BaseAdapter {
             case 0:
                 holder.image.setImageResource(R.drawable.icon_coin);
                 holder.txtPrice.setText("100 Coins");
-                holder.txtInfo.setText("Coins Information");
+                holder.txtInfo.setText("Coin for buying lives and tools");
                 holder.btnBuy.setText("$0.99");
                 break;
             case 1:
                 holder.image.setImageResource(R.drawable.icon_coin);
                 holder.txtPrice.setText("220 Coins");
-                holder.txtInfo.setText("Coins Information");
+                holder.txtInfo.setText("Coin for buying lives and tools");
                 holder.btnBuy.setText("$1.99");
                 break;
 //            case 2:

@@ -89,13 +89,13 @@ public class ShopsAdapter extends BaseAdapter {
             case 3:
                 holder.image.setImageResource(R.drawable.life_icon);
                 holder.txtPrice.setText("Life");
-                holder.txtInfo.setText("Tool Information");
+                holder.txtInfo.setText("Each life can play one game");
                 holder.btnBuy.setText("100 Coins");
                 break;
             case 4:
                 holder.image.setImageResource(R.drawable.dice_icon);
                 holder.txtPrice.setText("Dice");
-                holder.txtInfo.setText("Tool Information");
+                holder.txtInfo.setText("Multiply the score by 1-6 times");
                 holder.btnBuy.setText("100 Coins");
                 break;
             case 5:
