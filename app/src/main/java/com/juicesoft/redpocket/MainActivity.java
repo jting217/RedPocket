@@ -149,8 +149,11 @@ public class MainActivity extends AppCompatActivity {
         stopService(svc);
     }
 
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        playMusicByFlag();
+    }
 
     @Override
     protected void onPause() {

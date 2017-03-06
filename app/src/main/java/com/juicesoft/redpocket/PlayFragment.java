@@ -36,6 +36,7 @@ import com.juicesoft.redpocket.Data.SystemPreferences;
 import com.juicesoft.redpocket.Data.Tool;
 import com.juicesoft.redpocket.Data.User;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -523,7 +524,7 @@ public class PlayFragment extends Fragment {
                         i++;
                     }
 */
-
+                    MediaPlayer mp = null;
                     switch (ptlogMatchResult) {
 
                         case 1: //Lose
@@ -532,9 +533,11 @@ public class PlayFragment extends Fragment {
                             getScore = (10 * mMultiple);
                             getLives = -1;
                             if (mPlaySound.equals("1")) {
-                                MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.lose);
-                                mpLose.start();
-                                mpLose.seekTo(0);
+                                //MediaPlayer mpLose = MediaPlayer.create(getActivity(), R.raw.lose);
+                                mp = MediaPlayer.create(getActivity(), R.raw.lose);
+
+                                mp.start();
+//                                mp.seekTo(0);
                             }
                             break;
                         case 2: //Win
@@ -543,17 +546,17 @@ public class PlayFragment extends Fragment {
                             getScore = (100 * mMultiple);
                             getLives = -1;
                             if (mPlaySound.equals("1")) {
-                                MediaPlayer mpWin = MediaPlayer.create(getActivity(), R.raw.win);
-                                mpWin.start();
-                                mpWin.seekTo(0);
+                                mp = MediaPlayer.create(getActivity(), R.raw.win);
+                                mp.start();
+//                                mp.seekTo(0);
                             }
                             mGifView.setVisibility(View.VISIBLE);
                             break;
                         default: //Tie
                             if (mPlaySound.equals("1")) {
-                                MediaPlayer mpTie = MediaPlayer.create(getActivity(), R.raw.excitement);
-                                mpTie.start();
-                                mpTie.seekTo(0);
+                                mp = MediaPlayer.create(getActivity(), R.raw.excitement);
+                                mp.start();
+//                                mp.seekTo(0);
                             }
                             break;
                     }

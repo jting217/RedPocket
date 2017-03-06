@@ -71,19 +71,19 @@ public class ShopsAdapter extends BaseAdapter {
             case 0:
                 holder.image.setImageResource(R.drawable.icon_ironfist);
                 holder.txtPrice.setText("Iron First");
-                holder.txtInfo.setText("Tool Information");
+                holder.txtInfo.setText("Coming soon");
                 holder.btnBuy.setText("100 Coins");
                 break;
             case 1:
                 holder.image.setImageResource(R.drawable.icon_mindcontrol);
                 holder.txtPrice.setText("Mind Control");
-                holder.txtInfo.setText("Tool Information");
+                holder.txtInfo.setText("Coming soon");
                 holder.btnBuy.setText("200 Coins");
                 break;
             case 2:
                 holder.image.setImageResource(R.drawable.icon_goldenhand);
                 holder.txtPrice.setText("Golden Hand");
-                holder.txtInfo.setText("Tool Information");
+                holder.txtInfo.setText("Coming soon");
                 holder.btnBuy.setText("150 Coins");
                 break;
             case 3:
@@ -101,7 +101,7 @@ public class ShopsAdapter extends BaseAdapter {
             case 5:
                 holder.image.setImageResource(R.drawable.victory_icon);
                 holder.txtPrice.setText("Victory");
-                holder.txtInfo.setText("Tool Information");
+                holder.txtInfo.setText("Coming soon");
                 holder.btnBuy.setText("100 Coins");
                 break;
         }
