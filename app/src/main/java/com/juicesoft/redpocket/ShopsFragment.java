@@ -58,7 +58,7 @@ public class ShopsFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         mListViewCoins = (ListView) getView().findViewById(R.id.listViewCoins);
-        mListViewCoins.setAdapter(new CoinsAdapter());
+        mListViewCoins.setAdapter(new CoinsAdapter(getActivity().getApplicationContext(),ShopsFragment.this));
         mListViewTools = (ListView) getView().findViewById(R.id.listViewTools);
         mListViewTools.setAdapter(new ShopsAdapter(getActivity().getApplicationContext(), ShopsFragment.this));
         super.onActivityCreated(savedInstanceState);
@@ -135,6 +135,36 @@ public class ShopsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void buyCoins(final String buyCoins){
+        Log.d("buyCoins", buyCoins);
+        DatabaseReference mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+
+        mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+
+                User u = snapshot.getValue(User.class);
+                if(u != null) {
+                    mUser = u;
+                    mCoins = u.getCoins().intValue();
+
+                    if(buyCoins.equals("100 Coins")) {
+                        ((MainActivity) getActivity()).onBuy100Coins(mCoins);
+                    }else if(buyCoins.equals("220 Coins")){
+                        ((MainActivity) getActivity()).onBuy220Coins(mCoins);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("☆firebase failed: ", databaseError.getMessage());
+            }
+
+        });
+
     }
 
     public void buySomething(final String toolName, final String toolPrice) {

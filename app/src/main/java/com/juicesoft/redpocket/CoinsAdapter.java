@@ -1,5 +1,6 @@
 package com.juicesoft.redpocket;
 
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,16 @@ import static com.facebook.FacebookSdk.getApplicationContext;
  */
 
 public class CoinsAdapter extends BaseAdapter {
+
+    private ShopsFragment mFragment;
+
+    public CoinsAdapter(Context context, ShopsFragment fragment)
+    {
+//        //Log.w("ShopsAdapter","ShopsAdapter");
+//        mLayInf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        mContext = context;
+        mFragment = fragment;
+    }
 
     @Override
     public int getCount() {
@@ -83,7 +94,8 @@ public class CoinsAdapter extends BaseAdapter {
                 String a = bn.getText().toString();
 
 
-                Log.w("CoinAdapter",position+","+s+","+a);
+                Log.w("CoinsAdapter",position+","+s+","+a);
+                mFragment.buyCoins(s);
 //                mFragment.useTool(s,a);
 //                switch (v.getId()) {
 //                    case R.id.button1:
