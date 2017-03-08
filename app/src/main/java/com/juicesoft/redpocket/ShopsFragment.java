@@ -139,31 +139,12 @@ public class ShopsFragment extends Fragment {
 
     public void buyCoins(final String buyCoins){
         Log.d("buyCoins", buyCoins);
-        DatabaseReference mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
 
-        mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-
-                User u = snapshot.getValue(User.class);
-                if(u != null) {
-                    mUser = u;
-                    mCoins = u.getCoins().intValue();
-
-                    if(buyCoins.equals("100 Coins")) {
-                        ((MainActivity) getActivity()).onBuy100Coins(mCoins);
-                    }else if(buyCoins.equals("220 Coins")){
-                        ((MainActivity) getActivity()).onBuy220Coins(mCoins);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("☆firebase failed: ", databaseError.getMessage());
-            }
-
-        });
+        if(buyCoins.equals("100 Coins")) {
+            ((MainActivity) getActivity()).onBuy100Coins();
+        }else if(buyCoins.equals("220 Coins")){
+            ((MainActivity) getActivity()).onBuy220Coins();
+        }
 
     }
 

@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     private SystemPreferences mSystemPreferences;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private boolean isLoginOrSign;
+    private User mUser;
 
     private static Tool[] tools ;
 
@@ -230,19 +231,19 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
             Purchase coins100Purchase = inventory.getPurchase(SKU_100_COINS);
             Purchase coins220Purchase = inventory.getPurchase(SKU_220_COINS);
             if (coins100Purchase != null && verifyDeveloperPayload(coins100Purchase)) {
-                Log.d(TAG, "We have gas. Consuming it.");
+                Log.d(TAG, "We have 100 coins. Update user.");
                 try {
                     mHelper.consumeAsync(inventory.getPurchase(SKU_100_COINS), mConsumeFinishedListener);
                 } catch (IabHelper.IabAsyncInProgressException e) {
-                    complain("Error consuming gas. Another async operation in progress.");
+                    complain("Error update user. Another async operation in progress.");
                 }
                 return;
             }else if (coins220Purchase != null && verifyDeveloperPayload(coins220Purchase)) {
-                Log.d(TAG, "We have gas. Consuming it.");
+                Log.d(TAG, "We have 100 coins. Update user.");
                 try {
                     mHelper.consumeAsync(inventory.getPurchase(SKU_220_COINS), mConsumeFinishedListener);
                 } catch (IabHelper.IabAsyncInProgressException e) {
-                    complain("Error consuming gas. Another async operation in progress.");
+                    complain("Error update user. Another async operation in progress.");
                 }
                 return;
             }
@@ -292,11 +293,13 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
-                if( mCoins >0) {
+                if( mCoins >0 && buyCoins >0) {
+
                     Map newUserData = new HashMap();
+                    mCoins+=buyCoins;
                     newUserData.put("coins", mCoins);
                     mWriteDatabase.updateChildren(newUserData);
-
+                    alert("You got " + buyCoins + ". Your tank is now " + mCoins + " coins");
                 }else{
                     complain("You got no coins.");
                 }
@@ -473,10 +476,11 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     }
 
 
-    public void onBuy100Coins(int iniCoins) {
+    public void onBuy100Coins() {
         Log.d(TAG, "onBuy100Coins.");
         buyCoins = 100;
-        mCoins = iniCoins + buyCoins;
+
+
 
         String payload = "";
         try {
@@ -489,10 +493,8 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
         }
     }
 
-    public void onBuy220Coins(int iniCoins) {
+    public void onBuy220Coins() {
         Log.d(TAG, "onBuy220Coins.");
-        buyCoins = 220;
-        mCoins = iniCoins + buyCoins;
         String payload = "";
         try {
             if (mHelper != null) mHelper.flagEndAsync();
@@ -552,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
 
     // Called when consumption is complete
     IabHelper.OnConsumeFinishedListener mConsumeFinishedListener = new IabHelper.OnConsumeFinishedListener() {
-        public void onConsumeFinished(Purchase purchase, IabResult result) {
+        public void onConsumeFinished(final Purchase purchase, IabResult result) {
             Log.d(TAG, "Consumption finished. Purchase: " + purchase + ", result: " + result);
 
             // if we were disposed of in the meantime, quit.
@@ -564,9 +566,35 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
             if (result.isSuccess()) {
                 // successfully consumed, so we apply the effects of the item in our
                 // game world's logic, which in our case means filling the gas tank a bit
-                updateUserAfterBuyCoins();
-                Log.d(TAG, "Consumption successful. Provisioning.");
-               alert("You got " + buyCoins + ". Your tank is now " + mCoins + " coins");
+                DatabaseReference mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
+
+                mReadDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+
+                        User u = snapshot.getValue(User.class);
+                        if(u != null) {
+                            mUser = u;
+                            mCoins = u.getCoins().intValue();
+                            if (purchase.getSku().equals(SKU_100_COINS)){
+                                buyCoins = 100;
+                            }else if (purchase.getSku().equals(SKU_220_COINS)){
+                                buyCoins = 220;
+                            }
+                            updateUserAfterBuyCoins();
+                            Log.d(TAG, "Consumption successful. Provisioning.");
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.e("☆firebase failed: ", databaseError.getMessage());
+                    }
+
+                });
+
             }
             else {
                 complain("Error while consuming: " + result);
