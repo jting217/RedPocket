@@ -20,7 +20,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +40,6 @@ import com.juicesoft.redpocket.util.Inventory;
 import com.juicesoft.redpocket.util.Purchase;
 
 import java.lang.reflect.Field;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -164,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
 
 
          /*--------------------Google In-App billing Start--------------------*/
-        String base64EncodedPublicKey = "";
+        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsZFQttvaR0IGV5vY6YZuhS6n7T2e/rk08T8DawRXveJuJEtLHx0RSq62GGejnjIr2lChPZ9HAc2Uy83twoKz5LyJ90jmIOkd7hFMMcpoFbdOwMLEBqBPVBfQF7cQUf0L6cHx0ujYWP4onkb01avlfwDyJ0iwiMnZJxgc+H9lf2sq9NQb/wkv4EgcV7PKzjwX0FWx6Ms4NkmsvRdfsqyynALDpu0Dgvz6bLAXzb6hHm7hMRfziMLpQR62ttAHZXrCFg4azbNaQSD+b/W+9WI1heEynMnwQxK4pmYkCHGyMy86+fZiDIrV4uvADiFU9fXtzgZZfnYhwnIvPOjDluY2TwIDAQAB";
 
         Log.d(TAG, "Creating IAB helper.");
         mHelper = new IabHelper(this, base64EncodedPublicKey);
@@ -479,9 +477,6 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     public void onBuy100Coins() {
         Log.d(TAG, "onBuy100Coins.");
         buyCoins = 100;
-
-
-
         String payload = "";
         try {
             if (mHelper != null) mHelper.flagEndAsync();
@@ -661,7 +656,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
                     Log.d("Firebase",userId + " is existed!");
 
                 }else{
-                    if(isLoginOrSign) {
+                    //if(isLoginOrSign) {
                         user.setCoins(iniVal);
                         user.setDailyPlayTimes(iniVal);
                         user.setDailyResetDate(iniVal);
@@ -682,10 +677,10 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
                         Map<String, Object> nUser = user.toMap();
                         nUser.put("lifeCounter", ServerValue.TIMESTAMP);
                         mWriteDatabase.child(userId).setValue(nUser);
-                    }else{
-                        Log.e("Logout",(new Date()).toString());
-                        logout();
-                    }
+//                    }else{
+//                        Log.e("Logout",(new Date()).toString());
+//                        logout();
+//                    }
                 }
             }
 
@@ -789,7 +784,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     }
 
     void complain(String message) {
-        Log.e(TAG, "**** TrivialDrive Error: " + message);
+        Log.e(TAG, "**** RedPocket Error: " + message);
         alert("Error: " + message);
     }
 
