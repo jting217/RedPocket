@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
 
 
          /*--------------------Google In-App billing Start--------------------*/
-        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsZFQttvaR0IGV5vY6YZuhS6n7T2e/rk08T8DawRXveJuJEtLHx0RSq62GGejnjIr2lChPZ9HAc2Uy83twoKz5LyJ90jmIOkd7hFMMcpoFbdOwMLEBqBPVBfQF7cQUf0L6cHx0ujYWP4onkb01avlfwDyJ0iwiMnZJxgc+H9lf2sq9NQb/wkv4EgcV7PKzjwX0FWx6Ms4NkmsvRdfsqyynALDpu0Dgvz6bLAXzb6hHm7hMRfziMLpQR62ttAHZXrCFg4azbNaQSD+b/W+9WI1heEynMnwQxK4pmYkCHGyMy86+fZiDIrV4uvADiFU9fXtzgZZfnYhwnIvPOjDluY2TwIDAQAB";
+        String base64EncodedPublicKey = "";
 
         Log.d(TAG, "Creating IAB helper.");
         mHelper = new IabHelper(this, base64EncodedPublicKey);
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
                     mCoins+=buyCoins;
                     newUserData.put("coins", mCoins);
                     mWriteDatabase.updateChildren(newUserData);
-                    alert("You got " + buyCoins + ". Your tank is now " + mCoins + " coins");
+                    alert("You got " + buyCoins + " coins. Your tank is now " + mCoins + " coins");
                 }else{
                     complain("You got no coins.");
                 }
@@ -501,6 +501,21 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        // Pass on the activity result to the helper for handling
+        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
+            // not handled, so handle it ourselves (here's where you'd
+            // perform any handling of activity results not related to in-app
+            // billing...
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            Log.d(TAG, "onActivityResult handled by IABUtil.");
+        }
+    }
     // Callback for when a purchase is finished
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
