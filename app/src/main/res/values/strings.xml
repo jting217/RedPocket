@@ -58,6 +58,7 @@
     <string name="TabBarItemShops">Shops</string>
     <string name="WelcomeButtonSignIn">Login</string>
     <string name="WelcomeButtonSignUp">Signup</string>
+    <string name="content_description_app_loading_image">App loading image</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

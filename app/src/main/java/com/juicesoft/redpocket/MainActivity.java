@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.login.LoginManager;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
     private Intent svc;
+    private RelativeLayout mCoorContentRegion;
 
     private DatabaseReference mWriteDatabase, mReadDatabase;
     private SystemPreferences mSystemPreferences;
@@ -111,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
         emailTextView = (TextView) findViewById(R.id.emailTextView);
         uidTextView = (TextView) findViewById(R.id.uidTextView);
         textPlayMusic = (TextView) findViewById(R.id.txtPlayMusic);
+        mCoorContentRegion = (RelativeLayout) findViewById(R.id.coorContentRegion);
         mSystemPreferences = new SystemPreferences();
         isLoginOrSign = false;
 
@@ -286,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
 
 
     private void updateUserAfterBuyCoins(){
+
         final DatabaseReference mWriteDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
         mWriteDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -298,14 +302,17 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
                     newUserData.put("coins", mCoins);
                     mWriteDatabase.updateChildren(newUserData);
                     alert("You got " + buyCoins + " coins. Your tank is now " + mCoins + " coins");
+                    setWaitScreen(false);
                 }else{
                     complain("You got no coins.");
+                    setWaitScreen(false);
                 }
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("☆firebase failed: ", databaseError.getMessage());
-
+                setWaitScreen(false);
             }
         });
     }
@@ -475,6 +482,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
 
 
     public void onBuy100Coins() {
+        setWaitScreen(true);
         Log.d(TAG, "onBuy100Coins.");
         buyCoins = 100;
         String payload = "";
@@ -489,6 +497,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     }
 
     public void onBuy220Coins() {
+        setWaitScreen(true);
         Log.d(TAG, "onBuy220Coins.");
         String payload = "";
         try {
@@ -497,7 +506,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
                     mPurchaseFinishedListener, payload);
         } catch (IabHelper.IabAsyncInProgressException e) {
             complain("Error launching purchase flow. Another async operation in progress.");
-            //setWaitScreen(false);
+            setWaitScreen(false);
         }
     }
 
@@ -526,25 +535,26 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
 
             if (result.isFailure()) {
                 complain("Error purchasing: " + result);
-//                setWaitScreen(false);
+                setWaitScreen(false);
                 return;
             }
             if (!verifyDeveloperPayload(purchase)) {
                 complain("Error purchasing. Authenticity verification failed.");
-//                setWaitScreen(false);
+                setWaitScreen(false);
                 return;
             }
 
             Log.d(TAG, "Purchase successful.");
 
             if (purchase.getSku().equals(SKU_100_COINS)) {
+
                 // bought 1/4 tank of gas. So consume it.
                 Log.d(TAG, "Purchase is 100 coins. Starting 100 coins consumption.");
                 try {
                     mHelper.consumeAsync(purchase, mConsumeFinishedListener);
                 } catch (IabHelper.IabAsyncInProgressException e) {
                     complain("Error consuming 100 coins. Another async operation in progress.");
-                    //setWaitScreen(false);
+                    setWaitScreen(false);
                     return;
                 }
             }else if (purchase.getSku().equals(SKU_220_COINS)) {
@@ -554,7 +564,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
                     mHelper.consumeAsync(purchase, mConsumeFinishedListener);
                 } catch (IabHelper.IabAsyncInProgressException e) {
                     complain("Error consuming 220 coins. Another async operation in progress.");
-                    //setWaitScreen(false);
+                    setWaitScreen(false);
                     return;
                 }
             }
@@ -574,6 +584,9 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
             // so we don't check which sku was consumed. If you have more than one
             // sku, you probably should check...
             if (result.isSuccess()) {
+
+                Log.e(TAG,"buy successed.");
+
                 // successfully consumed, so we apply the effects of the item in our
                 // game world's logic, which in our case means filling the gas tank a bit
                 DatabaseReference mReadDatabase = FirebaseDatabase.getInstance().getReference("users/" + user.getUid());
@@ -745,6 +758,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     }
 
     public void enableBottomNavListener() {
+        Log.e(TAG," enableBottomNavListener.");
         mBottomNav.getMenu().getItem(0).setEnabled(true);
         mBottomNav.getMenu().getItem(1).setEnabled(true);
         mBottomNav.getMenu().getItem(2).setEnabled(true);
@@ -753,6 +767,7 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     }
 
     public void disalbeBottomNavListener(){
+        Log.e(TAG," disalbeBottomNavListener.");
         mBottomNav.getMenu().getItem(0).setEnabled(false);
         mBottomNav.getMenu().getItem(1).setEnabled(false);
         mBottomNav.getMenu().getItem(2).setEnabled(false);
@@ -809,6 +824,12 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
         bld.setNeutralButton("OK", null);
         Log.d(TAG, "Showing alert dialog: " + message);
         bld.create().show();
+    }
+
+    // Enables or disables the "please wait" screen.
+    void setWaitScreen(boolean set) {
+        findViewById(R.id.screen_main).setVisibility(set ? View.GONE : View.VISIBLE);
+        findViewById(R.id.screen_wait).setVisibility(set ? View.VISIBLE : View.GONE);
     }
 
 }
