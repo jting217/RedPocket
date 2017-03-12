@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
     private BottomNavigationView mBottomNav;
     private int mSelectedItem;
     private Intent svc;
-    private RelativeLayout mCoorContentRegion;
 
     private DatabaseReference mWriteDatabase, mReadDatabase;
     private SystemPreferences mSystemPreferences;
@@ -113,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements IabBroadcastRecei
         emailTextView = (TextView) findViewById(R.id.emailTextView);
         uidTextView = (TextView) findViewById(R.id.uidTextView);
         textPlayMusic = (TextView) findViewById(R.id.txtPlayMusic);
-        mCoorContentRegion = (RelativeLayout) findViewById(R.id.coorContentRegion);
         mSystemPreferences = new SystemPreferences();
         isLoginOrSign = false;
 
