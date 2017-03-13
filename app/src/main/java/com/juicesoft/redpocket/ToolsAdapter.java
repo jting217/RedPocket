@@ -68,35 +68,35 @@ public class ToolsAdapter extends BaseAdapter {
             case 0:
                 holder.mImageItem.setImageResource(R.drawable.icon_ironfist);
                 holder.mTxtViewName.setText("Iron First");
-                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mTxtViewInfo.setText("Coming soon");
                 holder.mBtnAmount.setText(String.valueOf(mUser.getIronFirst()));
 //                Log.w("holer0",String.valueOf(mUser.getIronFirst()));
                 break;
             case 1:
                 holder.mImageItem.setImageResource(R.drawable.icon_mindcontrol);
                 holder.mTxtViewName.setText("Mind Control");
-                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mTxtViewInfo.setText("Coming soon");
                 holder.mBtnAmount.setText(String.valueOf(mUser.getMindControl()));
 //                Log.w("holer0",String.valueOf(mUser.getMindControl()));
                 break;
             case 2:
                 holder.mImageItem.setImageResource(R.drawable.icon_goldenhand);
                 holder.mTxtViewName.setText("Golden Hand");
-                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mTxtViewInfo.setText("Coming soon");
                 holder.mBtnAmount.setText(String.valueOf(mUser.getGoldenHand()));
 //                Log.w("holer0",String.valueOf(mUser.getGoldenHand()));
                 break;
             case 3:
                 holder.mImageItem.setImageResource(R.drawable.dice_icon);
                 holder.mTxtViewName.setText("Dice");
-                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mTxtViewInfo.setText("Multiply the score by 1-6 times");
                 holder.mBtnAmount.setText(String.valueOf(mUser.getDice()));
 //                Log.w("holer0",String.valueOf(mUser.getDice()));
                 break;
             case 4:
                 holder.mImageItem.setImageResource(R.drawable.victory_icon);
                 holder.mTxtViewName.setText("Victory");
-                holder.mTxtViewInfo.setText("Tool Information");
+                holder.mTxtViewInfo.setText("Coming soon");
                 holder.mBtnAmount.setText(String.valueOf(mUser.getVictory()));
 //                Log.w("holer0",String.valueOf(mUser.getVictory()));
                 break;
